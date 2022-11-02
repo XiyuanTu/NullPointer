@@ -57,7 +57,7 @@ const ReplyComment = ({
 }: IProps) => {
   const dispatch = useAppDispatch();
 
-  const [isDeleted, setIsDeleted] = useState(comment.deleted);
+  const [isDeleted, setIsDeleted] = useState(comment.deletedAt !== null);
   const [deletedAt, setDeletedAt] = useState(comment.deletedAt);
   const [author, setAuthor] = useState<User | null>(null);
   const [replyTo, setReplyTo] = useState<User | null>(null);
@@ -143,8 +143,7 @@ const ReplyComment = ({
     try {
       if (isDeleted) {
         await axios.patch(`http://localhost:3000/api/comment/${comment._id}`, {
-          property: CommentInfo.Deleted,
-          value: { deleted: false },
+          property: CommentInfo.DeletedAt,
         });
       } else {
         const {

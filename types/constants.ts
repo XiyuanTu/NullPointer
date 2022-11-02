@@ -39,5 +39,5 @@ export enum Action {
 
 export enum CommentInfo {
     Likes='likes',
-    Deleted='deleted'
+    DeletedAt='deletedAt'
 }

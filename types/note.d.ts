@@ -54,7 +54,6 @@ declare interface Comment {
   content: string;
   createdAt: Date;
   likes: string[];
-  deleted: boolean;
   deletedAt: Date;
   children: string[]
 }

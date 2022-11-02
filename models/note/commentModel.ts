@@ -5,7 +5,6 @@ interface IComment {
   content: string;
   createdAt: Date;
   likes: Schema.Types.ObjectId[];
-  deleted: boolean;
   deletedAt: Date;
   children: Schema.Types.ObjectId[]
 }
@@ -15,7 +14,6 @@ const commentSchema = new Schema<IComment>({
   content: { type: String, required: true},
   createdAt: { type: Date, default: new Date()},
   likes: { type: [Schema.Types.ObjectId], default: []},
-  deleted: {type: Boolean, default: false},
   deletedAt: { type: Date, default: null},
   children: { type: [Schema.Types.ObjectId], default: []},
 });

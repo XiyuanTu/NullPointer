@@ -43,8 +43,8 @@ export default async function handler(
             comment = await Comment.findByIdAndUpdate(id, { $pull: value });
           }
           break;
-        case CommentInfo.Deleted: 
-          comment = await Comment.findByIdAndUpdate(id, {...value, deletedAt: null});
+        case CommentInfo.DeletedAt: 
+          comment = await Comment.findByIdAndUpdate(id, {deletedAt: null});
           break;
         default:
           break;
@@ -63,7 +63,7 @@ export default async function handler(
   if (req.method === "DELETE") {
     try {
       const date = new Date()
-      const comment = await Comment.findByIdAndUpdate(id, {deleted: true, deletedAt: date});
+      const comment = await Comment.findByIdAndUpdate(id, {deletedAt: new Date()});
       if (!comment) {
         return res.status(404).json({ message: "Not found!" });
       }
