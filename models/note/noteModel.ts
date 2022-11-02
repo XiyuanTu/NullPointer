@@ -15,7 +15,7 @@ interface INote {
   like: number;
   bookmark: number;
   comment: number;
-  comments: Schema.Types.ObjectId[]
+  comments: Schema.Types.ObjectId[],
 }
 
 const noteSchema = new Schema<INote>({

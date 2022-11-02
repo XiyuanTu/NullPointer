@@ -6,4 +6,5 @@ declare interface User {
     following: string[];
     likes: string[];
     bookmarks: string[];
+    blocks: string[];
 }

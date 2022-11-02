@@ -27,6 +27,8 @@ import {
   ListItemAvatar,
   Collapse,
   Divider,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { IconButtonProps } from "@mui/material/IconButton";
@@ -45,10 +47,7 @@ import { feedback } from "../../../utils/feedback";
 import { useAppDispatch } from "../../../state/hooks";
 import { Action, Feedback, NoteInfo, UserInfo } from "../../../types/constants";
 import UserAvatar from "../../UserAvatar";
-import {
-  convertCount,
-  convertDate,
-} from "../../../utils/forum";
+import { convertCount, convertDate } from "../../../utils/forum";
 import Comment from "./Comment/";
 import { useSession } from "next-auth/react";
 
@@ -102,6 +101,7 @@ const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
     following,
     likes,
     bookmarks,
+    blocks,
   } = user;
 
   const { data: session, status } = useSession();
@@ -112,8 +112,9 @@ const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
   const [bookmarkCount, setBookmarkCount] = useState(bookmark);
   const [commentIds, setCommentIds] = useState(comments);
   const [noteComments, setNoteComments] = useState<ConvertedComment[]>([]);
+  const [isBlocked, setIsBlocked] = useState(blocks.includes(authorId));
 
-  // When a new comment is added, it will still be able to display comments correctly number-wise. 
+  // When a new comment is added, it will still be able to display comments correctly number-wise.
   const [newNoteComments, setNewNoteComments] = useState<ConvertedComment[]>(
     []
   );
@@ -123,7 +124,10 @@ const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
   const [openComment, setOpenComment] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
-  const commentSectionRef = useRef<HTMLDivElement>(null)
+  const commentSectionRef = useRef<HTMLDivElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const openMoreActions = Boolean(anchorEl);
+
   const dispatch = useAppDispatch();
 
   const handleGetComment = useCallback(async () => {
@@ -134,7 +138,7 @@ const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
         params: { commentIds },
       });
       setNoteComments(convertedComments);
-      setNewNoteComments([])
+      setNewNoteComments([]);
       console.log(convertedComments);
     }
     setOpenComment((state) => !state);
@@ -147,6 +151,7 @@ const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
       : [...following, authorId];
     try {
       await axios.patch(`http://localhost:3000/api/user/${userId}`, {
+        property: UserInfo.Following,
         action: isFollowing ? Action.Pull : Action.Push,
         value: { following: authorId },
       });
@@ -163,6 +168,7 @@ const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
   const handleLike = useCallback(async () => {
     try {
       await axios.patch(`http://localhost:3000/api/user/${userId}`, {
+        property: UserInfo.Likes,
         action: isLike ? Action.Pull : Action.Push,
         value: { likes: noteId },
       });
@@ -185,6 +191,7 @@ const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
   const handleBookmark = useCallback(async () => {
     try {
       await axios.patch(`http://localhost:3000/api/user/${userId}`, {
+        property: UserInfo.Bookmarks,
         action: isBookmark ? Action.Pull : Action.Push,
         value: { bookmarks: noteId },
       });
@@ -228,7 +235,7 @@ const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
       delete returnValue["__v"];
       setNewNoteComments((state) => [returnValue, ...state]);
       setCommentIds((state) => [returnValue._id, ...state]);
-      setCommentCount(state => state + 1)
+      setCommentCount((state) => state + 1);
     } catch (e) {
       feedback(
         dispatch,
@@ -236,11 +243,43 @@ const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
         "Fail to add comment. Internal error. Please try later."
       );
     }
-  }, [noteId, userId, commentContent]);
+  }, [commentContent]);
 
   const handleShowMore = useCallback(() => {
     setCommentRenderCount((state) => state + 5);
   }, []);
+
+  const handleOpenMoreActions = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      setAnchorEl(event.currentTarget);
+    },
+    []
+  );
+
+  const handleCloseMoreActions = useCallback(() => {
+    setAnchorEl(null);
+  }, []);
+
+  const handleBlock = useCallback(async () => {
+    handleCloseMoreActions();
+    try {
+      await axios.patch(`http://localhost:3000/api/user/${userId}`, {
+        property: UserInfo.Blocks,
+        action: isBlocked ? Action.Pull : Action.Push,
+        value: { blocks: authorId },
+      });
+
+      setIsBlocked((state) => !state);
+    } catch (e) {
+      feedback(
+        dispatch,
+        Feedback.Error,
+        `Fail to ${
+          isBlocked ? "unblock" : "block"
+        } the user. Internal error. Please try later.`
+      );
+    }
+  }, [isBlocked]);
 
   useEffect(() => {
     setIsFollowing(following.includes(authorId));
@@ -249,13 +288,16 @@ const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
   // When the comment section is open, if it's not in the screen, it will be scrolled to the middle of the screen
   useEffect(() => {
     if (openComment) {
-      const {top} = commentSectionRef.current!.getBoundingClientRect()
-      const offsetTop = commentSectionRef.current!.offsetTop
+      const { top } = commentSectionRef.current!.getBoundingClientRect();
+      const offsetTop = commentSectionRef.current!.offsetTop;
       if (top > window.innerHeight) {
-        window.scrollTo({top: offsetTop - window.innerHeight / 2, behavior: 'smooth'});
+        window.scrollTo({
+          top: offsetTop - window.innerHeight / 2,
+          behavior: "smooth",
+        });
       }
     }
-  }, [openComment])
+  }, [openComment]);
 
   const actionList = [
     {
@@ -292,9 +334,41 @@ const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
       <CardHeader
         avatar={<UserAvatar image={authorAvatar} name={authorName} />}
         action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
+          userId !== authorId && (
+            <>
+              <IconButton aria-label="settings" onClick={handleOpenMoreActions}>
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={openMoreActions}
+                onClose={handleCloseMoreActions}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "center",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+                sx={{
+                  "& .MuiMenuItem-root": {
+                    fontFamily: "inherit",
+                    fontSize: 15,
+                  },
+                }}
+              >
+                <MenuItem onClick={handleBlock}>
+                  {isBlocked ? "Unblock" : "Block"}
+                </MenuItem>
+                <MenuItem onClick={handleCloseMoreActions}>Report</MenuItem>
+              </Menu>
+            </>
+          )
         }
         title={
           <Typography
@@ -412,7 +486,7 @@ const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
           {mdText}
         </ReactMarkdown>
       </CardContent>
-      
+
       {/* comment section button, like button, bookmark button and expand button  */}
       <CardActions
         sx={{
@@ -438,7 +512,7 @@ const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
 
       {/* comment section */}
       {openComment && (
-        <Box >
+        <Box>
           <CardContent ref={commentSectionRef}>
             <Grid container spacing={1}>
               <Grid xs={11}>

@@ -17,18 +17,34 @@ export default async function handler(
   const session = await unstable_getServerSession(req, res, authOptions);
 
   if (!session) return res.status(401).json({ message: "Not authenticated!" });
+  
+  const { id } = req.query;
 
   if (req.method === "PATCH") {
-    const { id } = req.query;
-    const {action, value} = req.body;
+    
+    const {property, action, value} = req.body;
 
     try {
         await connectDB();
         let user
-        if (action === Action.Push) {
-          user = await UserAccount.findByIdAndUpdate(id, { $push: value });
-        } else {
-          user = await UserAccount.findByIdAndUpdate(id, { $pull: value });
+        switch (property) {
+          case UserInfo.Blocks:
+            if (action === Action.Push) {
+              const authorId = value.blocks
+              user = await UserAccount.findByIdAndUpdate(id, { $push: value, $pull: {following: authorId}});
+            } else {
+              user = await UserAccount.findByIdAndUpdate(id, { $pull: value});
+            }
+            break;
+
+          default:
+            // UserInfo.Following, UserInfo.Likes, UserInfo.Bookmarks
+            if (action === Action.Push) {
+              user = await UserAccount.findByIdAndUpdate(id, { $push: value });
+            } else {
+              user = await UserAccount.findByIdAndUpdate(id, { $pull: value });
+            }
+            break;
         }
         
         if (!user) {
@@ -43,8 +59,6 @@ export default async function handler(
   }
 
   if (req.method === "GET") {
-    const { id } = req.query;
-
     try {
       await connectDB();
      

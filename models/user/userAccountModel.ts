@@ -10,6 +10,7 @@ interface IUser {
   following: string[],
   likes: string[],
   bookmarks: string[],
+  blocks: Schema.Types.ObjectId[],
 }
 
 const userAccountSchema = new Schema<IUser>({
@@ -21,6 +22,7 @@ const userAccountSchema = new Schema<IUser>({
   following: { type: [String], default: [],},
   likes: { type: [String], default: [],},
   bookmarks: { type: [String], default: [],},
+  blocks: { type: [Schema.Types.ObjectId], default: [],},
 });
 
 const user = mongoose.connection.useDb('user');

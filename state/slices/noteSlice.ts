@@ -20,6 +20,5 @@ export const noteSlice = createSlice({
 })
 
 export const { setNote } = noteSlice.actions
-// export const selectCount = (state: RootState) => state.counter.value
 
 export default noteSlice.reducer

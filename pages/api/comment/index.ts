@@ -34,7 +34,7 @@ export default async function handler(
       await connectDB();
       const comment = new Comment({userId, content})
       await comment.save()
-      console.log(noteId)
+
       if (to) {
         await Comment.findByIdAndUpdate(to, {$push: {children: comment._id}})
       } else {

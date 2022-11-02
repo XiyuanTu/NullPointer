@@ -113,7 +113,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
   const [openDialog, setOpenDialog] = useState(false);
   const [isFavorite, setIsFavorite] = useState(nodeObj.favorite);
   const [isPublic, setIsPublic] = useState(nodeObj.public);
-
+  
   const inputRef = useRef<HTMLInputElement>(null);
 
   const dispatch = useAppDispatch();

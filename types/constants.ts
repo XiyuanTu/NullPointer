@@ -30,6 +30,7 @@ export enum UserInfo {
     Following='following',
     Likes='likes',
     Bookmarks='bookmarks',
+    Blocks='blocks',
 }
 
 export enum Action {

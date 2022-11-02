@@ -20,6 +20,5 @@ export const selectedIdSlice = createSlice({
 })
 
 export const { setSelectedId } = selectedIdSlice.actions
-// export const selectCount = (state: RootState) => state.counter.value
 
 export default selectedIdSlice.reducer
