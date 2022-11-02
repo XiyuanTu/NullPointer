@@ -5,6 +5,7 @@ export enum NoteInfo {
     Title='title',
     Favorite='favorite',
     Public='public',
+    FirstPublicAt='firstPublicAt',
     CreatedAt='createdAt',
     LastModified='lastModified',
     Tags='tags',

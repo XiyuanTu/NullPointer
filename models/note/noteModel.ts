@@ -7,6 +7,7 @@ interface INote {
   belongTo: Schema.Types.ObjectId;
   mdText: string;
   public: boolean;
+  firstPublicAt: Date;
   favorite: boolean;
   createdAt: Date;
   lastModified: Date;
@@ -24,6 +25,7 @@ const noteSchema = new Schema<INote>({
   belongTo: { type: Schema.Types.ObjectId},
   mdText: { type: String, default: ''},
   public: { type: Boolean, default: false },
+  firstPublicAt: { type: Date, default: null},
   favorite: { type: Boolean, default: false },
   createdAt: { type: Date, default: new Date()},
   lastModified: { type: Date, required: true },

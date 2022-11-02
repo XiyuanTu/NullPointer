@@ -12,6 +12,7 @@ import InfoItem from "./InfoItem";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import EditIcon from "@mui/icons-material/Edit";
+import PublicIcon from "@mui/icons-material/Public";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import { Feedback, NoteInfo } from "../../../types/constants";
 import axios from "axios";
@@ -23,9 +24,12 @@ const NoteInfoComponent = () => {
   const note = useAppSelector((state) => state.note.value);
   const createdAt = new Date(note!.createdAt).toLocaleString();
   const lastModified = new Date(note!.lastModified).toLocaleString();
+  const firstPublicAt = new Date(note!.firstPublicAt).toLocaleString();
 
   return (
-    <Box sx={{display: 'flex', flexFlow: 'column', height: "91vh", pt: 2, pl: 1 }}>
+    <Box
+      sx={{ display: "flex", flexFlow: "column", height: "91vh", pt: 2, pl: 1 }}
+    >
       <Typography
         align="center"
         variant="h5"
@@ -45,6 +49,13 @@ const NoteInfoComponent = () => {
         info={createdAt}
       />
       <InfoItem icon={EditIcon} label="Last Modified" info={lastModified} />
+      {note!.firstPublicAt && (
+        <InfoItem
+          icon={PublicIcon}
+          label="Public First Time"
+          info={firstPublicAt}
+        />
+      )}
 
       <Divider
         orientation="horizontal"
@@ -115,20 +126,20 @@ const Tags = ({ note }: IProps) => {
         p: 0.5,
         overflowY: "auto",
         overflowX: "hidden",
-        '&::-webkit-scrollbar': {
+        "&::-webkit-scrollbar": {
           width: 8,
         },
-        '&::-webkit-scrollbar-thumb': {
-          backgroundColor: 'transparent',
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "transparent",
           borderRadius: 5,
           // outline: '1px solid slategrey',
-          '&:hover': {
-            backgroundColor: '#F8F8FF',
+          "&:hover": {
+            backgroundColor: "#F8F8FF",
           },
-          '&:active': {
-            backgroundColor: '#4682B4',
-          }
-        }
+          "&:active": {
+            backgroundColor: "#4682B4",
+          },
+        },
       }}
     >
       {tags.map((tag) => (

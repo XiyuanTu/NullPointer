@@ -80,6 +80,7 @@ const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
     title,
     createdAt,
     lastModified,
+    firstPublicAt,
     tags,
     like,
     bookmark,
@@ -321,7 +322,7 @@ const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
             variant="body2"
             sx={{ fontFamily: "inherit", color: "gray" }}
           >
-            {authorDescription}
+            {authorDescription} · {convertDate(firstPublicAt)}
           </Typography>
         }
         sx={{

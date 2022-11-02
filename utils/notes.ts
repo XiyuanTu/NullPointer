@@ -91,6 +91,7 @@ export const convertForumData = async (rawNotes: any[]) => {
       author,
       createdAt: new Date(rawNote!.createdAt).toLocaleString(),
       lastModified: new Date(rawNote!.lastModified).toLocaleString(),
+      firstPublicAt: new Date(rawNote!.firstPublicAt).toLocaleString(),
       comments
     });
   }

@@ -4,6 +4,7 @@ declare interface Note {
   userId: string;
   mdText: string;
   public: boolean;
+  firstPublicAt: Date;
   title: string;
   createdAt: Date;
   lastModified: Date;
@@ -19,6 +20,7 @@ declare interface ForumNote {
   name: string;
   mdText: string;
   public: boolean;
+  firstPublicAt: Date;
   title: string;
   createdAt: string;
   lastModified: string;
@@ -42,6 +44,7 @@ declare interface RenderTree {
   isNew: boolean;
   children?: RenderTree[];
   public?: boolean;
+  firstPublicAt?: Date;
   favorite?: boolean;
 }
 

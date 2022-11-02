@@ -246,7 +246,11 @@ function StyledTreeItem(props: StyledTreeItemProps) {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.stopPropagation();
-    handleToggleAction(NoteInfo.Public, { public: !isPublic }, setIsPublic)
+    const value: {public: boolean, firstPublicAt?: Date | null} = { public: !isPublic}
+    if (!nodeObj.firstPublicAt) {
+      value.firstPublicAt = new Date()
+    }
+    handleToggleAction(NoteInfo.Public, value, setIsPublic)
   };
 
   const handleToggleAction = async(property: NoteInfo, value: {}, setState: React.Dispatch<React.SetStateAction<boolean | undefined>>)  => {

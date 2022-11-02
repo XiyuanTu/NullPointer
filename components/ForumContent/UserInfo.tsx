@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect } from "react";
-import Link from 'next/link'
+import { useState, useRef, useEffect, useCallback } from "react";
 import {
   Box,
   Divider,
@@ -20,6 +19,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import DescriptionIcon from "@mui/icons-material/Description";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import { useRouter } from "next/router";
 
 const listButtons = [
   {
@@ -70,7 +70,10 @@ const recommendedUsers = [
 const info = ["Contact Me", "FAQs", "Source Code", "Terms and Privacy"];
 
 const UserInfo = () => {
-
+  const router = useRouter();
+  const handleCreateNote = useCallback(() => {
+    router.push("/notes");
+  }, []);
 
   return (
     <Box sx={{ position: "sticky", top: "-200px" }}>
@@ -167,8 +170,9 @@ const UserInfo = () => {
       <Button
         variant="outlined"
         sx={{ textTransform: "none", width: "100%", mt: 1, bgcolor: "#fff" }}
+        onClick={handleCreateNote}
       >
-        <Link href='/notes'>Create Note</Link> 
+        Create Note
       </Button>
 
       <Box sx={{ bgcolor: "#fff", mt: 1 }}>

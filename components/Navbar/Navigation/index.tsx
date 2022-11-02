@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSession, signOut } from "next-auth/react";
 import ForumOutlinedIcon from "@mui/icons-material/ForumOutlined";
@@ -43,9 +42,12 @@ const Navigation = () => {
       <Box sx={{ display: "flex", gap: 1 }}>
         {session ? (
           <>
-            <Link href="/forum">
-              <NavbarMenuItem icon={ForumOutlinedIcon} tooltipTitle="forum" />
-            </Link>
+            <NavbarMenuItem
+              icon={ForumOutlinedIcon}
+              tooltipTitle="forum"
+              onClick={() => router.push("/forum")}
+            />
+
             <NavbarMenuItem
               icon={NotificationsNoneOutlinedIcon}
               tooltipTitle="notifications"

@@ -161,6 +161,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     { userId: 0, mdText: 0 }
   ).lean();
 
+  
+  
   const newFiles = files.map((file) => ({ ...file, type: FileOrFolder.File }));
 
   const convertedData = convertTreeViewData([...newFolders, ...newFiles]);
