@@ -113,7 +113,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
   const [openDialog, setOpenDialog] = useState(false);
   const [isFavorite, setIsFavorite] = useState(nodeObj.favorite);
   const [isPublic, setIsPublic] = useState(nodeObj.public);
-  
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const dispatch = useAppDispatch();
@@ -133,7 +133,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
   };
 
   const handleDelete = async () => {
-    feedback(dispatch, Feedback.Info, "Deleting the file/folder...", false)
+    feedback(dispatch, Feedback.Info, "Deleting the file/folder...", false);
 
     try {
       await axios.delete(`http://localhost:3000/api/note/${nodeObj.id}`, {
@@ -165,9 +165,17 @@ function StyledTreeItem(props: StyledTreeItemProps) {
       }
 
       setData({ ...data });
-      feedback(dispatch, Feedback.Success, "Successfully delete the file/folder.")
+      feedback(
+        dispatch,
+        Feedback.Success,
+        "Successfully delete the file/folder."
+      );
     } catch (e) {
-      feedback(dispatch, Feedback.Error, "Fail to delete. Internal error. Please try later.")
+      feedback(
+        dispatch,
+        Feedback.Error,
+        "Fail to delete. Internal error. Please try later."
+      );
     }
   };
 
@@ -205,7 +213,12 @@ function StyledTreeItem(props: StyledTreeItemProps) {
 
     if (isInputValid) {
       if (!justAdded) {
-        feedback(dispatch, Feedback.Info, "Updating the filename/foldername...", false)
+        feedback(
+          dispatch,
+          Feedback.Info,
+          "Updating the filename/foldername...",
+          false
+        );
       }
 
       try {
@@ -218,15 +231,23 @@ function StyledTreeItem(props: StyledTreeItemProps) {
 
         //the filename in info component can update immediately
         if (!nodeObj.children) {
-          dispatch(setNote({...note!, name: inputValue}))
+          dispatch(setNote({ ...note!, name: inputValue }));
         }
-        
+
         if (!justAdded) {
-          feedback(dispatch, Feedback.Success, "Updating the filename/foldername...")
+          feedback(
+            dispatch,
+            Feedback.Success,
+            "Updating the filename/foldername..."
+          );
         }
       } catch (e) {
         if (!justAdded) {
-          feedback(dispatch, Feedback.Error, "Fail to rename. Internal error. Please try later.")
+          feedback(
+            dispatch,
+            Feedback.Error,
+            "Fail to rename. Internal error. Please try later."
+          );
         }
       }
     }
@@ -240,39 +261,60 @@ function StyledTreeItem(props: StyledTreeItemProps) {
   ) => {
     e.stopPropagation();
 
-    /* otherwise if the user set it to 'favorite' and then turn to the userinfo page, 
-    when they come back to this page, they will see it's still not favorite */
-    nodeObj.favorite = !isFavorite
-    await handleToggleAction(NoteInfo.Favorite, { favorite: !isFavorite }, setIsFavorite) 
+    try {
+      await axios.patch(`http://localhost:3000/api/note/${nodeObj.id}`, {
+        property: NoteInfo.Favorite,
+        value: { favorite: !isFavorite },
+      });
+
+      setIsFavorite((state) => !state);
+      /* otherwise if the user set it to 'favorite' and then turn to the userinfo page, 
+      when they come back to this page, they will see it's still not favorite */
+      nodeObj.favorite = !isFavorite;
+
+    } catch (error) {
+      feedback(
+        dispatch,
+        Feedback.Error,
+        "Fail to update. Internal error. Please try later."
+      );
+    }
   };
 
   const handlePublicBtn = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.stopPropagation();
-    const value: {public: boolean, firstPublicAt?: Date | null} = { public: !isPublic}
-    if (!nodeObj.firstPublicAt) {
-      value.firstPublicAt = new Date()
-    }
-
-    /* otherwise if the user set it to 'public' and then turn to the userinfo page, 
-    when they come back to this page, they will see it's still private */
-    nodeObj.public = !isPublic
-    await handleToggleAction(NoteInfo.Public, value, setIsPublic)
-  };
-
-  const handleToggleAction = async(property: NoteInfo, value: {}, setState: React.Dispatch<React.SetStateAction<boolean | undefined>>)  => {
     try {
+      const value: { public: boolean; firstPublicAt?: Date | null } = {
+        public: !isPublic,
+      };
+      let date = new Date()
+      if (!nodeObj.firstPublicAt) {
+        value.firstPublicAt = date;
+      }
+
       await axios.patch(`http://localhost:3000/api/note/${nodeObj.id}`, {
-        property,
-        value
+        property: NoteInfo.Public,
+        value,
       });
 
-      setState((state) => !state);
+      setIsPublic((state) => !state);
+      /* otherwise if the user set it to 'public' and then turn to the userinfo page, 
+      when they come back to this page, they will see it's still private */
+      nodeObj.public = !isPublic;
+
+      if (note && nodeObj.id === note._id && !note.firstPublicAt) {
+        dispatch(setNote({...note, firstPublicAt: date.toLocaleString()}))
+      }
     } catch (error) {
-      feedback(dispatch, Feedback.Error, "Fail to update. Internal error. Please try later.")
+      feedback(
+        dispatch,
+        Feedback.Error,
+        "Fail to update. Internal error. Please try later."
+      );
     }
-  }
+  };
 
   const actions = [
     {
@@ -304,7 +346,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
       ),
       onClick: handlePublicBtn,
       type: FileOrFolder.File,
-    }
+    },
   ];
 
   return (
@@ -331,7 +373,11 @@ function StyledTreeItem(props: StyledTreeItemProps) {
             ) : (
               // <Box sx={{width: 50}}>
 
-              <Typography noWrap={true} variant="body2" sx={{ fontWeight: "inherit", mr: 5,  maxWidth: '30vw'}}>
+              <Typography
+                noWrap={true}
+                variant="body2"
+                sx={{ fontWeight: "inherit", mr: 5, maxWidth: "30vw" }}
+              >
                 {labelText}
               </Typography>
               // </Box>
@@ -375,9 +421,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
       <Dialog open={openDialog} aria-labelledby="alert-dialog-title">
         <DialogTitle id="alert-dialog-title">
           Are you sure you want to delete
-          <Typography noWrap={true} >
-            {nodeObj.name}?
-          </Typography>
+          <Typography noWrap={true}>{nodeObj.name}?</Typography>
         </DialogTitle>
         <DialogActions>
           <Button onClick={handleYes} autoFocus>

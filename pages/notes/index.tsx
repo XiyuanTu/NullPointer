@@ -29,34 +29,37 @@ interface IProps {
 
 const Notes = ({ convertedData }: IProps) => {
   const initRatio = 0.2; // How much sidebar takes place
-  const dividerWidth = 5
+  const dividerWidth = 5;
   const heightRatioWithNote = 0.849; //0.909
   const heightRatioWithoutNote = 0.909;
   const windowHeight = useWindowHeight();
-  const windowWidth = useWindowWidth()
+  const windowWidth = useWindowWidth();
   const selectedId = useAppSelector((state) => state.selectedId.value);
   const note = useAppSelector((state) => state.note.value);
   const dispatch = useAppDispatch();
 
-  const [sidebarWidth, setSidebarWidth] = useState(windowWidth * initRatio + "px");
-  const [editorWidth, setEditorWidth] = useState(windowWidth * (1 - initRatio) - dividerWidth + "px");
+  const [sidebarWidth, setSidebarWidth] = useState(
+    windowWidth * initRatio + "px"
+  );
+  const [editorWidth, setEditorWidth] = useState(
+    windowWidth * (1 - initRatio) - dividerWidth + "px"
+  );
   const [height, setHeight] = useState(windowHeight * heightRatioWithoutNote);
   const [x, setX] = useState(windowWidth * initRatio);
   const [folderIds, setFolderIds] = useState(getFolderIds(convertedData));
   const [noteId, setNoteId] = useState("");
   const [showInfo, setShowInfo] = useState(false); // show info or file tree
 
-
   useEffect(() => {
-    setSidebarWidth(x + "px")
-    setEditorWidth(windowWidth - x - dividerWidth + "px")
+    setSidebarWidth(x + "px");
+    setEditorWidth(windowWidth - x - dividerWidth + "px");
   }, [x]);
 
   useEffect(() => {
-    setX(windowWidth * initRatio)
-    setSidebarWidth(windowWidth * initRatio + "px")
-    setEditorWidth(windowWidth * (1 - initRatio) - dividerWidth + "px")
-  }, [windowWidth])
+    setX(windowWidth * initRatio);
+    setSidebarWidth(windowWidth * initRatio + "px");
+    setEditorWidth(windowWidth * (1 - initRatio) - dividerWidth + "px");
+  }, [windowWidth]);
 
   useEffect(() => {
     if (note) {
@@ -79,13 +82,18 @@ const Notes = ({ convertedData }: IProps) => {
         const {
           data: { note },
         } = await axios.get(`http://localhost:3000/api/note/${selectedId}`);
+        note.createdAt = note.createdAt.toLocaleString();
+        note.lastModified = note.lastModified.toLocaleString();
+        if (note.firstPublicAt) {
+          note.firstPublicAt = note.firstPublicAt.toLocaleString();
+        }
         dispatch(setNote(note));
       })();
     }
   }, [selectedId]);
 
   return (
-    <Box sx={{ display: "flex", width: "100vw", mt: '9vh', }}>
+    <Box sx={{ display: "flex", width: "100vw", mt: "9vh" }}>
       <Box sx={{ mr: "5px" }}>
         <Box sx={{ width: sidebarWidth }}>
           <Sidebar
@@ -113,12 +121,12 @@ const Notes = ({ convertedData }: IProps) => {
             m: 0,
             position: "absolute",
             cursor: "ew-resize",
-            bgcolor: '#ffffff',
+            bgcolor: "#ffffff",
             "& .MuiDivider-wrapperVertical": { px: 0 },
           }}
         />
       </Draggable>
-      <Box sx={{ width: editorWidth}}>
+      <Box sx={{ width: editorWidth }}>
         {note ? (
           <>
             <Title />
@@ -161,8 +169,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     { userId: 0, mdText: 0 }
   ).lean();
 
-  
-  
   const newFiles = files.map((file) => ({ ...file, type: FileOrFolder.File }));
 
   const convertedData = convertTreeViewData([...newFolders, ...newFiles]);

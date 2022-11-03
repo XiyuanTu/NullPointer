@@ -17,8 +17,7 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import { Feedback, NoteInfo } from "../../../types/constants";
 import axios from "axios";
 import { setNote } from "../../../state/slices/noteSlice";
-import { showFeedback } from "../../../state/slices/feedbackSlice";
-import { feedback } from "../../../utils/feedback";
+
 
 const NoteInfoComponent = () => {
   const note = useAppSelector((state) => state.note.value);
@@ -63,7 +62,6 @@ const NoteInfoComponent = () => {
       />
 
       <Tags note={note!} />
-
     </Box>
   );
 };

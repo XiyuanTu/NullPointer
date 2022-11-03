@@ -125,7 +125,7 @@ const MarkdownEditorForEdit = ({ height }: MarkdownEditor) => {
       });
 
       //the lastModified in info component can update immediately
-      dispatch(setNote({...note!, lastModified}))
+      dispatch(setNote({...note!, lastModified: lastModified.toLocaleString()}))
       feedback(dispatch, Feedback.Success, "Successfully save the note.")
     } catch (e) {
       feedback(dispatch, Feedback.Error, "Fail to save the note. Internal error. Please try later.")

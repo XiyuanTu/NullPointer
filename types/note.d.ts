@@ -4,10 +4,10 @@ declare interface Note {
   userId: string;
   mdText: string;
   public: boolean;
-  firstPublicAt: Date;
+  firstPublicAt: Date | string;
   title: string;
-  createdAt: Date;
-  lastModified: Date;
+  createdAt: Date | string;
+  lastModified: Date | string;
   tags: string[];
   like: number;
   bookmark: number;
