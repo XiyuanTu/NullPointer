@@ -239,7 +239,11 @@ function StyledTreeItem(props: StyledTreeItemProps) {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.stopPropagation();
-    handleToggleAction(NoteInfo.Favorite, { favorite: !isFavorite }, setIsFavorite)
+
+    /* otherwise if the user set it to 'favorite' and then turn to the userinfo page, 
+    when they come back to this page, they will see it's still not favorite */
+    nodeObj.favorite = !isFavorite
+    await handleToggleAction(NoteInfo.Favorite, { favorite: !isFavorite }, setIsFavorite) 
   };
 
   const handlePublicBtn = async (
@@ -250,7 +254,11 @@ function StyledTreeItem(props: StyledTreeItemProps) {
     if (!nodeObj.firstPublicAt) {
       value.firstPublicAt = new Date()
     }
-    handleToggleAction(NoteInfo.Public, value, setIsPublic)
+
+    /* otherwise if the user set it to 'public' and then turn to the userinfo page, 
+    when they come back to this page, they will see it's still private */
+    nodeObj.public = !isPublic
+    await handleToggleAction(NoteInfo.Public, value, setIsPublic)
   };
 
   const handleToggleAction = async(property: NoteInfo, value: {}, setState: React.Dispatch<React.SetStateAction<boolean | undefined>>)  => {

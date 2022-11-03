@@ -64,10 +64,6 @@ const NoteInfoComponent = () => {
 
       <Tags note={note!} />
 
-      {/* <Divider
-        orientation="horizontal"
-        sx={{ height: "1vh", mb: 2, color: "black" }}
-      /> */}
     </Box>
   );
 };
