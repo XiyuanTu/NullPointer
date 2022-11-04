@@ -372,8 +372,6 @@ function StyledTreeItem(props: StyledTreeItemProps) {
                 autoComplete={"off"}
               />
             ) : (
-              // <Box sx={{width: 50}}>
-
               <Typography
                 noWrap={true}
                 variant="body2"
@@ -381,7 +379,6 @@ function StyledTreeItem(props: StyledTreeItemProps) {
               >
                 {labelText}
               </Typography>
-              // </Box>
             )}
 
             {isHovering &&

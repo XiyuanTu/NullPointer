@@ -47,6 +47,7 @@ const MarkdownEditorForEdit = ({ height }: MarkdownEditor) => {
   const note = useAppSelector((state) => state.note.value);
   const [startSave, setStartSave] = useState(false);
   const [value, setValue] = useState<string | undefined>('');
+  const [isJustRendered, setIsJustRendered] = useState(true)
 
   const saveBtn: ICommand = {
     name: "save",
@@ -101,10 +102,11 @@ const MarkdownEditorForEdit = ({ height }: MarkdownEditor) => {
   }, [note]);
 
 
-  //the word count in info component can update immediately
+  //the change of the content can be stored in redux immediately
+  //isJustRendered: otherwise when a note just rendered, the mdText in redux will be set to ''
   useEffect(() => {
     if (note) {
-      dispatch(setNote({...note, mdText: value!}))
+      isJustRendered ? setIsJustRendered(true) : dispatch(setNote({...note, mdText: value!}))
     }
   }, [value]);
 
