@@ -5,6 +5,7 @@ import axios from "axios";
 import { showFeedback, closeFeedback } from "../state/slices/feedbackSlice";
 import { Feedback, NoteInfo } from "../types/constants";
 import { feedback } from "../utils/feedback";
+import { setNote } from "../state/slices/noteSlice";
 
 const Title = () => {
   const dispatch = useAppDispatch();
@@ -28,6 +29,7 @@ const Title = () => {
         property: NoteInfo.Title,
         value: { title: title.trim() },
       });
+      dispatch(setNote({...note!, title: title.trim()}))
     } catch (e) {
       feedback(dispatch, Feedback.Error, "Fail to update the title in the database. Internal error. Please try later...")
     }
