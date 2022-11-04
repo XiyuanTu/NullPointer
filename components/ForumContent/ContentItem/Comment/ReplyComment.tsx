@@ -264,7 +264,7 @@ const ReplyComment = ({
                 </Typography>
                 {(author._id === user._id || author._id === noteAuthorId) && (
                   <Chip
-                    label={author._id === noteAuthorId ? "Author" : "Yourself"}
+                    label={author._id === noteAuthorId ? "Author" : "You"}
                     variant="outlined"
                     size="small"
                     sx={{ ml: 1 }}
@@ -287,7 +287,7 @@ const ReplyComment = ({
                       replyTo._id === noteAuthorId) && (
                       <Chip
                         label={
-                          replyTo._id === noteAuthorId ? "Author" : "Yourself"
+                          replyTo._id === noteAuthorId ? "Author" : "You"
                         }
                         variant="outlined"
                         size="small"

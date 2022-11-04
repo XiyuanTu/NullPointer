@@ -9,6 +9,7 @@ import { SvgIconComponent } from "@mui/icons-material";
 import {
   Button,
   Tooltip,
+  Chip,
   Card,
   CardHeader,
   CardMedia,
@@ -371,32 +372,49 @@ const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
           )
         }
         title={
+          <Box sx={{display: 'flex', alignItems: 'center'}}>
           <Typography
             variant="body2"
-            sx={{ fontWeight: "bold", fontFamily: "inherit" }}
+            sx={{fontWeight: "bold", fontFamily: "inherit" }}
             component="span"
           >
-            {authorName} ·&nbsp;
-            <Typography
-              variant="body2"
-              sx={{
-                fontFamily: "inherit",
-                color: isFollowing ? "#939598" : "#2e69ff",
-                "&:hover": { cursor: "pointer", textDecoration: "underline" },
-              }}
-              onClick={handleFollow}
-              component="span"
-            >
-              {isFollowing ? "Following" : "Follow"}
-            </Typography>
+            {authorName}
+            {userId === authorId ? (
+              <Chip
+                label={"You"}
+                variant="outlined"
+                size="small"
+                sx={{ ml: 1}}
+              />
+            ) : (
+              <>
+                <Typography variant="body2" component='span'>&nbsp;·&nbsp;</Typography>
+                <Typography
+                  variant="body2"
+                  component='span'
+                  sx={{
+                    fontFamily: "inherit",
+                    color: isFollowing ? "#939598" : "#2e69ff",
+                    "&:hover": {
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                    },
+                  }}
+                  onClick={handleFollow}
+                >
+                  {isFollowing ? "Following" : "Follow"}
+                </Typography>
+              </>
+            )}
           </Typography>
+          </Box>
         }
         subheader={
           <Typography
             variant="body2"
             sx={{ fontFamily: "inherit", color: "gray" }}
           >
-            {authorDescription} · {convertDate(firstPublicAt)}
+            {authorDescription}{`${authorDescription === '' ? '' : ' · '}`}{convertDate(firstPublicAt)}
           </Typography>
         }
         sx={{

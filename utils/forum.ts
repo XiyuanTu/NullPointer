@@ -18,9 +18,9 @@ export const convertDate = (createdAt: Date) => {
       if (minute < 1) {
         return 'Just now'
       } 
-      return minute.toFixed() + (minute < 2 ? ' min ago' : ' mins ago')
+      return minute.toFixed() + (minute < 1.5 ? ' min ago' : ' mins ago')
     } else if (hoursBetweenDates < 24) {
-      return hoursBetweenDates.toFixed() + (hoursBetweenDates < 2 ? ' hr ago' : ' hrs ago')
+      return hoursBetweenDates.toFixed() + (hoursBetweenDates < 1.5 ? ' hr ago' : ' hrs ago')
     } else if (hoursBetweenDates < 24 * 7) {
       return date.toLocaleString("en-US", {weekday: 'short'})
     } else if (date.getFullYear() === now.getFullYear()) {
