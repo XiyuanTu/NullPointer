@@ -10,11 +10,12 @@ interface IProps {
 const ForumContent = ({notes, user} : IProps) => {
 
   const [currentUser, setCurrentUser] = useState(user)
+  const [currentNotes, setCurrentNotes] = useState(notes)
 
   return (
     <Box>
       {
-        notes.map((note) => <ContentItem key={note._id} note={note} user={currentUser} setCurrentUser={setCurrentUser}/>)
+        currentNotes.map((note) => <ContentItem key={note._id} note={note} user={currentUser} setCurrentUser={setCurrentUser} setCurrentNotes={setCurrentNotes}/>)
       }
     </Box>
         

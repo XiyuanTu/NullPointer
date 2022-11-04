@@ -71,9 +71,10 @@ interface IProps {
   note: ForumNote;
   user: User;
   setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
+  setCurrentNotes: React.Dispatch<React.SetStateAction<ForumNote[]>>
 }
 
-const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
+const ContentItem = ({ note, user, setCurrentUser, setCurrentNotes }: IProps) => {
   const {
     _id: noteId,
     mdText,
@@ -113,7 +114,6 @@ const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
   const [bookmarkCount, setBookmarkCount] = useState(bookmark);
   const [commentIds, setCommentIds] = useState(comments);
   const [noteComments, setNoteComments] = useState<ConvertedComment[]>([]);
-  const [isBlocked, setIsBlocked] = useState(blocks.includes(authorId));
 
   // When a new comment is added, it will still be able to display comments correctly number-wise.
   const [newNoteComments, setNewNoteComments] = useState<ConvertedComment[]>(
@@ -266,21 +266,18 @@ const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
     try {
       await axios.patch(`http://localhost:3000/api/user/${userId}`, {
         property: UserInfo.Blocks,
-        action: isBlocked ? Action.Pull : Action.Push,
+        action: Action.Push,
         value: { blocks: authorId },
       });
-
-      setIsBlocked((state) => !state);
+      setCurrentNotes(state => state.filter(note => note.author._id !== authorId));
     } catch (e) {
       feedback(
         dispatch,
         Feedback.Error,
-        `Fail to ${
-          isBlocked ? "unblock" : "block"
-        } the user. Internal error. Please try later.`
+        `Fail to block the user. Internal error. Please try later.`
       );
     }
-  }, [isBlocked]);
+  }, []);
 
   useEffect(() => {
     setIsFollowing(following.includes(authorId));
@@ -363,9 +360,7 @@ const ContentItem = ({ note, user, setCurrentUser }: IProps) => {
                   },
                 }}
               >
-                <MenuItem onClick={handleBlock}>
-                  {isBlocked ? "Unblock" : "Block"}
-                </MenuItem>
+                <MenuItem onClick={handleBlock}>Block</MenuItem>
                 <MenuItem onClick={handleCloseMoreActions}>Report</MenuItem>
               </Menu>
             </>

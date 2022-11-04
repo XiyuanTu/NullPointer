@@ -64,6 +64,7 @@ export default async function handler(
      
       const user = await UserAccount.findById(id, {__v: 0}).lean();
       user._id = user._id + ""
+      user.blocks = user.blocks.map((blockId: mongoose.Types.ObjectId) => blockId + '')
      
       if (!user) {
           return res.status(404).json({ message: "Not found!" });

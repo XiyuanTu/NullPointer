@@ -2,6 +2,7 @@ import Comment from "../models/note/commentModel";
 import UserAccount from "../models/user/userAccountModel";
 import { FileOrFolder } from "../types/constants";
 import connectDB from "./connectDB";
+import mongoose from "mongoose";
 
 export const convertTreeViewData = (rawData: any[]): RenderTree => {
   const data: RenderTree = {
@@ -80,6 +81,7 @@ export const convertForumData = async (rawNotes: any[]) => {
       password: 0,
     }).lean();
     author._id = author._id + "";
+    author.blocks = author.blocks.map((blockId: mongoose.Types.ObjectId) => blockId + '')
     let comments = []
     for (let id of rawNote.comments) {
       comments.push(id + "")
@@ -101,6 +103,7 @@ export const convertForumData = async (rawNotes: any[]) => {
 
 export const convertUser = (user: User) => {
   user._id = user._id + "";
+  user.blocks = user.blocks.map(block => block + '')
   return user;
 }
 

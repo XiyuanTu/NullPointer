@@ -37,17 +37,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   await connectDB();
 
+  const id = session!.user.id;
+  const user = await UserAccount.findById(id, {email: 0, password: 0}).lean()
+  const convertedUser = convertUser(user)
+
   const notes = await Note.find(
-    { public: true },
+    { public: true, userId: {$nin: convertedUser.blocks} },
     { name: 0, public: 0, favorite: 0, belongTo: 0 }
   ).lean();
 
   const convertedData = await convertForumData(notes);
   
-  const id = session!.user.id;
-  const user = await UserAccount.findById(id, {email: 0, password: 0}).lean()
-  const convertedUser = convertUser(user)
-
   return { props: { convertedData, convertedUser} };
 };
 
