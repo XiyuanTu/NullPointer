@@ -370,10 +370,11 @@ const ContentItem = ({ note, user, setCurrentUser, setCurrentNotes }: IProps) =>
           <Box sx={{display: 'flex', alignItems: 'center'}}>
           <Typography
             variant="body2"
-            sx={{fontWeight: "bold", fontFamily: "inherit" }}
+            sx={{fontWeight: "bold", fontFamily: "inherit", lineHeight: 1.7}}
             component="span"
           >
             {authorName}
+          </Typography>
             {userId === authorId ? (
               <Chip
                 label={"You"}
@@ -401,7 +402,7 @@ const ContentItem = ({ note, user, setCurrentUser, setCurrentNotes }: IProps) =>
                 </Typography>
               </>
             )}
-          </Typography>
+          
           </Box>
         }
         subheader={
@@ -424,8 +425,8 @@ const ContentItem = ({ note, user, setCurrentUser, setCurrentNotes }: IProps) =>
       {/* note title  */}
       <CardContent sx={{ pb: 0 }}>
         <Typography
-          variant="body1"
-          sx={{ fontWeight: "bold", fontFamily: "inherit" }}
+          variant="h6"
+          sx={{ fontWeight: "bold", fontFamily: "inherit", lineHeight: "1.4" }}
         >
           {title}
         </Typography>
