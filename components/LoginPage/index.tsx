@@ -38,11 +38,11 @@ const LoginPage = () => {
         sx={{
           position: "relative",
           px: 10,
-          pt: 5,
+          py: 5,
           bgcolor: "#fff",
           border: "1px solid #dbdbdb",
           width: "30vw",
-          height: "90vh",
+          minHeight: "90vh",
         }}
       >
         <Fab

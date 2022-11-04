@@ -111,6 +111,7 @@ const LoginForm = ({ setLoggingIn }: IProps) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          mt: 2
         }}
       >
         <Typography sx={{ mr: 1, fontSize: "0.875rem" }}>
