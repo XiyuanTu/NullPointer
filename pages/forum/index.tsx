@@ -18,10 +18,10 @@ interface IProps {
 const Forum = ({ convertedData: notes, convertedUser: user }: IProps) => {
   return (
     <Container maxWidth="lg" sx={{ display: 'flex', pt: 3, mt: "9vh" }}>
-        <Box sx={{width: '95%', mr: 2}}>
+        <Box sx={{width: '75%', mr: 2}}>
           <ForumContent notes={notes} user={user}/>
         </Box>
-        <Box >
+        <Box sx={{width: '25%'}}>
           <UserInfo/>
         </Box>
     </Container>

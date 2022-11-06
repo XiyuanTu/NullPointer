@@ -15,8 +15,10 @@ export default async function handler(
 
   if (!session) return res.status(401).json({ message: "Not authenticated!" });
 
+  const { id } = session.user;
+
   if (req.method === "POST") {
-    const { id } = session.user;
+    
     const { name, belongTo, createdAt, lastModified, type } = req.body;
 
     try {
@@ -50,6 +52,16 @@ export default async function handler(
         nodeId = newFolder._id + ''
       }
       return res.status(200).json({ nodeId });
+    } catch (err) {
+      return res.status(500).json({ message: "Fail to process"  });
+    }
+  }
+
+  if (req.method === "GET") {
+    try {
+      await connectDB()
+      const notes = await Note.find({userId: id}, {'__v': 0})
+      return res.status(200).json({ notes });
     } catch (err) {
       return res.status(500).json({ message: "Fail to process"  });
     }

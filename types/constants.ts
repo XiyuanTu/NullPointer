@@ -27,6 +27,7 @@ export enum Feedback {
 }
 
 export enum UserInfo {
+    Description='description',
     Following='following',
     Likes='likes',
     Bookmarks='bookmarks',

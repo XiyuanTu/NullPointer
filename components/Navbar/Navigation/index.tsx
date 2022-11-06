@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
 import { useSession, signOut } from "next-auth/react";
 import ForumOutlinedIcon from "@mui/icons-material/ForumOutlined";
@@ -20,10 +20,14 @@ const Navigation = () => {
 
   const dispatch = useAppDispatch();
 
-  const handleLogOut = async () => {
+  const handleLogOut = useCallback(async () => {
     await signOut({ callbackUrl: "http://localhost:3000/", redirect: false });
     router.push("/");
-  };
+  }, []);
+
+  const handleCurrentUserProfile = useCallback(() => {
+    router.push("/profile");
+  }, []);
 
   return (
     <Box sx={{ display: "flex", gap: 10 }}>
@@ -31,11 +35,15 @@ const Navigation = () => {
         // <UserAvatar image={session.user.image} name={session.user.name}/>
         (session.user.image ? (
           <Avatar
-            sx={{ width: "2rem", height: "2rem", color: "primary.main" }}
+            sx={{ width: "2rem", height: "2rem", color: "primary.main", '&:hover': {cursor: 'pointer'}}}
             src={session.user.image}
+            onClick={handleCurrentUserProfile}
           />
         ) : (
-          <Avatar sx={{ width: "2rem", height: "2rem", color: "primary.main" }}>
+          <Avatar
+            sx={{ width: "2rem", height: "2rem", color: "primary.main", '&:hover': {cursor: 'pointer'}}}
+            onClick={handleCurrentUserProfile}
+          >
             {session.user.name!.substring(0, 1).toUpperCase()}
           </Avatar>
         ))}

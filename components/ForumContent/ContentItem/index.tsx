@@ -49,7 +49,7 @@ import { useAppDispatch } from "../../../state/hooks";
 import { Action, Feedback, NoteInfo, UserInfo } from "../../../types/constants";
 import UserAvatar from "../../UserAvatar";
 import { convertCount, convertDate } from "../../../utils/forum";
-import Comment from "./Comment/";
+import Comment from "../../Comment";
 import { useSession } from "next-auth/react";
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -408,7 +408,7 @@ const ContentItem = ({ note, user, setCurrentUser, setCurrentNotes }: IProps) =>
         subheader={
           <Typography
             variant="body2"
-            sx={{ fontFamily: "inherit", color: "gray" }}
+            sx={{ fontFamily: "inherit", color: "gray", wordBreak: "break-word"}}
           >
             {authorDescription}{`${authorDescription === '' ? '' : ' · '}`}{convertDate(firstPublicAt)}
           </Typography>

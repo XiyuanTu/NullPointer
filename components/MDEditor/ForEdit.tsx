@@ -106,7 +106,7 @@ const MarkdownEditorForEdit = ({ height }: MarkdownEditor) => {
   //isJustRendered: otherwise when a note just rendered, the mdText in redux will be set to ''
   useEffect(() => {
     if (note) {
-      isJustRendered ? setIsJustRendered(true) : dispatch(setNote({...note, mdText: value!}))
+      isJustRendered ? setIsJustRendered(false) : dispatch(setNote({...note, mdText: value!}))
     }
   }, [value]);
 

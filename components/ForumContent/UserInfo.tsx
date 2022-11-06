@@ -51,7 +51,7 @@ const recommendedUsers = [
   },
   {
     username: "Tina",
-    description: "athlete",
+    description: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   },
   {
     username: "Tina",
@@ -76,7 +76,7 @@ const UserInfo = () => {
   }, []);
 
   return (
-    <Box sx={{ position: "sticky", top: "-200px" }}>
+    <Box>
       <Box
         sx={{
           display: "flex",
@@ -237,7 +237,7 @@ const UserCard = ({ user }: UserCardIProps) => {
       title={
         <Typography
           variant="body2"
-          sx={{ fontWeight: "bold", fontFamily: "inherit" }}
+          sx={{ width: '100%', fontWeight: "bold", fontFamily: "inherit", wordBreak: "break-word"}}
           component="span"
         >
           {user.username}
@@ -246,7 +246,7 @@ const UserCard = ({ user }: UserCardIProps) => {
       subheader={
         <Typography
           variant="body2"
-          sx={{ fontFamily: "inherit", color: "gray" }}
+          sx={{ fontFamily: "inherit", color: "gray", wordBreak: "break-word"}}
         >
           {user.description}
         </Typography>

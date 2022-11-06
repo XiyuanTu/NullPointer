@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
-import { useAppDispatch } from "../../../../state/hooks";
-import { Action, CommentInfo, Feedback } from "../../../../types/constants";
-import { feedback } from "../../../../utils/feedback";
+import { useAppDispatch } from "../../state/hooks";
+import { Action, CommentInfo, Feedback } from "../../types/constants";
+import { feedback } from "../../utils/feedback";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import {
   Button,
@@ -35,8 +35,8 @@ import {
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { convertDate } from "../../../../utils/forum";
-import UserAvatar from "../../../UserAvatar";
+import { convertDate } from "../../utils/forum";
+import UserAvatar from "../UserAvatar";
 
 interface IProps {
   comment: ConvertedComment;
