@@ -230,7 +230,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
         setData({ ...data }); //setData(data) won't make React rerender!
 
         //the filename in info component can update immediately
-        //!justAdded: since the newly added file won't be selected right away, it can prevent the appearance of the toggle button
+        //justAdded: since the newly added file won't be selected right away, it can prevent the appearance of the toggle button
         if (!nodeObj.children && !justAdded) {
           dispatch(setNote({ ...note!, name: inputValue }));
         }
