@@ -4,6 +4,7 @@ declare interface User {
     description?: string;
     avatar?: string;
     following: string[];
+    followers: string[];
     likes: string[];
     bookmarks: string[];
     blocks: string[];

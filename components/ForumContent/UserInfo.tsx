@@ -69,8 +69,17 @@ const recommendedUsers = [
 
 const info = ["Contact Me", "FAQs", "Source Code", "Terms and Privacy"];
 
-const UserInfo = () => {
+interface IProps {
+   user: User,
+   followingCount: number,
+   setFollowingCount: React.Dispatch<React.SetStateAction<number>>,
+}
+
+const UserInfo = ({user, followingCount, setFollowingCount}: IProps) => {
   const router = useRouter();
+
+  
+
   const handleCreateNote = useCallback(() => {
     router.push("/notes");
   }, []);
@@ -131,7 +140,7 @@ const UserInfo = () => {
               color: "black",
             }}
           >
-            10
+            {user.followers.length}
           </Typography>
         </Button>
         <Button
@@ -162,7 +171,7 @@ const UserInfo = () => {
               color: "black",
             }}
           >
-            12
+            {followingCount}
           </Typography>
         </Button>
       </Box>

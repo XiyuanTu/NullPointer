@@ -9,6 +9,7 @@ import Note from "../../models/note/noteModel";
 import { convertForumData, convertUser } from "../../utils/notes";
 import UserInfo from "../../components/ForumContent/UserInfo";
 import UserAccount from "../../models/user/userAccountModel";
+import { useState } from "react";
 
 interface IProps {
   convertedData: [];
@@ -16,13 +17,16 @@ interface IProps {
 }
 
 const Forum = ({ convertedData: notes, convertedUser: user }: IProps) => {
+
+  const [followingCount, setFollowingCount] = useState(user.following.length)
+
   return (
     <Container maxWidth="lg" sx={{ display: 'flex', pt: 3, mt: "9vh" }}>
         <Box sx={{width: '75%', mr: 2}}>
-          <ForumContent notes={notes} user={user}/>
+          <ForumContent notes={notes} user={user} setFollowingCount={setFollowingCount}/>
         </Box>
         <Box sx={{width: '25%'}}>
-          <UserInfo/>
+          <UserInfo user={user} followingCount={followingCount} setFollowingCount={setFollowingCount}/>
         </Box>
     </Container>
   );

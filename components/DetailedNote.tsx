@@ -139,6 +139,11 @@ const DetailedNote = ({ user, note, author }: IProps) => {
         action: isFollowing ? Action.Pull : Action.Push,
         value: { following: authorId },
       });
+      await axios.patch(`http://localhost:3000/api/user/${authorId}`, {
+        property: UserInfo.Followers,
+        action: isFollowing ? Action.Pull : Action.Push,
+        value: { followers: userId },
+      });
     } catch (e) {
       feedback(
         dispatch,

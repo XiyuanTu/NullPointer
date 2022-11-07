@@ -10,7 +10,7 @@ import {
 import { SelectChangeEvent } from "@mui/material/Select";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
-import { NoteInfo } from "../../types/constants";
+import { NoteInfo } from "../../../types/constants";
 import ContentItem from "./ContentItem";
 
 interface ProfileNotesProps {

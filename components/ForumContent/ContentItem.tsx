@@ -70,10 +70,11 @@ interface IProps {
   note: ForumNote;
   user: User;
   setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
-  setCurrentNotes: React.Dispatch<React.SetStateAction<ForumNote[]>>
+  setCurrentNotes: React.Dispatch<React.SetStateAction<ForumNote[]>>,
+  setFollowingCount: React.Dispatch<React.SetStateAction<number>>,
 }
 
-const ContentItem = ({ note, user, setCurrentUser, setCurrentNotes }: IProps) => {
+const ContentItem = ({ note, user, setCurrentUser, setCurrentNotes, setFollowingCount}: IProps) => {
   const {
     _id: noteId,
     mdText,
@@ -154,7 +155,13 @@ const ContentItem = ({ note, user, setCurrentUser, setCurrentNotes }: IProps) =>
         action: isFollowing ? Action.Pull : Action.Push,
         value: { following: authorId },
       });
+      await axios.patch(`http://localhost:3000/api/user/${authorId}`, {
+        property: UserInfo.Followers,
+        action: isFollowing ? Action.Pull : Action.Push,
+        value: { followers: userId },
+      });
       setCurrentUser({ ...user, following: newFollowing });
+      setFollowingCount(state => isFollowing ? state -1 : state + 1)
     } catch (e) {
       feedback(
         dispatch,
