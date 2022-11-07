@@ -39,17 +39,16 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
-import ShareIcon from "@mui/icons-material/Share";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import axios from "axios";
-import { feedback } from "../../../utils/feedback";
-import { useAppDispatch } from "../../../state/hooks";
-import { Action, Feedback, NoteInfo, UserInfo } from "../../../types/constants";
-import UserAvatar from "../../UserAvatar";
-import { convertCount, convertDate } from "../../../utils/forum";
-import Comment from "../../Comment";
+import { feedback } from "../../utils/feedback";
+import { useAppDispatch } from "../../state/hooks";
+import { Action, Feedback, NoteInfo, UserInfo } from "../../types/constants";
+import UserAvatar from "../UserAvatar";
+import { convertCount, convertDate } from "../../utils/forum";
+import Comment from "../Comment";
 import { useSession } from "next-auth/react";
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -140,7 +139,6 @@ const ContentItem = ({ note, user, setCurrentUser, setCurrentNotes }: IProps) =>
       });
       setNoteComments(convertedComments);
       setNewNoteComments([]);
-      console.log(convertedComments);
     }
     setOpenComment((state) => !state);
   }, [openComment, commentIds]);

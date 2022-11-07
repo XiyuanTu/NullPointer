@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
 import {List , Box} from '@mui/material';
-import ContentItem from './ContentItem/';
+import ContentItem from './ContentItem';
 
 interface IProps {
   notes: ForumNote[],

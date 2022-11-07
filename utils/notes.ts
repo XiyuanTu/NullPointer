@@ -104,7 +104,22 @@ export const convertForumData = async (rawNotes: any[]) => {
 export const convertUser = (user: User) => {
   user._id = user._id + "";
   user.blocks = user.blocks.map(block => block + '')
+  user.following = user.following.map(following => following + '')
+  user.likes = user.likes.map(like => like + '')
+  user.bookmarks = user.bookmarks.map(bookmark => bookmark + '')
   return user;
+}
+
+export const convertNote = (note: Note) => {
+  note._id = note._id + "";
+  note.userId = note.userId + ''
+  note.createdAt = note.createdAt.toLocaleString()
+  note.lastModified = note.lastModified.toLocaleString()
+  if (note.firstPublicAt) {
+    note.firstPublicAt = note.firstPublicAt.toLocaleString()
+  }
+  note.comments = note.comments.map(comment => comment + '')
+  return note;
 }
 
 export const getComments = async(commentIds: string[]) => {

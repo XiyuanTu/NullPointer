@@ -50,7 +50,7 @@ const ContentItem = ({ note }: IProps) => {
   }, []);
 
   const handleRedirect = useCallback(() => {
-    router.push('/note/' + _id)
+    router.push('/notes/' + _id)
   }, [])
 
   return (
