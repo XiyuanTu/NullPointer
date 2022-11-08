@@ -19,7 +19,7 @@ interface ProfileNotesProps {
 }
 
 const ProfileNotes = ({ user }: ProfileNotesProps) => {
-  const { _id: userId } = user;
+  const { _id: userId, blocks } = user;
   const [rawNotes, setRawNotes] = useState<Note[] | null>(null);
   const [sortedNotes, setSortedNotes] = useState<Note[]>([]);
   const [currentPage, setCurrentPage] = useState(1);

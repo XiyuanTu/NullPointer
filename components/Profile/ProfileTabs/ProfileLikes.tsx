@@ -18,7 +18,7 @@ interface ProfileNotesProps {
 }
 
 const ProfileLikes = ({ user }: ProfileNotesProps) => {
-  const { _id: userId, likes } = user;
+  const { _id: userId, likes, blocks } = user;
   const [rawNotes, setRawNotes] = useState<Note[] | null>(null);
   const [sortedNotes, setSortedNotes] = useState<Note[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,7 +47,7 @@ const ProfileLikes = ({ user }: ProfileNotesProps) => {
       } = await axios.get('http://localhost:3000/api/notes', {
         params: { value: likes },
       });
-      setRawNotes(notes.filter((note: Note) => note.public));
+      setRawNotes(notes.filter((note: Note) => note.public && !blocks.includes(note.userId)));
     })();
   }, []);
 

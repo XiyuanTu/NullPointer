@@ -19,7 +19,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import Grid from "@mui/material/Unstable_Grid2";
-import { SvgIconComponent } from "@mui/icons-material";
+import { Router, SvgIconComponent } from "@mui/icons-material";
 import {
   Button,
   Tooltip,
@@ -52,6 +52,7 @@ import remarkGfm from "remark-gfm";
 import "github-markdown-css";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import Comment from "./Comment";
+import { useRouter } from "next/router";
 
 interface IProps {
   user: User;
@@ -114,6 +115,7 @@ const DetailedNote = ({ user, note, author }: IProps) => {
   const openMoreActions = Boolean(anchorEl);
 
   const dispatch = useAppDispatch();
+  const router = useRouter()
 
   const handleGetComment = useCallback(async () => {
     if (!openComment) {
@@ -254,6 +256,7 @@ const DetailedNote = ({ user, note, author }: IProps) => {
         action: Action.Push,
         value: { blocks: authorId },
       });
+      router.back()
     } catch (e) {
       feedback(
         dispatch,
