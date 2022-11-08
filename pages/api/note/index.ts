@@ -56,14 +56,4 @@ export default async function handler(
       return res.status(500).json({ message: "Fail to process"  });
     }
   }
-
-  if (req.method === "GET") {
-    try {
-      await connectDB()
-      const notes = await Note.find({userId: id}, {'__v': 0})
-      return res.status(200).json({ notes });
-    } catch (err) {
-      return res.status(500).json({ message: "Fail to process"  });
-    }
-  }
 }

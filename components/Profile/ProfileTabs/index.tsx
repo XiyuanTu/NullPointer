@@ -1,7 +1,7 @@
 import { Tabs, Tab, Box, Typography } from "@mui/material";
 import { useState } from "react";
+import ProfileLikes from "./ProfileLikes";
 import ProfileNotes from "./ProfileNotes";
-
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -20,11 +20,7 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ px: 0}}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box sx={{ px: 0 }}>{children}</Box>}
     </div>
   );
 }
@@ -37,10 +33,10 @@ function a11yProps(index: number) {
 }
 
 interface ProfileTabsProps {
-  user: User
+  user: User;
 }
 
-const ProfileTabs = ({user}: ProfileTabsProps) => {
+const ProfileTabs = ({ user }: ProfileTabsProps) => {
   const [value, setValue] = useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -49,7 +45,16 @@ const ProfileTabs = ({user}: ProfileTabsProps) => {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider", position: 'sticky', top: 64, bgcolor: 'rgb(241, 242, 242)', zIndex: 99 }}>
+      <Box
+        sx={{
+          borderBottom: 1,
+          borderColor: "divider",
+          position: "sticky",
+          top: 64,
+          bgcolor: "rgb(241, 242, 242)",
+          zIndex: 99,
+        }}
+      >
         <Tabs
           value={value}
           onChange={handleChange}
@@ -86,10 +91,10 @@ const ProfileTabs = ({user}: ProfileTabsProps) => {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <ProfileNotes user={user}/>
+        <ProfileNotes user={user} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <ProfileLikes user={user} />
       </TabPanel>
       <TabPanel value={value} index={2}>
         Item Three
