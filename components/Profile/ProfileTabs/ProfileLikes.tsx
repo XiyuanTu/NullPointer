@@ -13,11 +13,11 @@ import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
 import ContentItem from "./ContentItem";
 
-interface ProfileNotesProps {
+interface IProps {
   user: User;
 }
 
-const ProfileLikes = ({ user }: ProfileNotesProps) => {
+const ProfileLikes = ({ user }: IProps) => {
   const { _id: userId, likes, blocks } = user;
   const [rawNotes, setRawNotes] = useState<Note[] | null>(null);
   const [sortedNotes, setSortedNotes] = useState<Note[]>([]);

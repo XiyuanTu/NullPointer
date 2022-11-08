@@ -1,6 +1,7 @@
 import { Tabs, Tab, Box, Typography } from "@mui/material";
 import { useState } from "react";
 import ProfileBookmarks from "./ProfileBookmarks";
+import ProfileFavorite from "./ProfileFavorite";
 import ProfileLikes from "./ProfileLikes";
 import ProfileNotes from "./ProfileNotes";
 
@@ -70,7 +71,7 @@ const ProfileTabs = ({ user }: ProfileTabsProps) => {
             sx={{ textTransform: "none" }}
           />
           <Tab
-            label="Comments"
+            label="Favorite"
             {...a11yProps(2)}
             sx={{ textTransform: "none" }}
           />
@@ -99,6 +100,9 @@ const ProfileTabs = ({ user }: ProfileTabsProps) => {
       </TabPanel>
       <TabPanel value={value} index={2}>
       <ProfileBookmarks user={user} />
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+      <ProfileFavorite user={user} />
       </TabPanel>
     </Box>
   );

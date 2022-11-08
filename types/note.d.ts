@@ -2,6 +2,7 @@ declare interface Note {
   _id: string;
   name: string;
   userId: string;
+  favorite: boolean;
   mdText: string;
   public: boolean;
   firstPublicAt: Date | string;

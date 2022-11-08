@@ -14,11 +14,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import { NoteInfo } from "../../../types/constants";
 import ContentItem from "./ContentItem";
 
-interface ProfileNotesProps {
+interface IProps {
   user: User;
 }
 
-const ProfileNotes = ({ user }: ProfileNotesProps) => {
+const ProfileNotes = ({ user }: IProps) => {
   const { _id: userId, blocks } = user;
   const [rawNotes, setRawNotes] = useState<Note[] | null>(null);
   const [sortedNotes, setSortedNotes] = useState<Note[]>([]);
