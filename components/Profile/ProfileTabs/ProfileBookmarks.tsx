@@ -11,25 +11,19 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import axios from "axios";
 import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
-import { NoteInfo } from "../../../types/constants";
 import ContentItem from "./ContentItem";
 
 interface ProfileNotesProps {
   user: User;
 }
 
-const ProfileNotes = ({ user }: ProfileNotesProps) => {
-  const { _id: userId } = user;
+const ProfileBookmarks = ({ user }: ProfileNotesProps) => {
+  const { bookmarks } = user;
   const [rawNotes, setRawNotes] = useState<Note[] | null>(null);
   const [sortedNotes, setSortedNotes] = useState<Note[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [category, setCategory] = useState("all");
   const [sortBy, setSortBy] = useState("createdAt");
   const [order, setOrder] = useState("latest");
-
-  const handleCategoryOnChange = useCallback((event: SelectChangeEvent) => {
-    setCategory(event.target.value);
-  }, []);
 
   const handleSortByOnChange = useCallback((event: SelectChangeEvent) => {
     setSortBy(event.target.value);
@@ -50,43 +44,24 @@ const ProfileNotes = ({ user }: ProfileNotesProps) => {
     (async function getNotes() {
       const {
         data: { notes },
-      } = await axios.get('http://localhost:3000/api/notes/' + userId);
-      setRawNotes(notes);
+      } = await axios.get("http://localhost:3000/api/notes", {
+        params: { value: bookmarks },
+      });
+      setRawNotes(notes.filter((note: Note) => note.public));
     })();
   }, []);
 
   useEffect(() => {
     if (rawNotes) {
-      setCurrentPage(1);
-      switch (category) {
-        case "all":
-          setSortedNotes([
-            ...rawNotes.sort((a: Note, b: Note) => {
-              return sortingCompareFn(a, b, sortBy, order);
-            }),
-          ]);
-          break;
-        case "public":
-          setSortedNotes([
-            ...rawNotes
-              .filter((rawNote) => rawNote.public)
-              .sort((a: Note, b: Note) => {
-                return sortingCompareFn(a, b, sortBy, order);
-              }),
-          ]);
-          break;
-        case "private":
-          setSortedNotes([
-            ...rawNotes
-              .filter((rawNote) => !rawNote.public)
-              .sort((a: Note, b: Note) => {
-                return sortingCompareFn(a, b, sortBy, order);
-              }),
-          ]);
-          break;
-      }
+      setSortedNotes([
+        ...rawNotes
+          .filter((rawNote) => rawNote.public)
+          .sort((a: Note, b: Note) => {
+            return sortingCompareFn(a, b, sortBy, order);
+          }),
+      ]);
     }
-  }, [rawNotes, category, sortBy, order]);
+  }, [rawNotes, sortBy, order]);
 
   if (rawNotes && rawNotes.length === 0) {
     return (
@@ -124,31 +99,17 @@ const ProfileNotes = ({ user }: ProfileNotesProps) => {
           py: 1.5,
           position: "sticky",
           top: 112,
-          bgcolor: 'rgb(241, 242, 242)',
-          zIndex: 99
+          bgcolor: "rgb(241, 242, 242)",
+          zIndex: 99,
         }}
       >
         <Typography>
           {(currentPage - 1) * 8 + 1} -{" "}
           {Math.min(currentPage * 8, sortedNotes.length)} of{" "}
-          {sortedNotes.length} results
+          {sortedNotes.length} results (Only currently public notes are
+          displayed)
         </Typography>
         <Box>
-          <FormControl sx={{ mr: 1, minWidth: 80 }} size="small">
-            <InputLabel id="category">Category</InputLabel>
-            <Select
-              labelId="category"
-              id="category"
-              value={category}
-              label="Category"
-              onChange={handleCategoryOnChange}
-              autoWidth
-            >
-              <MenuItem value="all">All</MenuItem>
-              <MenuItem value="public">Public</MenuItem>
-              <MenuItem value="private">Private</MenuItem>
-            </Select>
-          </FormControl>
           <FormControl sx={{ mr: 1 }} size="small">
             <InputLabel id="sortBy">Sort by</InputLabel>
             <Select
@@ -201,7 +162,7 @@ const ProfileNotes = ({ user }: ProfileNotesProps) => {
   );
 };
 
-export default ProfileNotes;
+export default ProfileBookmarks;
 
 const sortingCompareFn = (a: Note, b: Note, sortBy: string, order: string) => {
   let dateA = new Date(),

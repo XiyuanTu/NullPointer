@@ -16,10 +16,10 @@ export default async function handler(
   if (!session) return res.status(401).json({ message: "Not authenticated!" });
 
   if (req.method === "GET") {
-    const likes = req.query['likes[]'];
+    const value = req.query['value[]'];
     try {
       await connectDB()
-      const notes = await Note.find({_id: {$in: likes}}, {'__v': 0})
+      const notes = await Note.find({_id: {$in: value}}, {'__v': 0})
       return res.status(200).json({ notes });
     } catch (err) {
       return res.status(500).json({ message: "Fail to process"  });

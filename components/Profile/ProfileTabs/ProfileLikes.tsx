@@ -9,8 +9,8 @@ import {
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
 import axios from "axios";
+import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
-import { NoteInfo } from "../../../types/constants";
 import ContentItem from "./ContentItem";
 
 interface ProfileNotesProps {
@@ -45,7 +45,7 @@ const ProfileLikes = ({ user }: ProfileNotesProps) => {
       const {
         data: { notes },
       } = await axios.get('http://localhost:3000/api/notes', {
-        params: { likes },
+        params: { value: likes },
       });
       setRawNotes(notes.filter((note: Note) => note.public));
     })();
@@ -62,6 +62,31 @@ const ProfileLikes = ({ user }: ProfileNotesProps) => {
       ]);
     }
   }, [rawNotes, sortBy, order]);
+
+  if (rawNotes && rawNotes.length === 0) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "column",
+          pt: 2,
+        }}
+      >
+        <Typography
+          sx={{
+            fontFamily: "inherit",
+            fontWeight: "bold",
+            mb: 2,
+            fontSize: 20,
+          }}
+        >
+          You have not liked any note yet!
+        </Typography>
+        <Image src="/no_data.jpg" width={900} height={500} />
+      </Box>
+    );
+  }
 
   return (
     <Box>

@@ -1,5 +1,6 @@
 import { Tabs, Tab, Box, Typography } from "@mui/material";
 import { useState } from "react";
+import ProfileBookmarks from "./ProfileBookmarks";
 import ProfileLikes from "./ProfileLikes";
 import ProfileNotes from "./ProfileNotes";
 
@@ -97,7 +98,7 @@ const ProfileTabs = ({ user }: ProfileTabsProps) => {
         <ProfileLikes user={user} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+      <ProfileBookmarks user={user} />
       </TabPanel>
     </Box>
   );
