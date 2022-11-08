@@ -57,7 +57,6 @@ const ContentItem = ({ note }: IProps) => {
     <Card
       sx={{ boxShadow: "none", mb: 1, bgcolor: "#fff", overflow: "visible" }}
     >
-      <CardActionArea onClick={handleRedirect}>
       {/* note title  */}
       <CardContent sx={{ pb: 0 }}>
         <Typography
@@ -72,6 +71,7 @@ const ContentItem = ({ note }: IProps) => {
         <CardContent sx={{ pt: 0.5, pb: 0 }}>
           {tags.map((tag) => (
             <Button
+              onClick={e => e.preventDefault()}
               key={tag}
               sx={{
                 py: 0,
@@ -97,7 +97,7 @@ const ContentItem = ({ note }: IProps) => {
           ))}
         </CardContent>
       )}
-
+      <CardActionArea onClick={handleRedirect}>
       {/* note content  */}
       <CardContent sx={{ maxHeight: expanded ? "none" : 300, overflowY: "hidden" }}>
         <ReactMarkdown
