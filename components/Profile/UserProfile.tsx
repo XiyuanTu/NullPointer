@@ -83,7 +83,7 @@ const UserProfile = ({ user }: IProps) => {
           {user.username}
         </Typography>
       </Box>
-      <Box sx={{ bgcolor: "white", px: 3 }}>
+      <Box sx={{ bgcolor: "white", px: 3, display: 'flex', justifyContent: 'center' }}>
         {/* user description */}
         {isEditingDescription ? (
           <TextField
