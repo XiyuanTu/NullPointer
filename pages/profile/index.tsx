@@ -10,20 +10,24 @@ import { convertUser } from "../../utils/notes";
 import { authOptions } from "../api/auth/[...nextauth]";
 import ProfileTabs from "../../components/Profile/ProfileTabs";
 import UserProfile from "../../components/Profile/UserProfile";
+import {useState} from 'react'
 
 interface IProps {
   user: User;
+  setTabValue: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const CurrentUserProfile = ({ user }: IProps) => {
+const CurrentUserProfile = ({ user: currentUser }: IProps) => {
+  const [user, setUser] = useState(currentUser)
+  const [tabValue, setTabValue] = useState(0);
 
   return (
     <Container maxWidth="lg" sx={{display: 'flex', pt: 3, mt: "9vh" }}>
       <Box sx={{ width: "20%", mr: 2 }}>
-        <UserProfile user={user}/>
+        <UserProfile user={user} setTabValue={setTabValue}/>
       </Box>
       <Box sx={{ width: "80%"}}>
-        <ProfileTabs user={user} />
+        <ProfileTabs user={user} setUser={setUser} tabValue={tabValue} setTabValue={setTabValue} />
       </Box>
     </Container>
   );

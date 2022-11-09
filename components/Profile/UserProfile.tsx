@@ -17,9 +17,10 @@ import UserAvatar from "../UserAvatar";
 
 interface IProps {
   user: User;
+  setTabValue: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const UserProfile = ({ user }: IProps) => {
+const UserProfile = ({ user, setTabValue }: IProps) => {
   const { _id: userId } = user;
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -54,6 +55,14 @@ const UserProfile = ({ user }: IProps) => {
     }
   }, []);
 
+  const handleFollowingBtn = useCallback(() => {
+    setTabValue(5);
+  }, []);
+
+  const handleFollowersBtn = useCallback(() => {
+    setTabValue(4);
+  }, []);
+
   return (
     <Box>
       <Box
@@ -83,7 +92,14 @@ const UserProfile = ({ user }: IProps) => {
           {user.username}
         </Typography>
       </Box>
-      <Box sx={{ bgcolor: "white", px: 3, display: 'flex', justifyContent: 'center' }}>
+      <Box
+        sx={{
+          bgcolor: "white",
+          px: 3,
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
         {/* user description */}
         {isEditingDescription ? (
           <TextField
@@ -136,6 +152,7 @@ const UserProfile = ({ user }: IProps) => {
       </Box>
       <Box sx={{ display: "flex", width: "100%" }}>
         <Button
+          onClick={handleFollowersBtn}
           sx={{
             bgcolor: "#ffffff",
             display: "flex",
@@ -167,6 +184,7 @@ const UserProfile = ({ user }: IProps) => {
           </Typography>
         </Button>
         <Button
+          onClick={handleFollowingBtn}
           sx={{
             bgcolor: "#ffffff",
             display: "flex",

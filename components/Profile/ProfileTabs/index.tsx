@@ -38,14 +38,15 @@ function a11yProps(index: number) {
 
 interface ProfileTabsProps {
   user: User;
+  setUser: React.Dispatch<React.SetStateAction<User>>;
+  tabValue: number
+  setTabValue: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const ProfileTabs = ({ user: currentUser }: ProfileTabsProps) => {
-  const [user, setUser] = useState(currentUser)
-  const [value, setValue] = useState(0);
+const ProfileTabs = ({ user, setUser, tabValue, setTabValue}: ProfileTabsProps) => {
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    setTabValue(newValue);
   };
 
   return (
@@ -61,7 +62,7 @@ const ProfileTabs = ({ user: currentUser }: ProfileTabsProps) => {
         }}
       >
         <Tabs
-          value={value}
+          value={tabValue}
           onChange={handleChange}
           aria-label="basic tabs example"
           sx={{}}
@@ -90,22 +91,22 @@ const ProfileTabs = ({ user: currentUser }: ProfileTabsProps) => {
           />
         </Tabs>
       </Box>
-      <TabPanel value={value} index={0}>
+      <TabPanel value={tabValue} index={0}>
         <ProfileNotes user={user} />
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel value={tabValue} index={1}>
         <ProfileLikes user={user} />
       </TabPanel>
-      <TabPanel value={value} index={2}>
+      <TabPanel value={tabValue} index={2}>
         <ProfileBookmarks user={user} />
       </TabPanel>
-      <TabPanel value={value} index={3}>
+      <TabPanel value={tabValue} index={3}>
         <ProfileFavorite user={user} />
       </TabPanel>
-      <TabPanel value={value} index={4}>
+      <TabPanel value={tabValue} index={4}>
         <ProfileFollowers user={user} setUser={setUser}/>
       </TabPanel>
-      <TabPanel value={value} index={5}>
+      <TabPanel value={tabValue} index={5}>
         <ProfileFollowing user={user} setUser={setUser}/>
       </TabPanel>
     </Box>
