@@ -2,6 +2,7 @@ import { Tabs, Tab, Box, Typography } from "@mui/material";
 import { useState } from "react";
 import ProfileBookmarks from "./ProfileBookmarks";
 import ProfileFavorite from "./ProfileFavorite";
+import ProfileFollowers from "./ProfileFollowers";
 import ProfileLikes from "./ProfileLikes";
 import ProfileNotes from "./ProfileNotes";
 
@@ -38,7 +39,8 @@ interface ProfileTabsProps {
   user: User;
 }
 
-const ProfileTabs = ({ user }: ProfileTabsProps) => {
+const ProfileTabs = ({ user: currentUser }: ProfileTabsProps) => {
+  const [user, setUser] = useState(currentUser)
   const [value, setValue] = useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -99,10 +101,13 @@ const ProfileTabs = ({ user }: ProfileTabsProps) => {
         <ProfileLikes user={user} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-      <ProfileBookmarks user={user} />
+        <ProfileBookmarks user={user} />
       </TabPanel>
       <TabPanel value={value} index={3}>
-      <ProfileFavorite user={user} />
+        <ProfileFavorite user={user} />
+      </TabPanel>
+      <TabPanel value={value} index={4}>
+        <ProfileFollowers user={user} setUser={setUser}/>
       </TabPanel>
     </Box>
   );
