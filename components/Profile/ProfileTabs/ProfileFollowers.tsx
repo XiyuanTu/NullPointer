@@ -72,7 +72,7 @@ const ProfileFollowers = ({ user, setUser }: IProps) => {
         "Fail to process. Internal error. Please try later."
       );
     }
-    }, [followers]);
+    }, [followers, user]);
 
   useEffect(() => {
     (async function getNotes() {
@@ -155,10 +155,7 @@ const ProfileFollowers = ({ user, setUser }: IProps) => {
                 </ListItemAvatar>
                 <ListItemText
                   primary={
-                    <Box sx={{display: 'flex', alignItems: 'center'}}>
                     <Typography component='span' sx={{fontFamily: 'inherit', fontWeight: 'bold'}}>{follower.username}</Typography>
-                    <Typography component='span' sx={{fontFamily: 'inherit', fontSize: 15}}>&nbsp;{follower.description}</Typography>
-                    </Box>
                   }
                   secondary={`${convertCount(follower.followers.length)} ${follower.followers.length === 1 ? 'follower': 'followers'}`}
                 />

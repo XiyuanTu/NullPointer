@@ -3,6 +3,7 @@ import { useState } from "react";
 import ProfileBookmarks from "./ProfileBookmarks";
 import ProfileFavorite from "./ProfileFavorite";
 import ProfileFollowers from "./ProfileFollowers";
+import ProfileFollowing from "./ProfileFollowing";
 import ProfileLikes from "./ProfileLikes";
 import ProfileNotes from "./ProfileNotes";
 
@@ -74,22 +75,17 @@ const ProfileTabs = ({ user: currentUser }: ProfileTabsProps) => {
           />
           <Tab
             label="Favorite"
-            {...a11yProps(2)}
+            {...a11yProps(3)}
             sx={{ textTransform: "none" }}
           />
           <Tab
             label="Followers"
-            {...a11yProps(2)}
+            {...a11yProps(4)}
             sx={{ textTransform: "none" }}
           />
           <Tab
             label="Following"
-            {...a11yProps(2)}
-            sx={{ textTransform: "none" }}
-          />
-          <Tab
-            label="Settings"
-            {...a11yProps(2)}
+            {...a11yProps(5)}
             sx={{ textTransform: "none" }}
           />
         </Tabs>
@@ -108,6 +104,9 @@ const ProfileTabs = ({ user: currentUser }: ProfileTabsProps) => {
       </TabPanel>
       <TabPanel value={value} index={4}>
         <ProfileFollowers user={user} setUser={setUser}/>
+      </TabPanel>
+      <TabPanel value={value} index={5}>
+        <ProfileFollowing user={user} setUser={setUser}/>
       </TabPanel>
     </Box>
   );
