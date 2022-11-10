@@ -27,10 +27,11 @@ import ContentItem from "./ContentItem";
 
 interface IProps {
   user: User;
-  setUser: React.Dispatch<React.SetStateAction<User>>
+  setUser: React.Dispatch<React.SetStateAction<User>>;
+  otherUser: User
 }
 
-const ProfileFollowers = ({ user, setUser }: IProps) => {
+const ProfileFollowers = ({ user, setUser, otherUser }: IProps) => {
   const { _id: userId } = user;
   const router = useRouter();
   const [followers, setFollowers] = useState<User[] | null>(null);
@@ -89,7 +90,7 @@ const ProfileFollowers = ({ user, setUser }: IProps) => {
       const {
         data: { users },
       } = await axios.get("http://localhost:3000/api/users", {
-        params: { value: user.followers },
+        params: { value: otherUser.followers },
       });
       setFollowers(users);
     })();
@@ -171,6 +172,7 @@ const ProfileFollowers = ({ user, setUser }: IProps) => {
                 />
                 <Button
                   variant="contained"
+                  disabled={userId === follower._id}
                   sx={{
                     // width: "50%",
                     fontFamily: "inherit",
@@ -179,7 +181,7 @@ const ProfileFollowers = ({ user, setUser }: IProps) => {
                   }}
                   onClick={() => handleFollowAndFollowing(follower._id)}
                 >
-                  {user.following.includes(follower._id) ? 'Following' : 'Follow'}
+                  {userId === follower._id ? 'Yourself' : user.following.includes(follower._id) ? 'Following' : 'Follow'}
                 </Button>
               </ListItem>
             );

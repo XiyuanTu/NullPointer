@@ -28,9 +28,10 @@ import ContentItem from "./ContentItem";
 interface IProps {
   user: User;
   setUser: React.Dispatch<React.SetStateAction<User>>;
+  otherUser: User;
 }
 
-const ProfileFollowing = ({ user, setUser }: IProps) => {
+const ProfileFollowing = ({ user, setUser, otherUser }: IProps) => {
   const { _id: userId } = user;
   const router = useRouter();
   const [following, setFollowing] = useState<User[] | null>(null);
@@ -48,7 +49,7 @@ const ProfileFollowing = ({ user, setUser }: IProps) => {
     if (followingUserId === userId) {
       router.push("/profile");
     } else {
-      router.push("/profile/" + followingUserId);
+      router.push("/profile/" + followingUserId)
     }
   }, []);
 
@@ -102,7 +103,7 @@ const ProfileFollowing = ({ user, setUser }: IProps) => {
       const {
         data: { users },
       } = await axios.get("http://localhost:3000/api/users", {
-        params: { value: user.following },
+        params: { value: otherUser.following },
       });
       setFollowing(users);
     })();
@@ -175,7 +176,7 @@ const ProfileFollowing = ({ user, setUser }: IProps) => {
                 sx={{ bgcolor: "white" }}
               >
                 <ListItemAvatar
-                  sx={{'&:hover': {cursor: "pointer"}}}
+                  sx={{ "&:hover": { cursor: "pointer" } }}
                   onClick={() => handleToProfile(followingUser._id)}
                 >
                   <UserAvatar
@@ -188,7 +189,11 @@ const ProfileFollowing = ({ user, setUser }: IProps) => {
                     <Typography
                       onClick={() => handleToProfile(followingUser._id)}
                       component="span"
-                      sx={{ fontFamily: "inherit", fontWeight: "bold", '&:hover': {cursor: "pointer"}}}
+                      sx={{
+                        fontFamily: "inherit",
+                        fontWeight: "bold",
+                        "&:hover": { cursor: "pointer" },
+                      }}
                     >
                       {followingUser.username}
                     </Typography>
@@ -201,6 +206,7 @@ const ProfileFollowing = ({ user, setUser }: IProps) => {
                 />
                 <Button
                   variant="contained"
+                  disabled={userId === followingUser._id}
                   sx={{
                     // width: "50%",
                     fontFamily: "inherit",
@@ -209,7 +215,9 @@ const ProfileFollowing = ({ user, setUser }: IProps) => {
                   }}
                   onClick={() => handleFollowAndFollowing(followingUser._id)}
                 >
-                  {user.following.includes(followingUser._id)
+                  {userId === followingUser._id
+                    ? "Yourself"
+                    : user.following.includes(followingUser._id)
                     ? "Following"
                     : "Follow"}
                 </Button>

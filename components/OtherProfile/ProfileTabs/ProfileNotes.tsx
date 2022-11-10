@@ -16,20 +16,17 @@ import ContentItem from "./ContentItem";
 
 interface IProps {
   user: User;
+  otherUser: User;
 }
 
-const ProfileNotes = ({ user }: IProps) => {
+const ProfileNotes = ({ user, otherUser }: IProps) => {
   const { _id: userId, blocks } = user;
+  const { _id: otherUserId } = otherUser;
   const [rawNotes, setRawNotes] = useState<Note[] | null>(null);
   const [sortedNotes, setSortedNotes] = useState<Note[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [category, setCategory] = useState("all");
   const [sortBy, setSortBy] = useState("createdAt");
   const [order, setOrder] = useState("latest");
-
-  const handleCategoryOnChange = useCallback((event: SelectChangeEvent) => {
-    setCategory(event.target.value);
-  }, []);
 
   const handleSortByOnChange = useCallback((event: SelectChangeEvent) => {
     setSortBy(event.target.value);
@@ -50,43 +47,21 @@ const ProfileNotes = ({ user }: IProps) => {
     (async function getNotes() {
       const {
         data: { notes },
-      } = await axios.get('http://localhost:3000/api/notes/' + userId);
-      setRawNotes(notes);
+      } = await axios.get("http://localhost:3000/api/notes/" + otherUserId);
+      setRawNotes(notes.filter((note: Note) => note.public));
     })();
   }, []);
 
   useEffect(() => {
     if (rawNotes) {
       setCurrentPage(1);
-      switch (category) {
-        case "all":
-          setSortedNotes([
-            ...rawNotes.sort((a: Note, b: Note) => {
-              return sortingCompareFn(a, b, sortBy, order);
-            }),
-          ]);
-          break;
-        case "public":
-          setSortedNotes([
-            ...rawNotes
-              .filter((rawNote) => rawNote.public)
-              .sort((a: Note, b: Note) => {
-                return sortingCompareFn(a, b, sortBy, order);
-              }),
-          ]);
-          break;
-        case "private":
-          setSortedNotes([
-            ...rawNotes
-              .filter((rawNote) => !rawNote.public)
-              .sort((a: Note, b: Note) => {
-                return sortingCompareFn(a, b, sortBy, order);
-              }),
-          ]);
-          break;
-      }
+      setSortedNotes([
+        ...rawNotes.sort((a: Note, b: Note) => {
+          return sortingCompareFn(a, b, sortBy, order);
+        }),
+      ]);
     }
-  }, [rawNotes, category, sortBy, order]);
+  }, [rawNotes, sortBy, order]);
 
   if (rawNotes && rawNotes.length === 0) {
     return (
@@ -106,7 +81,7 @@ const ProfileNotes = ({ user }: IProps) => {
             fontSize: 20,
           }}
         >
-          You have not written any note yet!
+          You have not written any note yet! 
         </Typography>
         <Image src="/no_data.jpg" width={900} height={500} />
       </Box>
@@ -124,31 +99,16 @@ const ProfileNotes = ({ user }: IProps) => {
           py: 1.5,
           position: "sticky",
           top: 112,
-          bgcolor: 'rgb(241, 242, 242)',
-          zIndex: 99
+          bgcolor: "rgb(241, 242, 242)",
+          zIndex: 99,
         }}
       >
         <Typography>
           {(currentPage - 1) * 8 + 1} -{" "}
           {Math.min(currentPage * 8, sortedNotes.length)} of{" "}
-          {sortedNotes.length} results
+          {sortedNotes.length} results (Only currently public notes are displayed)
         </Typography>
         <Box>
-          <FormControl sx={{ mr: 1, minWidth: 80 }} size="small">
-            <InputLabel id="category">Category</InputLabel>
-            <Select
-              labelId="category"
-              id="category"
-              value={category}
-              label="Category"
-              onChange={handleCategoryOnChange}
-              autoWidth
-            >
-              <MenuItem value="all">All</MenuItem>
-              <MenuItem value="public">Public</MenuItem>
-              <MenuItem value="private">Private</MenuItem>
-            </Select>
-          </FormControl>
           <FormControl sx={{ mr: 1 }} size="small">
             <InputLabel id="sortBy">Sort by</InputLabel>
             <Select

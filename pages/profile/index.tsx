@@ -14,7 +14,6 @@ import {useState} from 'react'
 
 interface IProps {
   user: User;
-  setTabValue: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const CurrentUserProfile = ({ user: currentUser }: IProps) => {
