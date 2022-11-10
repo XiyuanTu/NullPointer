@@ -30,6 +30,7 @@ import {
   Divider,
   Menu,
   MenuItem,
+  CardActionArea,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { IconButtonProps } from "@mui/material/IconButton";
@@ -50,6 +51,7 @@ import UserAvatar from "../UserAvatar";
 import { convertCount, convertDate } from "../../utils/forum";
 import Comment from "../Comment";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -70,11 +72,17 @@ interface IProps {
   note: ForumNote;
   user: User;
   setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
-  setCurrentNotes: React.Dispatch<React.SetStateAction<ForumNote[]>>,
-  setFollowingCount: React.Dispatch<React.SetStateAction<number>>,
+  setCurrentNotes: React.Dispatch<React.SetStateAction<ForumNote[]>>;
+  setFollowingCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const ContentItem = ({ note, user, setCurrentUser, setCurrentNotes, setFollowingCount}: IProps) => {
+const ContentItem = ({
+  note,
+  user,
+  setCurrentUser,
+  setCurrentNotes,
+  setFollowingCount,
+}: IProps) => {
   const {
     _id: noteId,
     mdText,
@@ -130,6 +138,7 @@ const ContentItem = ({ note, user, setCurrentUser, setCurrentNotes, setFollowing
   const openMoreActions = Boolean(anchorEl);
 
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const handleGetComment = useCallback(async () => {
     if (!openComment) {
@@ -161,7 +170,7 @@ const ContentItem = ({ note, user, setCurrentUser, setCurrentNotes, setFollowing
         value: { followers: userId },
       });
       setCurrentUser({ ...user, following: newFollowing });
-      setFollowingCount(state => isFollowing ? state -1 : state + 1)
+      setFollowingCount((state) => (isFollowing ? state - 1 : state + 1));
     } catch (e) {
       feedback(
         dispatch,
@@ -274,13 +283,27 @@ const ContentItem = ({ note, user, setCurrentUser, setCurrentNotes, setFollowing
         action: Action.Push,
         value: { blocks: authorId },
       });
-      setCurrentNotes(state => state.filter(note => note.author._id !== authorId));
+      setCurrentNotes((state) =>
+        state.filter((note) => note.author._id !== authorId)
+      );
     } catch (e) {
       feedback(
         dispatch,
         Feedback.Error,
         `Fail to block the user. Internal error. Please try later.`
       );
+    }
+  }, []);
+
+  const handleToDetailedNote = useCallback(() => {
+    router.push("/notes/" + noteId);
+  }, []);
+
+  const handleToProfile = useCallback(() => {
+    if (authorId === userId) {
+      router.push("/profile");
+    } else {
+      router.push("/profile/" + authorId);
     }
   }, []);
 
@@ -335,7 +358,11 @@ const ContentItem = ({ note, user, setCurrentUser, setCurrentNotes, setFollowing
     >
       {/* author info */}
       <CardHeader
-        avatar={<UserAvatar image={authorAvatar} name={authorName} />}
+        avatar={
+          <Box onClick={handleToProfile} sx={{'&:hover': {cursor: "pointer"}}}>
+            <UserAvatar image={authorAvatar} name={authorName} />
+          </Box>
+        }
         action={
           userId !== authorId && (
             <>
@@ -372,27 +399,35 @@ const ContentItem = ({ note, user, setCurrentUser, setCurrentNotes, setFollowing
           )
         }
         title={
-          <Box sx={{display: 'flex', alignItems: 'center'}}>
-          <Typography
-            variant="body2"
-            sx={{fontWeight: "bold", fontFamily: "inherit", lineHeight: 1.7}}
-            component="span"
-          >
-            {authorName}
-          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Typography
+              onClick={handleToProfile}
+              variant="body2"
+              sx={{
+                fontWeight: "bold",
+                fontFamily: "inherit",
+                lineHeight: 1.7,
+                '&:hover': {cursor: "pointer"}
+              }}
+              component="span"
+            >
+              {authorName}
+            </Typography>
             {userId === authorId ? (
               <Chip
                 label={"You"}
                 variant="outlined"
                 size="small"
-                sx={{ ml: 1}}
+                sx={{ ml: 1 }}
               />
             ) : (
               <>
-                <Typography variant="body2" component='span'>&nbsp;·&nbsp;</Typography>
+                <Typography variant="body2" component="span">
+                  &nbsp;·&nbsp;
+                </Typography>
                 <Typography
                   variant="body2"
-                  component='span'
+                  component="span"
                   sx={{
                     fontFamily: "inherit",
                     color: isFollowing ? "#939598" : "#2e69ff",
@@ -407,15 +442,20 @@ const ContentItem = ({ note, user, setCurrentUser, setCurrentNotes, setFollowing
                 </Typography>
               </>
             )}
-          
           </Box>
         }
         subheader={
           <Typography
             variant="body2"
-            sx={{ fontFamily: "inherit", color: "gray", wordBreak: "break-word"}}
+            sx={{
+              fontFamily: "inherit",
+              color: "gray",
+              wordBreak: "break-word",
+            }}
           >
-            {authorDescription}{`${authorDescription === '' ? '' : ' · '}`}{convertDate(firstPublicAt)}
+            {authorDescription}
+            {`${authorDescription === "" ? "" : " · "}`}
+            {convertDate(firstPublicAt)}
           </Typography>
         }
         sx={{
@@ -467,45 +507,45 @@ const ContentItem = ({ note, user, setCurrentUser, setCurrentNotes, setFollowing
           ))}
         </CardContent>
       )}
-
-      {/* note content  */}
-      <CardContent
-        sx={{ maxHeight: expanded ? "none" : 200, overflowY: "hidden" }}
-      >
-        <ReactMarkdown
-          skipHtml={true}
-          className="markdown-body"
-          components={{
-            code({
-              node,
-              inline,
-              className,
-              children,
-              style,
-              ...props
-            }: CodeProps) {
-              const match = /language-(\w+)/.exec(className || "");
-              return !inline && match ? (
-                <SyntaxHighlighter
-                  children={String(children).replace(/\n$/, "")}
-                  wrapLongLines={true}
-                  language={match[1]}
-                  PreTag="div"
-                  {...props}
-                />
-              ) : (
-                <code className={className} {...props}>
-                  {children}
-                </code>
-              );
-            },
-          }}
-          remarkPlugins={[remarkGfm]}
+      <CardActionArea onClick={handleToDetailedNote}>
+        {/* note content  */}
+        <CardContent
+          sx={{ maxHeight: expanded ? "none" : 200, overflowY: "hidden" }}
         >
-          {mdText}
-        </ReactMarkdown>
-      </CardContent>
-
+          <ReactMarkdown
+            skipHtml={true}
+            className="markdown-body"
+            components={{
+              code({
+                node,
+                inline,
+                className,
+                children,
+                style,
+                ...props
+              }: CodeProps) {
+                const match = /language-(\w+)/.exec(className || "");
+                return !inline && match ? (
+                  <SyntaxHighlighter
+                    children={String(children).replace(/\n$/, "")}
+                    wrapLongLines={true}
+                    language={match[1]}
+                    PreTag="div"
+                    {...props}
+                  />
+                ) : (
+                  <code className={className} {...props}>
+                    {children}
+                  </code>
+                );
+              },
+            }}
+            remarkPlugins={[remarkGfm]}
+          >
+            {mdText}
+          </ReactMarkdown>
+        </CardContent>
+      </CardActionArea>
       {/* comment section button, like button, bookmark button and expand button  */}
       <CardActions
         sx={{

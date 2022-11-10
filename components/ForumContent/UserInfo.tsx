@@ -19,6 +19,8 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import DescriptionIcon from "@mui/icons-material/Description";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import StarIcon from "@mui/icons-material/Star";
+
 import { useRouter } from "next/router";
 
 const listButtons = [
@@ -35,8 +37,8 @@ const listButtons = [
     text: "Bookmarks",
   },
   {
-    icon: <ChatBubbleIcon />,
-    text: "Comments",
+    icon: <StarIcon />,
+    text: "Favorite",
   },
 ];
 
@@ -78,7 +80,9 @@ interface IProps {
 const UserInfo = ({user, followingCount, setFollowingCount}: IProps) => {
   const router = useRouter();
 
-  
+  const handleNavigateToProfile = useCallback((tabValue: number) => {
+    router.push({pathname: "/profile", query: { tabValue}});
+  }, []);
 
   const handleCreateNote = useCallback(() => {
     router.push("/notes");
@@ -112,6 +116,7 @@ const UserInfo = ({user, followingCount, setFollowingCount}: IProps) => {
 
       <Box sx={{ display: "flex", mt: 1 }}>
         <Button
+          onClick={() => handleNavigateToProfile(4)}
           sx={{
             bgcolor: "#ffffff",
             display: "flex",
@@ -144,6 +149,7 @@ const UserInfo = ({user, followingCount, setFollowingCount}: IProps) => {
           </Typography>
         </Button>
         <Button
+        onClick={() => handleNavigateToProfile(5)}
           sx={{
             bgcolor: "#ffffff",
             display: "flex",
@@ -186,9 +192,9 @@ const UserInfo = ({user, followingCount, setFollowingCount}: IProps) => {
 
       <Box sx={{ bgcolor: "#fff", mt: 1 }}>
         <List>
-          {listButtons.map((listButtons) => (
+          {listButtons.map((listButtons, index) => (
             <ListItem key={listButtons.text} disablePadding>
-              <ListItemButton>
+              <ListItemButton onClick={() => handleNavigateToProfile(index)}>
                 <ListItemIcon>{listButtons.icon}</ListItemIcon>
                 <ListItemText
                   sx={{ fontFamily: "inherit", color: "#8590a6" }}

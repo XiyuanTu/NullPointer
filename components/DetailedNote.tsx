@@ -115,7 +115,7 @@ const DetailedNote = ({ user, note, author }: IProps) => {
   const openMoreActions = Boolean(anchorEl);
 
   const dispatch = useAppDispatch();
-  const router = useRouter()
+  const router = useRouter();
 
   const handleGetComment = useCallback(async () => {
     if (!openComment) {
@@ -201,8 +201,6 @@ const DetailedNote = ({ user, note, author }: IProps) => {
     }
   }, [isBookmark]);
 
-
-
   const handleCommentContentOnChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setCommentContent(e.target.value);
@@ -256,13 +254,21 @@ const DetailedNote = ({ user, note, author }: IProps) => {
         action: Action.Push,
         value: { blocks: authorId },
       });
-      router.back()
+      router.back();
     } catch (e) {
       feedback(
         dispatch,
         Feedback.Error,
         `Fail to block the user. Internal error. Please try later.`
       );
+    }
+  }, []);
+
+  const handleToProfile = useCallback(() => {
+    if (authorId === userId) {
+      router.push("/profile");
+    } else {
+      router.push("/profile/" + authorId);
     }
   }, []);
 
@@ -313,7 +319,14 @@ const DetailedNote = ({ user, note, author }: IProps) => {
     >
       {/* author info */}
       <CardHeader
-        avatar={<UserAvatar image={authorAvatar} name={authorName} />}
+        avatar={
+          <Box
+            onClick={handleToProfile}
+            sx={{ "&:hover": { cursor: "pointer" } }}
+          >
+            <UserAvatar image={authorAvatar} name={authorName} />
+          </Box>
+        }
         action={
           userId !== authorId && (
             <>
@@ -352,11 +365,13 @@ const DetailedNote = ({ user, note, author }: IProps) => {
         title={
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Typography
+              onClick={handleToProfile}
               variant="body2"
               sx={{
                 fontWeight: "bold",
                 fontFamily: "inherit",
                 lineHeight: 1.7,
+                "&:hover": { cursor: "pointer" },
               }}
               component="span"
             >
@@ -458,7 +473,7 @@ const DetailedNote = ({ user, note, author }: IProps) => {
 
       {/* note content  */}
       <CardContent
-        // sx={{ maxHeight: expanded ? "none" : 200, overflowY: "hidden" }}
+      // sx={{ maxHeight: expanded ? "none" : 200, overflowY: "hidden" }}
       >
         <ReactMarkdown
           skipHtml={true}

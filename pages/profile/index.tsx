@@ -11,14 +11,16 @@ import { authOptions } from "../api/auth/[...nextauth]";
 import ProfileTabs from "../../components/Profile/ProfileTabs";
 import UserProfile from "../../components/Profile/UserProfile";
 import {useState} from 'react'
+import { useRouter } from "next/router";
 
 interface IProps {
   user: User;
 }
 
 const CurrentUserProfile = ({ user: currentUser }: IProps) => {
+  const router = useRouter()
   const [user, setUser] = useState(currentUser)
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState(router.query.tabValue ? parseInt(router.query.tabValue as string) : 0);
 
   return (
     <Container maxWidth="lg" sx={{display: 'flex', pt: 3, mt: "9vh" }}>
