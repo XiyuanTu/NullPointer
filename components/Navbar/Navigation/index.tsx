@@ -7,12 +7,14 @@ import Box from "@mui/material/Box";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import NavbarMenuItem from "./NavbarMenuItem";
 
 import { openLoginPage } from "../../../state/slices/loginSlice";
 import { useAppDispatch } from "../../../state/hooks";
 import UserAvatar from "../../UserAvatar";
+import { Tooltip } from "@mui/material";
 
 const Navigation = () => {
   const router = useRouter();
@@ -34,18 +36,32 @@ const Navigation = () => {
       {session &&
         // <UserAvatar image={session.user.image} name={session.user.name}/>
         (session.user.image ? (
-          <Avatar
-            sx={{ width: "2rem", height: "2rem", color: "primary.main", '&:hover': {cursor: 'pointer'}}}
-            src={session.user.image}
-            onClick={handleCurrentUserProfile}
-          />
+          <Tooltip title="Profile" arrow>
+            <Avatar
+              sx={{
+                width: "2rem",
+                height: "2rem",
+                color: "primary.main",
+                "&:hover": { cursor: "pointer" },
+              }}
+              src={session.user.image}
+              onClick={handleCurrentUserProfile}
+            />
+          </Tooltip>
         ) : (
-          <Avatar
-            sx={{ width: "2rem", height: "2rem", color: "primary.main", '&:hover': {cursor: 'pointer'}}}
-            onClick={handleCurrentUserProfile}
-          >
-            {session.user.name!.substring(0, 1).toUpperCase()}
-          </Avatar>
+          <Tooltip title="Profile" arrow>
+            <Avatar
+              sx={{
+                width: "2rem",
+                height: "2rem",
+                color: "primary.main",
+                "&:hover": { cursor: "pointer" },
+              }}
+              onClick={handleCurrentUserProfile}
+            >
+              {session.user.name!.substring(0, 1).toUpperCase()}
+            </Avatar>
+          </Tooltip>
         ))}
       <Box sx={{ display: "flex", gap: 1 }}>
         {session ? (
@@ -55,17 +71,10 @@ const Navigation = () => {
               tooltipTitle="forum"
               onClick={() => router.push("/forum")}
             />
-
             <NavbarMenuItem
-              icon={NotificationsNoneOutlinedIcon}
-              tooltipTitle="notifications"
-              badgeContent={100}
-              onClick={() => {}}
-            />
-            <NavbarMenuItem
-              icon={SettingsOutlinedIcon}
-              tooltipTitle="settings"
-              onClick={() => {}}
+              icon={CreateOutlinedIcon}
+              tooltipTitle="notebook"
+              onClick={() => router.push("/notes")}
             />
             <NavbarMenuItem
               icon={LogoutIcon}
