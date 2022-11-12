@@ -36,6 +36,7 @@ declare interface ForumNote {
     description?: string;
     avatar?: string;
   };
+  relevance?: number;
 };
 
 declare interface RenderTree {

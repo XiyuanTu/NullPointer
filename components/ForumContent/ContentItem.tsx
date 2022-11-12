@@ -72,7 +72,7 @@ interface IProps {
   note: ForumNote;
   user: User;
   setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
-  setCurrentNotes: React.Dispatch<React.SetStateAction<ForumNote[]>>;
+  setNotes: React.Dispatch<React.SetStateAction<ForumNote[] | null>>;
   setFollowingCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
@@ -80,7 +80,7 @@ const ContentItem = ({
   note,
   user,
   setCurrentUser,
-  setCurrentNotes,
+  setNotes,
   setFollowingCount,
 }: IProps) => {
   const {
@@ -283,8 +283,8 @@ const ContentItem = ({
         action: Action.Push,
         value: { blocks: authorId },
       });
-      setCurrentNotes((state) =>
-        state.filter((note) => note.author._id !== authorId)
+      setNotes((state) =>
+        state!.filter((note) => note.author._id !== authorId)
       );
     } catch (e) {
       feedback(
@@ -297,6 +297,17 @@ const ContentItem = ({
 
   const handleToDetailedNote = useCallback(() => {
     router.push("/notes/" + noteId);
+  }, []);
+
+  const handleSearchForTag = useCallback((tag: string) => {
+    router.push(
+      {
+        pathname: "/forum",
+        query: { search: tag },
+      },
+      undefined,
+      { shallow: true }
+    );
   }, []);
 
   const handleToProfile = useCallback(() => {
@@ -496,6 +507,7 @@ const ContentItem = ({
                 ":hover": { backgroundColor: "#d0e3f1", border: "none" },
               }}
               variant="outlined"
+              onClick={() => handleSearchForTag(tag)}
             >
               <Typography
                 noWrap={true}

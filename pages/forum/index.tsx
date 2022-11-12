@@ -9,25 +9,37 @@ import Note from "../../models/note/noteModel";
 import { convertForumData, convertUser } from "../../utils/notes";
 import UserInfo from "../../components/ForumContent/UserInfo";
 import UserAccount from "../../models/user/userAccountModel";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 interface IProps {
   convertedData: [];
-  convertedUser: User
+  convertedUser: User;
 }
 
-const Forum = ({ convertedData: notes, convertedUser: user }: IProps) => {
+const Forum = ({ convertedData, convertedUser: user }: IProps) => {
 
-  const [followingCount, setFollowingCount] = useState(user.following.length)
+  const [followingCount, setFollowingCount] = useState(user.following.length);
 
   return (
-    <Container maxWidth="lg" sx={{ display: 'flex', pt: 3, mt: "9vh" }}>
-        <Box sx={{width: '75%', mr: 2}}>
-          <ForumContent notes={notes} user={user} setFollowingCount={setFollowingCount}/>
-        </Box>
-        <Box sx={{width: '25%'}}>
-          <UserInfo user={user} followingCount={followingCount} setFollowingCount={setFollowingCount}/>
-        </Box>
+    <Container
+      maxWidth="lg"
+      sx={{ display: "flex", pt: 3, mt: "9vh" }}
+    >
+      <Box sx={{ width: "75%", mr: 2 }}>
+        <ForumContent
+          convertedData={convertedData}
+          user={user}
+          setFollowingCount={setFollowingCount}
+        />
+      </Box>
+      <Box sx={{ width: "25%" }}>
+        <UserInfo
+          user={user}
+          followingCount={followingCount}
+          setFollowingCount={setFollowingCount}
+        />
+      </Box>
     </Container>
   );
 };
@@ -42,17 +54,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   await connectDB();
 
   const id = session!.user.id;
-  const user = await UserAccount.findById(id, {email: 0, password: 0}).lean()
-  const convertedUser = convertUser(user)
+  const user = await UserAccount.findById(id, { email: 0, password: 0 }).lean();
+  const convertedUser = convertUser(user);
 
   const notes = await Note.find(
-    { public: true, userId: {$nin: convertedUser.blocks} },
+    { public: true, userId: { $nin: convertedUser.blocks } },
     { name: 0, public: 0, favorite: 0, belongTo: 0 }
   ).lean();
 
   const convertedData = await convertForumData(notes);
-  
-  return { props: { convertedData, convertedUser} };
+  convertedData.sort((a, b) => a.like - b.like)
+
+  return { props: { convertedData, convertedUser } };
 };
 
 export default Forum;
+
+

@@ -264,6 +264,15 @@ const DetailedNote = ({ user, note, author }: IProps) => {
     }
   }, []);
 
+  const handleSearchForTag = useCallback((tag: string) => {
+    router.push(
+      {
+        pathname: "/forum",
+        query: { search: tag },
+      }
+    );
+  }, []);
+
   const handleToProfile = useCallback(() => {
     if (authorId === userId) {
       router.push("/profile");
@@ -459,6 +468,7 @@ const DetailedNote = ({ user, note, author }: IProps) => {
                 ":hover": { backgroundColor: "#d0e3f1", border: "none" },
               }}
               variant="outlined"
+              onClick={() => handleSearchForTag(tag)}
             >
               <Typography
                 noWrap={true}
