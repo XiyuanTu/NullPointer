@@ -41,6 +41,7 @@ import {
     const handlePageOnChange = useCallback(
       (event: React.ChangeEvent<unknown>, value: number) => {
         setCurrentPage(value);
+        window.scrollTo(0, 0)
       },
       []
     );
