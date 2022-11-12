@@ -11,7 +11,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Button
+  Button,
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
 import axios from "axios";
@@ -27,7 +27,7 @@ import ContentItem from "./ContentItem";
 
 interface IProps {
   user: User;
-  setUser: React.Dispatch<React.SetStateAction<User>>
+  setUser: React.Dispatch<React.SetStateAction<User>>;
 }
 
 const ProfileFollowers = ({ user, setUser }: IProps) => {
@@ -35,12 +35,11 @@ const ProfileFollowers = ({ user, setUser }: IProps) => {
   const router = useRouter();
   const [followers, setFollowers] = useState<User[] | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   const handlePageOnChange = useCallback(
     (event: React.ChangeEvent<unknown>, value: number) => {
       setCurrentPage(value);
-      window.scrollTo(0, 0)
     },
     []
   );
@@ -53,37 +52,54 @@ const ProfileFollowers = ({ user, setUser }: IProps) => {
     }
   }, []);
 
-  const handleFollowAndFollowing = useCallback(async(followerId: string) => {
-    try {
-      await axios.patch(`http://localhost:3000/api/user/${userId}`, {
-        property: UserInfo.Following,
-        action: user.following.includes(followerId) ? Action.Pull : Action.Push,
-        value: { following: followerId },
-      });
-      await axios.patch(`http://localhost:3000/api/user/${followerId}`, {
-        property: UserInfo.Followers,
-        action: user.following.includes(followerId) ? Action.Pull : Action.Push,
-        value: { followers: userId },
-      });
-      const target = followers!.find(follower => follower._id === followerId)
-      let newFollowing = []
-      if (user.following.includes(followerId)) {
-        newFollowing = user.following.filter(followingId => followingId !== followerId)
-        target!.followers = target!.followers.filter(followerId => followerId !== userId)
-      } else {
-        newFollowing = [...user.following, followerId]
-        target!.followers = [...target!.followers, userId]
+  const handleFollowAndFollowing = useCallback(
+    async (followerId: string) => {
+      try {
+        await axios.patch(`http://localhost:3000/api/user/${userId}`, {
+          property: UserInfo.Following,
+          action: user.following.includes(followerId)
+            ? Action.Pull
+            : Action.Push,
+          value: { following: followerId },
+        });
+        await axios.patch(`http://localhost:3000/api/user/${followerId}`, {
+          property: UserInfo.Followers,
+          action: user.following.includes(followerId)
+            ? Action.Pull
+            : Action.Push,
+          value: { followers: userId },
+        });
+        const target = followers!.find(
+          (follower) => follower._id === followerId
+        );
+        let newFollowing = [];
+        if (user.following.includes(followerId)) {
+          newFollowing = user.following.filter(
+            (followingId) => followingId !== followerId
+          );
+          target!.followers = target!.followers.filter(
+            (followerId) => followerId !== userId
+          );
+        } else {
+          newFollowing = [...user.following, followerId];
+          target!.followers = [...target!.followers, userId];
+        }
+        setUser({ ...user, following: newFollowing });
+        setFollowers((state) => [...state!]);
+      } catch (e) {
+        feedback(
+          dispatch,
+          Feedback.Error,
+          "Fail to process. Internal error. Please try later."
+        );
       }
-      setUser({ ...user, following: newFollowing});
-      setFollowers(state => [...state!])
-    } catch (e) {
-      feedback(
-        dispatch,
-        Feedback.Error,
-        "Fail to process. Internal error. Please try later."
-      );
-    }
-    }, [followers, user]);
+    },
+    [followers, user]
+  );
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentPage]);
 
   useEffect(() => {
     (async function getNotes() {
@@ -157,8 +173,15 @@ const ProfileFollowers = ({ user, setUser }: IProps) => {
             index < Math.min(currentPage * 8, followers.length)
           ) {
             return (
-              <ListItem key={follower._id} alignItems="center" sx={{bgcolor: 'white'}}>
-                <ListItemAvatar sx={{'&:hover': {cursor: "pointer"}}} onClick={() => handleToProfile(follower._id)}>
+              <ListItem
+                key={follower._id}
+                alignItems="center"
+                sx={{ bgcolor: "white" }}
+              >
+                <ListItemAvatar
+                  sx={{ "&:hover": { cursor: "pointer" } }}
+                  onClick={() => handleToProfile(follower._id)}
+                >
                   <UserAvatar
                     name={follower.username}
                     image={follower.avatar}
@@ -166,9 +189,21 @@ const ProfileFollowers = ({ user, setUser }: IProps) => {
                 </ListItemAvatar>
                 <ListItemText
                   primary={
-                    <Typography onClick={() => handleToProfile(follower._id)} component='span' sx={{fontFamily: 'inherit', fontWeight: 'bold', '&:hover': {cursor: "pointer"}}}>{follower.username}</Typography>
+                    <Typography
+                      onClick={() => handleToProfile(follower._id)}
+                      component="span"
+                      sx={{
+                        fontFamily: "inherit",
+                        fontWeight: "bold",
+                        "&:hover": { cursor: "pointer" },
+                      }}
+                    >
+                      {follower.username}
+                    </Typography>
                   }
-                  secondary={`${convertCount(follower.followers.length)} ${follower.followers.length === 1 ? 'follower': 'followers'}`}
+                  secondary={`${convertCount(follower.followers.length)} ${
+                    follower.followers.length === 1 ? "follower" : "followers"
+                  }`}
                 />
                 <Button
                   variant="contained"
@@ -180,7 +215,9 @@ const ProfileFollowers = ({ user, setUser }: IProps) => {
                   }}
                   onClick={() => handleFollowAndFollowing(follower._id)}
                 >
-                  {user.following.includes(follower._id) ? 'Following' : 'Follow'}
+                  {user.following.includes(follower._id)
+                    ? "Following"
+                    : "Follow"}
                 </Button>
               </ListItem>
             );

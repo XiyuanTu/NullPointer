@@ -40,7 +40,6 @@ const ProfileFollowing = ({ user, setUser }: IProps) => {
   const handlePageOnChange = useCallback(
     (event: React.ChangeEvent<unknown>, value: number) => {
       setCurrentPage(value);
-      window.scrollTo(0, 0)
     },
     []
   );
@@ -97,6 +96,10 @@ const ProfileFollowing = ({ user, setUser }: IProps) => {
     },
     [following, user]
   );
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentPage]);
 
   useEffect(() => {
     (async function getNotes() {
@@ -176,7 +179,7 @@ const ProfileFollowing = ({ user, setUser }: IProps) => {
                 sx={{ bgcolor: "white" }}
               >
                 <ListItemAvatar
-                  sx={{'&:hover': {cursor: "pointer"}}}
+                  sx={{ "&:hover": { cursor: "pointer" } }}
                   onClick={() => handleToProfile(followingUser._id)}
                 >
                   <UserAvatar
@@ -189,7 +192,11 @@ const ProfileFollowing = ({ user, setUser }: IProps) => {
                     <Typography
                       onClick={() => handleToProfile(followingUser._id)}
                       component="span"
-                      sx={{ fontFamily: "inherit", fontWeight: "bold", '&:hover': {cursor: "pointer"}}}
+                      sx={{
+                        fontFamily: "inherit",
+                        fontWeight: "bold",
+                        "&:hover": { cursor: "pointer" },
+                      }}
                     >
                       {followingUser.username}
                     </Typography>

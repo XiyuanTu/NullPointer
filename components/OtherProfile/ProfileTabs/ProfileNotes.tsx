@@ -39,7 +39,6 @@ const ProfileNotes = ({ user, otherUser }: IProps) => {
   const handlePageOnChange = useCallback(
     (event: React.ChangeEvent<unknown>, value: number) => {
       setCurrentPage(value);
-      window.scrollTo(0, 0)
     },
     []
   );
@@ -52,6 +51,10 @@ const ProfileNotes = ({ user, otherUser }: IProps) => {
       setRawNotes(notes.filter((note: Note) => note.public));
     })();
   }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentPage]);
 
   useEffect(() => {
     if (rawNotes) {
@@ -82,7 +85,7 @@ const ProfileNotes = ({ user, otherUser }: IProps) => {
             fontSize: 20,
           }}
         >
-          You have not written any note yet! 
+          You have not written any note yet!
         </Typography>
         <Image src="/no_data.jpg" width={900} height={500} />
       </Box>
@@ -107,7 +110,8 @@ const ProfileNotes = ({ user, otherUser }: IProps) => {
         <Typography>
           {(currentPage - 1) * 8 + 1} -{" "}
           {Math.min(currentPage * 8, sortedNotes.length)} of{" "}
-          {sortedNotes.length} results (Only currently public notes are displayed)
+          {sortedNotes.length} results (Only currently public notes are
+          displayed)
         </Typography>
         <Box>
           <FormControl sx={{ mr: 1 }} size="small">
