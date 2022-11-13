@@ -22,6 +22,10 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import StarIcon from "@mui/icons-material/Star";
 
 import { useRouter } from "next/router";
+import axios from "axios";
+import { Action, Feedback, UserInfo } from "../../types/constants";
+import { feedback } from "../../utils/feedback";
+import { useAppDispatch } from "../../state/hooks";
 
 const listButtons = [
   {
@@ -42,51 +46,32 @@ const listButtons = [
   },
 ];
 
-const recommendedUsers = [
-  {
-    username: "John",
-    description: "full stack",
-  },
-  {
-    username: "Tina",
-    description: "athlete",
-  },
-  {
-    username: "Tina",
-    description: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-  },
-  {
-    username: "Tina",
-    description: "athlete",
-  },
-  {
-    username: "Tina",
-    description: "athlete",
-  },
-  {
-    username: "Tina",
-    description: "athlete",
-  },
-];
-
 const info = ["Contact Me", "FAQs", "Source Code", "Terms and Privacy"];
 
 interface IProps {
-   user: User,
-   followingCount: number,
-   setFollowingCount: React.Dispatch<React.SetStateAction<number>>,
+  user: User;
+  setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
+  whoToFollow: User[];
 }
 
-const UserInfo = ({user, followingCount, setFollowingCount}: IProps) => {
+const UserInfoComponent = ({
+  user,
+  setCurrentUser,
+  whoToFollow,
+}: IProps) => {
   const router = useRouter();
 
   const handleNavigateToProfile = useCallback((tabValue: number) => {
-    router.push({pathname: "/profile", query: { tabValue}});
+    router.push({ pathname: "/profile", query: { tabValue } });
   }, []);
 
   const handleCreateNote = useCallback(() => {
     router.push("/notes");
   }, []);
+
+  // useEffect(() => {
+  //   console.log(whoToFollow);
+  // }, [whoToFollow]);
 
   return (
     <Box>
@@ -109,8 +94,13 @@ const UserInfo = ({user, followingCount, setFollowingCount}: IProps) => {
         >
           Who to follow
         </Typography>
-        {recommendedUsers.map((recommendedUser, index) => (
-          <UserCard key={index} user={recommendedUser} />
+        {whoToFollow.map((recommendedUser, index) => (
+          <UserCard
+            key={index}
+            user={user}
+            recommendedUser={recommendedUser}
+            setCurrentUser={setCurrentUser}
+          />
         ))}
       </Box>
 
@@ -149,7 +139,7 @@ const UserInfo = ({user, followingCount, setFollowingCount}: IProps) => {
           </Typography>
         </Button>
         <Button
-        onClick={() => handleNavigateToProfile(5)}
+          onClick={() => handleNavigateToProfile(5)}
           sx={{
             bgcolor: "#ffffff",
             display: "flex",
@@ -177,7 +167,7 @@ const UserInfo = ({user, followingCount, setFollowingCount}: IProps) => {
               color: "black",
             }}
           >
-            {followingCount}
+            {user.following.length}
           </Typography>
         </Button>
       </Box>
@@ -227,48 +217,100 @@ const UserInfo = ({user, followingCount, setFollowingCount}: IProps) => {
   );
 };
 
-export default UserInfo;
+export default UserInfoComponent;
 
 interface UserCardIProps {
-  user: {
-    username: string;
-    avatar?: string;
-    description?: string;
-  };
+  recommendedUser: User;
+  user: User;
+  setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
 }
 
-const UserCard = ({ user }: UserCardIProps) => {
+const UserCard = ({
+  recommendedUser,
+  user,
+  setCurrentUser,
+}: UserCardIProps) => {
+
+  const [isFollowing, setIsFollowing] = useState(
+    user.following.includes(recommendedUser._id)
+  );
+
+  const dispatch = useAppDispatch();
+
+  const handleFollowAndFollowing = useCallback(async () => {
+    try {
+      await axios.patch(`http://localhost:3000/api/user/${user._id}`, {
+        property: UserInfo.Following,
+        action: isFollowing ? Action.Pull : Action.Push,
+        value: { following: recommendedUser._id },
+      });
+      await axios.patch(
+        `http://localhost:3000/api/user/${recommendedUser._id}`,
+        {
+          property: UserInfo.Followers,
+          action: isFollowing ? Action.Pull : Action.Push,
+          value: { followers: user._id },
+        }
+      );
+
+      let newFollowing;
+      newFollowing = isFollowing
+        ? user.following.filter((id) => id !== recommendedUser._id)
+        : [...user.following, recommendedUser._id];
+      setCurrentUser({ ...user, following: newFollowing });
+    } catch (e) {
+      feedback(
+        dispatch,
+        Feedback.Error,
+        "Fail to process. Internal error. Please try later."
+      );
+    }
+  }, [user.following, isFollowing]);
+
+  useEffect(() => {
+    setIsFollowing(user.following.includes(recommendedUser._id));
+  }, [user.following]);
+
   return (
     <CardHeader
       avatar={
-        user.avatar ? (
-          <Avatar src={user.avatar} aria-label="username" />
+        recommendedUser.avatar ? (
+          <Avatar src={recommendedUser.avatar} aria-label="username" />
         ) : (
-          <Avatar src={user.avatar} aria-label="username">
-            {user.username.substring(0, 1).toUpperCase()}
+          <Avatar src={recommendedUser.avatar} aria-label="username">
+            {recommendedUser.username.substring(0, 1).toUpperCase()}
           </Avatar>
         )
       }
       title={
         <Typography
           variant="body2"
-          sx={{ width: '100%', fontWeight: "bold", fontFamily: "inherit", wordBreak: "break-word"}}
+          sx={{
+            width: "100%",
+            fontWeight: "bold",
+            fontFamily: "inherit",
+            wordBreak: "break-word",
+          }}
           component="span"
         >
-          {user.username}
+          {recommendedUser.username}
         </Typography>
       }
       subheader={
         <Typography
           variant="body2"
-          sx={{ fontFamily: "inherit", color: "gray", wordBreak: "break-word"}}
+          sx={{ fontFamily: "inherit", color: "gray", wordBreak: "break-word" }}
         >
-          {user.description}
+          {recommendedUser.description}
         </Typography>
       }
       action={
-        <Button variant="text" sx={{ textTransform: "none" }}>
-          + Follow
+        <Button
+          variant="text"
+          sx={{ textTransform: "none" }}
+          onClick={handleFollowAndFollowing}
+        >
+          {isFollowing ? "Following" : "+ Follow"}
         </Button>
       }
       sx={{

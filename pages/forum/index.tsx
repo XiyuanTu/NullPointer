@@ -1,13 +1,13 @@
 import { Paper, Box, Container } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import ForumContent from "../../components/ForumContent";
+import ForumContent from "../../components/Forum/ForumContent";
 import { unstable_getServerSession } from "next-auth/next";
 import { GetServerSideProps } from "next";
 import { authOptions } from "../api/auth/[...nextauth]";
 import connectDB from "../../utils/connectDB";
 import Note from "../../models/note/noteModel";
 import { convertForumData, convertUser } from "../../utils/notes";
-import UserInfo from "../../components/ForumContent/UserInfo";
+import UserInfoComponent from "../../components/Forum/UserInfoComponent";
 import UserAccount from "../../models/user/userAccountModel";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
@@ -15,11 +15,14 @@ import { useRouter } from "next/router";
 interface IProps {
   convertedData: [];
   convertedUser: User;
+  convertedWhoToFollow: User[]
 }
 
-const Forum = ({ convertedData, convertedUser: user }: IProps) => {
+const Forum = ({ convertedData, convertedUser, convertedWhoToFollow }: IProps) => {
 
-  const [followingCount, setFollowingCount] = useState(user.following.length);
+  const [followingCount, setFollowingCount] = useState(convertedUser.following.length);
+  const [currentUser, setCurrentUser] = useState(convertedUser)
+  //作废，在这里保存user状态
 
   return (
     <Container
@@ -29,15 +32,15 @@ const Forum = ({ convertedData, convertedUser: user }: IProps) => {
       <Box sx={{ width: "75%", mr: 2 }}>
         <ForumContent
           convertedData={convertedData}
-          user={user}
-          setFollowingCount={setFollowingCount}
+          user={currentUser}
+          setCurrentUser={setCurrentUser}
         />
       </Box>
       <Box sx={{ width: "25%" }}>
-        <UserInfo
-          user={user}
-          followingCount={followingCount}
-          setFollowingCount={setFollowingCount}
+        <UserInfoComponent
+          user={currentUser}
+          setCurrentUser={setCurrentUser}
+          whoToFollow={convertedWhoToFollow}
         />
       </Box>
     </Container>
@@ -63,9 +66,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   ).lean();
 
   const convertedData = await convertForumData(notes);
-  convertedData.sort((a, b) => a.like - b.like)
+  convertedData.sort((a, b) => b.like - a.like)
 
-  return { props: { convertedData, convertedUser } };
+  const whoToFollow: User[] = await UserAccount.find({_id: {$nin: [...convertedUser.blocks, ...convertedUser.following, id]}}, { email: 0, password: 0 }).lean()
+
+  const convertedWhoToFollow = whoToFollow.map(user => convertUser(user)).sort((a, b) => b.following.length - a.following.length).slice(0, 6)
+
+  return { props: { convertedData, convertedUser, convertedWhoToFollow } };
 };
 
 export default Forum;

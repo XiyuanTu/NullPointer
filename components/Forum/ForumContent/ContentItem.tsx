@@ -44,12 +44,12 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import axios from "axios";
-import { feedback } from "../../utils/feedback";
-import { useAppDispatch } from "../../state/hooks";
-import { Action, Feedback, NoteInfo, UserInfo } from "../../types/constants";
-import UserAvatar from "../UserAvatar";
-import { convertCount, convertDate } from "../../utils/forum";
-import Comment from "../Comment";
+import { feedback } from "../../../utils/feedback";
+import { useAppDispatch } from "../../../state/hooks";
+import { Action, Feedback, NoteInfo, UserInfo } from "../../../types/constants";
+import UserAvatar from "../../UserAvatar";
+import { convertCount, convertDate } from "../../../utils/forum";
+import Comment from "../../Comment";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
@@ -73,7 +73,6 @@ interface IProps {
   user: User;
   setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
   setNotes: React.Dispatch<React.SetStateAction<ForumNote[] | null>>;
-  setFollowingCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const ContentItem = ({
@@ -81,7 +80,6 @@ const ContentItem = ({
   user,
   setCurrentUser,
   setNotes,
-  setFollowingCount,
 }: IProps) => {
   const {
     _id: noteId,
@@ -154,10 +152,6 @@ const ContentItem = ({
   }, [openComment, commentIds]);
 
   const handleFollow = useCallback(async () => {
-    let newFollowing;
-    newFollowing = isFollowing
-      ? following.filter((id) => id !== authorId)
-      : [...following, authorId];
     try {
       await axios.patch(`http://localhost:3000/api/user/${userId}`, {
         property: UserInfo.Following,
@@ -169,8 +163,12 @@ const ContentItem = ({
         action: isFollowing ? Action.Pull : Action.Push,
         value: { followers: userId },
       });
+
+      let newFollowing;
+      newFollowing = isFollowing
+        ? following.filter((id) => id !== authorId)
+        : [...following, authorId];
       setCurrentUser({ ...user, following: newFollowing });
-      setFollowingCount((state) => (isFollowing ? state - 1 : state + 1));
     } catch (e) {
       feedback(
         dispatch,
@@ -370,7 +368,10 @@ const ContentItem = ({
       {/* author info */}
       <CardHeader
         avatar={
-          <Box onClick={handleToProfile} sx={{'&:hover': {cursor: "pointer"}}}>
+          <Box
+            onClick={handleToProfile}
+            sx={{ "&:hover": { cursor: "pointer" } }}
+          >
             <UserAvatar image={authorAvatar} name={authorName} />
           </Box>
         }
@@ -418,7 +419,7 @@ const ContentItem = ({
                 fontWeight: "bold",
                 fontFamily: "inherit",
                 lineHeight: 1.7,
-                '&:hover': {cursor: "pointer"}
+                "&:hover": { cursor: "pointer" },
               }}
               component="span"
             >

@@ -101,7 +101,7 @@ export const convertForumData = async (rawNotes: any[]) => {
   return newNotes;
 };
 
-export const convertUser = (user: User) => {
+export const convertUser = (user: User): User => {
   user._id = user._id + "";
   user.blocks = user.blocks.map(block => block + '')
   user.following = user.following.map(following => following + '')

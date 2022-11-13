@@ -18,12 +18,11 @@ import { useRouter } from "next/router";
 interface IProps {
   convertedData: ForumNote[];
   user: User;
-  setFollowingCount: React.Dispatch<React.SetStateAction<number>>;
+  setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
 }
 
-const ForumContent = ({ convertedData, user, setFollowingCount }: IProps) => {
+const ForumContent = ({ convertedData, user: currentUser, setCurrentUser }: IProps) => {
   const router = useRouter();
-  const [currentUser, setCurrentUser] = useState(user);
   const [rawNotes, setRawNotes] = useState<ForumNote[]>(convertedData);
   const [notes, setNotes] = useState<ForumNote[] | null>(null);
   const [searchText, setSearchText] = useState(router.query.search);
@@ -190,7 +189,6 @@ const ForumContent = ({ convertedData, user, setFollowingCount }: IProps) => {
               user={currentUser}
               setCurrentUser={setCurrentUser}
               setNotes={setNotes}
-              setFollowingCount={setFollowingCount}
             />
           );
         }
