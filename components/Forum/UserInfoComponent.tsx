@@ -69,10 +69,6 @@ const UserInfoComponent = ({
     router.push("/notes");
   }, []);
 
-  // useEffect(() => {
-  //   console.log(whoToFollow);
-  // }, [whoToFollow]);
-
   return (
     <Box>
       <Box
@@ -265,7 +261,7 @@ const UserCard = ({
         "Fail to process. Internal error. Please try later."
       );
     }
-  }, [user.following, isFollowing]);
+  }, [isFollowing]);
 
   useEffect(() => {
     setIsFollowing(user.following.includes(recommendedUser._id));

@@ -14,6 +14,7 @@ import {
 import ContentItem from "./ContentItem";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { calRelevance } from "../../../utils/forum";
 
 interface IProps {
   convertedData: ForumNote[];
@@ -207,28 +208,3 @@ const ForumContent = ({ convertedData, user: currentUser, setCurrentUser }: IPro
 
 export default ForumContent;
 
-const calRelevance = (search: string, notes: ForumNote[]) => {
-  const words = search.split(" ").map((word) => word.toLowerCase());
-  return notes
-    .map((note) => {
-      const wordSet = new Set(
-        note.title.split(" ").map((word) => word.toLowerCase())
-      );
-      note.tags.forEach((tag) => wordSet.add(tag.toLowerCase()));
-      let count = 0;
-      words.forEach((word) => wordSet.has(word) && count++);
-      return { ...note, relevance: count / words.length };
-    })
-    .filter((note) => note.relevance > 0)
-    .sort((a, b) => {
-      if (a.relevance === b.relevance) {
-        if ((a.like === b.like)) {
-          const dateA = new Date(a.firstPublicAt);
-          const dateB = new Date(b.firstPublicAt);
-          return dateB.getTime() - dateA.getTime();
-        }
-        return b.like - a.like;
-      }
-      return b.relevance! - a.relevance!;
-    });
-};
