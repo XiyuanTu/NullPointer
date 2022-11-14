@@ -41,6 +41,9 @@ export default async function handler(
         case UserInfo.Description:
           user = await UserAccount.findByIdAndUpdate(id, value);
           break;
+        case UserInfo.Avatar:
+          user = await UserAccount.findByIdAndUpdate(id, value);
+          break;
         default:
           // UserInfo.Following, UserInfo.Likes, UserInfo.Bookmarks
           if (action === Action.Push) {

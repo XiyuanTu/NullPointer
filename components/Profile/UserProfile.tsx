@@ -9,11 +9,14 @@ import {
 import axios from "axios";
 import EditIcon from "@mui/icons-material/Edit";
 import { useRouter } from "next/router";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, useEffect } from "react";
 import { useAppDispatch } from "../../state/hooks";
 import { Feedback, UserInfo } from "../../types/constants";
 import { feedback } from "../../utils/feedback";
 import UserAvatar from "../UserAvatar";
+import { PhotoCamera } from "@mui/icons-material";
+import { useSession } from "next-auth/react";
+
 
 interface IProps {
   user: User;
@@ -24,10 +27,12 @@ const UserProfile = ({ user, setTabValue }: IProps) => {
   const { _id: userId } = user;
   const dispatch = useAppDispatch();
   const router = useRouter();
-
+ 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [description, setDescription] = useState(user.description);
   const [isEditingDescription, setIsEditingDescription] = useState(false);
+  const [isHoveringAvatar, setIsHoveringAvatar] = useState(false);
+  const [imageUrl, setImageUrl] = useState(user.avatar);
 
   const handleCreateNote = useCallback(() => {
     router.push("/notes");
@@ -63,6 +68,47 @@ const UserProfile = ({ user, setTabValue }: IProps) => {
     setTabValue(4);
   }, []);
 
+  const handleOnMouseOver = useCallback(
+    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      e.stopPropagation();
+      setIsHoveringAvatar(true);
+    },
+    []
+  );
+
+  const handleOnMouseOut = useCallback(() => {
+    setIsHoveringAvatar(false);
+  }, []);
+
+  const handleImageUpload = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const formData = new FormData();
+      formData.append("file", e.target.files!["0"]);
+      formData.append("upload_preset", "nullpointer");
+      try {
+        const {
+          data: { url },
+        } = await axios.post(
+          "https://api.cloudinary.com/v1_1/dfk7ged9a/image/upload",
+          formData
+        );
+        await axios.patch(`http://localhost:3000/api/user/${userId}`, {
+          property: UserInfo.Avatar,
+          value: { avatar: url },
+        });
+        setImageUrl(url);
+
+      } catch (e) {
+        feedback(
+          dispatch,
+          Feedback.Error,
+          `Fail to update the avatar. Internal error. Please try later.`
+        );
+      }
+    },
+    []
+  );
+
   return (
     <Box>
       <Box
@@ -75,11 +121,44 @@ const UserProfile = ({ user, setTabValue }: IProps) => {
         }}
       >
         {/* user avatar */}
-        <UserAvatar
-          name={user.username}
-          image={user.avatar}
-          sx={{ width: 120, height: 120, mb: 3 }}
-        />
+        <Box
+          onMouseOver={handleOnMouseOver}
+          onMouseOut={handleOnMouseOut}
+          sx={{ mb: 3, position: "relative" }}
+        >
+          <UserAvatar
+            name={user.username}
+            image={imageUrl}
+            sx={{
+              width: 120,
+              height: 120,
+              opacity: isHoveringAvatar ? 0.5 : 1,
+            }}
+          />
+          {isHoveringAvatar && (
+            <IconButton
+              color="primary"
+              aria-label="upload picture"
+              component="label"
+              sx={{
+                position: "absolute",
+                left: "50%",
+                top: "50%",
+                transform: "translate(-50%, -50%)",
+                fontSize: 20,
+              }}
+            >
+              <input
+                hidden
+                accept="image/*"
+                type="file"
+                onChange={handleImageUpload}
+              />
+              <PhotoCamera fontSize="large" />
+            </IconButton>
+          )}
+        </Box>
+
         {/* username  */}
         <Typography
           sx={{

@@ -119,8 +119,8 @@ export const authOptions: NextAuthOptions = {
             break  
         }
         session.user.id = user.userId
+        user = await UserAccount.findById(user.userId);
       }
-      
       if (user.avatar) session.user.image = user.avatar
       return session
     }
