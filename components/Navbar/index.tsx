@@ -3,9 +3,8 @@ import Logo from "../Logo";
 import Navigation from "./Navigation";
 import NavbarSearch from "./NavbarSearch";
 import Box from "@mui/material/Box";
-import Divider from "@mui/material/Box";
 import LoginPage from "../../components/LoginPage";
-import { useAppSelector, useAppDispatch } from "../../state/hooks";
+import { useAppSelector } from "../../state/hooks";
 import { useSession } from "next-auth/react";
 
 const Navbar = () => {

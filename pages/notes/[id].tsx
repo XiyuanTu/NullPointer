@@ -6,13 +6,7 @@ import connectDB from "../../utils/connectDB";
 import { convertNote, convertUser } from "../../utils/notes";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { Container } from "@mui/material";
-import UserAvatar from "../../components/UserAvatar";
-import ReactMarkdown from "react-markdown";
-import { CodeProps } from "react-markdown/lib/ast-to-react";
-import remarkGfm from "remark-gfm";
 import "github-markdown-css";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import Comment from "../../components/Comment";
 import DetailedNote from "../../components/DetailedNote";
 
 interface IProps {

@@ -1,6 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { signIn } from "next-auth/react";
-import { useSession } from "next-auth/react";
 import { Stack, Box, Typography, Button } from "@mui/material";
 import { GiCompass } from "react-icons/gi";
 import UsernameInput from "./UsernameInput";
@@ -9,10 +8,7 @@ import PasswordInput from "./PasswordInput";
 import { closeLoginPage } from "../../../state/slices/loginSlice";
 import { useAppDispatch } from "../../../state/hooks";
 import axios from "axios";
-import {
-  showFeedback,
-  closeFeedback,
-} from "../../../state/slices/feedbackSlice";
+import { closeFeedback } from "../../../state/slices/feedbackSlice";
 import { Feedback } from "../../../types/constants";
 import { feedback } from "../../../utils/feedback";
 
@@ -22,7 +18,6 @@ interface IProps {
 
 const SignUpForm = ({ setLoggingIn }: IProps) => {
   const dispatch = useAppDispatch();
-  const { data: session, status } = useSession();
 
   const usernameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -33,13 +28,6 @@ const SignUpForm = ({ setLoggingIn }: IProps) => {
   const [emailStatus, setEmailStatus] = useState(false);
   const [passwordStatus, setPasswordStatus] = useState(false);
 
-  // useEffect(() => {
-  //   console.log(session)
-  //   if (session) {
-  //     dispatch(closeFeedback());
-  //   }
-  // }, [session]);
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const username = usernameRef.current!.value;
@@ -49,20 +37,27 @@ const SignUpForm = ({ setLoggingIn }: IProps) => {
     try {
       await axios.post("/api/auth/signup", formData);
 
-      feedback(dispatch, Feedback.Success, "Sign up successfully. Logging in...", false)
+      feedback(
+        dispatch,
+        Feedback.Success,
+        "Sign up successfully. Logging in...",
+        false
+      );
 
       await signIn("credentials", {
         email,
         password,
         redirect: false,
-        // callbackUrl: '/notes'
       });
 
       dispatch(closeLoginPage());
       dispatch(closeFeedback());
     } catch (error) {
-      feedback(dispatch, Feedback.Error, "Fail to sign up. Internal error. Please try later.")
-
+      feedback(
+        dispatch,
+        Feedback.Error,
+        "Fail to sign up. Internal error. Please try later."
+      );
     }
   };
 

@@ -5,7 +5,10 @@ import {
   emailFormatCheck,
   verifyEmail,
 } from "../../../utils/auth/emailValidation";
-import { passwordFormatCheck, hashPassword } from "../../../utils/auth/passwordValidation";
+import {
+  passwordFormatCheck,
+  hashPassword,
+} from "../../../utils/auth/passwordValidation";
 import {
   usernameFormatCheck,
   verifyUsername,
@@ -36,9 +39,11 @@ export default async function handler(
   try {
     const isUsernameNotTaken = await verifyUsername(username);
     const isEmailNotTaken = await verifyEmail(email);
-    
+
     if (!isUsernameNotTaken) {
-      return res.status(422).json({ message: "Username has already been taken!" });
+      return res
+        .status(422)
+        .json({ message: "Username has already been taken!" });
     }
 
     if (!isEmailNotTaken) {
@@ -46,8 +51,12 @@ export default async function handler(
     }
 
     await connectDB();
-    const hashedPassword = await hashPassword(password)
-    const userAccount = new UserAccount({username, email, password: hashedPassword});
+    const hashedPassword = await hashPassword(password);
+    const userAccount = new UserAccount({
+      username,
+      email,
+      password: hashedPassword,
+    });
     await userAccount.save();
     res.status(200).json({ message: "success" });
   } catch (err) {

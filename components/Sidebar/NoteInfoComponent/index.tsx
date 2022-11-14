@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Divider,
@@ -14,10 +14,9 @@ import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined
 import EditIcon from "@mui/icons-material/Edit";
 import PublicIcon from "@mui/icons-material/Public";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
-import { Feedback, NoteInfo } from "../../../types/constants";
+import { NoteInfo } from "../../../types/constants";
 import axios from "axios";
 import { setNote } from "../../../state/slices/noteSlice";
-
 
 const NoteInfoComponent = () => {
   const note = useAppSelector((state) => state.note.value);
@@ -126,7 +125,6 @@ const Tags = ({ note }: IProps) => {
         "&::-webkit-scrollbar-thumb": {
           backgroundColor: "transparent",
           borderRadius: 5,
-          // outline: '1px solid slategrey',
           "&:hover": {
             backgroundColor: "#F8F8FF",
           },

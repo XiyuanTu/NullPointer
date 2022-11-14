@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { GetServerSideProps } from "next";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { unstable_getServerSession } from "next-auth/next";
@@ -14,7 +14,6 @@ import MarkdownEditorForEdit from "../../components/MDEditor/ForEdit";
 import MarkdownEditorForShow from "../../components/MDEditor/ForShow";
 import mongoose from "mongoose";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
-
 import { getFolderIds } from "../../utils/fileSystem";
 import { setNote } from "../../state/slices/noteSlice";
 import ToggleButton from "../../components/ToggleButton";
@@ -104,8 +103,6 @@ const Notes = ({ convertedData }: IProps) => {
           />
         </Box>
       </Box>
-
-      {/*这个position: 'absolute'立大功*/}
 
       <Draggable
         position={{ x, y: 0 }}

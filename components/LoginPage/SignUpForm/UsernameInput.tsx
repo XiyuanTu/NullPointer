@@ -7,10 +7,6 @@ import {
 } from "../../../utils/auth/usernameValidation";
 import { useAppDispatch } from "../../../state/hooks";
 import { Feedback } from "../../../types/constants";
-import {
-  closeFeedback,
-  showFeedback,
-} from "../../../state/slices/feedbackSlice";
 import { feedback } from "../../../utils/feedback";
 
 interface IProps {
@@ -54,7 +50,11 @@ const UsernameInput = ({ inputRef, setUsernameStatus }: IProps) => {
       setUsernameInputShowError(false);
       setIsValidUsername(true);
     } catch (e) {
-      feedback(dispatch, Feedback.Error, "Can not connect to server. Please try later.", )
+      feedback(
+        dispatch,
+        Feedback.Error,
+        "Can not connect to server. Please try later."
+      );
     }
   };
 

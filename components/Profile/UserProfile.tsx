@@ -9,14 +9,12 @@ import {
 import axios from "axios";
 import EditIcon from "@mui/icons-material/Edit";
 import { useRouter } from "next/router";
-import { useCallback, useRef, useState, useEffect } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useAppDispatch } from "../../state/hooks";
 import { Feedback, UserInfo } from "../../types/constants";
 import { feedback } from "../../utils/feedback";
 import UserAvatar from "../UserAvatar";
 import { PhotoCamera } from "@mui/icons-material";
-import { useSession } from "next-auth/react";
-
 
 interface IProps {
   user: User;
@@ -27,7 +25,7 @@ const UserProfile = ({ user, setTabValue }: IProps) => {
   const { _id: userId } = user;
   const dispatch = useAppDispatch();
   const router = useRouter();
- 
+
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [description, setDescription] = useState(user.description);
   const [isEditingDescription, setIsEditingDescription] = useState(false);
@@ -97,7 +95,6 @@ const UserProfile = ({ user, setTabValue }: IProps) => {
           value: { avatar: url },
         });
         setImageUrl(url);
-
       } catch (e) {
         feedback(
           dispatch,

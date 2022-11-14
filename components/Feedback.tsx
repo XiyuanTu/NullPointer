@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import Alert, { AlertProps } from "@mui/material/Alert";
-import { AlertColor } from "@mui/material/Alert/Alert";
 import { styled } from "@mui/material/styles";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import { showFeedback, closeFeedback } from "../state/slices/feedbackSlice";
+import { closeFeedback } from "../state/slices/feedbackSlice";
 
 const StyledAlert = styled(Alert)<AlertProps>(({ theme }) => ({
   position: "absolute",

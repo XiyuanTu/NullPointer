@@ -1,5 +1,6 @@
 import {
   Box,
+  CircularProgress,
   FormControl,
   InputLabel,
   MenuItem,
@@ -21,7 +22,7 @@ interface IProps {
 const ProfileLikes = ({ user }: IProps) => {
   const { _id: userId, likes, blocks } = user;
   const [rawNotes, setRawNotes] = useState<Note[] | null>(null);
-  const [sortedNotes, setSortedNotes] = useState<Note[]>([]);
+  const [sortedNotes, setSortedNotes] = useState<Note[] | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("createdAt");
   const [order, setOrder] = useState("latest");
@@ -49,10 +50,14 @@ const ProfileLikes = ({ user }: IProps) => {
     (async function getNotes() {
       const {
         data: { notes },
-      } = await axios.get('/api/notes', {
+      } = await axios.get("/api/notes", {
         params: { value: likes },
       });
-      setRawNotes(notes.filter((note: Note) => note.public && !blocks.includes(note.userId)));
+      setRawNotes(
+        notes.filter(
+          (note: Note) => note.public && !blocks.includes(note.userId)
+        )
+      );
     })();
   }, []);
 
@@ -68,7 +73,15 @@ const ProfileLikes = ({ user }: IProps) => {
     }
   }, [rawNotes, sortBy, order]);
 
-  if (rawNotes && rawNotes.length === 0) {
+  if (!sortedNotes) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 20 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+  
+  if (sortedNotes && sortedNotes.length === 0) {
     return (
       <Box
         sx={{
@@ -111,7 +124,8 @@ const ProfileLikes = ({ user }: IProps) => {
         <Typography>
           {(currentPage - 1) * 8 + 1} -{" "}
           {Math.min(currentPage * 8, sortedNotes.length)} of{" "}
-          {sortedNotes.length} results (Only currently public notes are displayed)
+          {sortedNotes.length} results (Only currently public notes are
+          displayed)
         </Typography>
         <Box>
           <FormControl sx={{ mr: 1 }} size="small">

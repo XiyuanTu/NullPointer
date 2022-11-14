@@ -28,8 +28,7 @@ import {
 } from "@uiw/react-md-editor/lib/commands";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import axios from "axios";
-import { showFeedback, closeFeedback } from "../../state/slices/feedbackSlice";
-import { Feedback, NoteInfo } from "../../types/constants";
+import { Feedback } from "../../types/constants";
 import { setNote } from "../../state/slices/noteSlice";
 import { feedback } from "../../utils/feedback";
 
@@ -41,13 +40,12 @@ interface MarkdownEditor {
   height?: number;
 }
 
-
 const MarkdownEditorForEdit = ({ height }: MarkdownEditor) => {
   const dispatch = useAppDispatch();
   const note = useAppSelector((state) => state.note.value);
   const [startSave, setStartSave] = useState(false);
-  const [value, setValue] = useState<string | undefined>('');
-  const [isJustRendered, setIsJustRendered] = useState(true)
+  const [value, setValue] = useState<string | undefined>("");
+  const [isJustRendered, setIsJustRendered] = useState(true);
 
   const saveBtn: ICommand = {
     name: "save",
@@ -101,12 +99,13 @@ const MarkdownEditorForEdit = ({ height }: MarkdownEditor) => {
     }
   }, [note]);
 
-
   //the change of the content can be stored in redux immediately
   //isJustRendered: otherwise when a note just rendered, the mdText in redux will be set to ''
   useEffect(() => {
     if (note) {
-      isJustRendered ? setIsJustRendered(false) : dispatch(setNote({...note, mdText: value!}))
+      isJustRendered
+        ? setIsJustRendered(false)
+        : dispatch(setNote({ ...note, mdText: value! }));
     }
   }, [value]);
 
@@ -115,26 +114,31 @@ const MarkdownEditorForEdit = ({ height }: MarkdownEditor) => {
       note && save();
       setStartSave(false);
     }
-  }, [startSave]);  
+  }, [startSave]);
 
   const save = async () => {
-    feedback(dispatch, Feedback.Info, "Saving the note...", false)
+    feedback(dispatch, Feedback.Info, "Saving the note...", false);
     try {
-      const lastModified = new Date()
+      const lastModified = new Date();
       await axios.patch(`/api/note/${note!._id}`, {
-        property: 'multiple',
-        value: { mdText: value, lastModified},
+        property: "multiple",
+        value: { mdText: value, lastModified },
       });
 
       //the lastModified in info component can update immediately
-      dispatch(setNote({...note!, lastModified: lastModified.toLocaleString()}))
-      feedback(dispatch, Feedback.Success, "Successfully save the note.")
+      dispatch(
+        setNote({ ...note!, lastModified: lastModified.toLocaleString() })
+      );
+      feedback(dispatch, Feedback.Success, "Successfully save the note.");
     } catch (e) {
-      feedback(dispatch, Feedback.Error, "Fail to save the note. Internal error. Please try later.")
+      feedback(
+        dispatch,
+        Feedback.Error,
+        "Fail to save the note. Internal error. Please try later."
+      );
     }
   };
 
-  //bug: 窗口较小的时候，MDEditor会缩得更小
   return (
     <MDEditor
       value={value}
@@ -142,7 +146,7 @@ const MarkdownEditorForEdit = ({ height }: MarkdownEditor) => {
       height={height}
       commands={commands}
       visibleDragbar={false}
-      style={{borderRadius: '0'}}
+      style={{ borderRadius: "0" }}
     />
   );
 };

@@ -1,12 +1,6 @@
 import { useState } from "react";
 import ReactDOM from "react-dom";
-import {
-  alpha,
-  Box,
-  Fab,
-} from "@mui/material";
-
-
+import { alpha, Box, Fab } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { closeLoginPage } from "../../state/slices/loginSlice";
 import { useAppDispatch } from "../../state/hooks";
@@ -18,7 +12,7 @@ const LoginPage = () => {
 
   const dispatch = useAppDispatch();
 
-  return ReactDOM.createPortal((
+  return ReactDOM.createPortal(
     <Box
       sx={{
         display: "flex",
@@ -62,10 +56,15 @@ const LoginPage = () => {
         >
           <CloseIcon sx={{ color: "black" }} />
         </Fab>
-        {loggingIn ? <LoginForm setLoggingIn={setLoggingIn}/> : <SignUpForm setLoggingIn={setLoggingIn}/>}
+        {loggingIn ? (
+          <LoginForm setLoggingIn={setLoggingIn} />
+        ) : (
+          <SignUpForm setLoggingIn={setLoggingIn} />
+        )}
       </Box>
-    </Box>
-  ), document.getElementById("loginPage") as Element);
+    </Box>,
+    document.getElementById("loginPage") as Element
+  );
 };
 
 export default LoginPage;

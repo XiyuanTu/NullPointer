@@ -1,5 +1,4 @@
-import { Tabs, Tab, Box, Typography } from "@mui/material";
-import { useState } from "react";
+import { Tabs, Tab, Box } from "@mui/material";
 import ProfileBookmarks from "./ProfileBookmarks";
 import ProfileFavorite from "./ProfileFavorite";
 import ProfileFollowers from "./ProfileFollowers";
@@ -39,12 +38,16 @@ function a11yProps(index: number) {
 interface ProfileTabsProps {
   user: User;
   setUser: React.Dispatch<React.SetStateAction<User>>;
-  tabValue: number
+  tabValue: number;
   setTabValue: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const ProfileTabs = ({ user, setUser, tabValue, setTabValue}: ProfileTabsProps) => {
-
+const ProfileTabs = ({
+  user,
+  setUser,
+  tabValue,
+  setTabValue,
+}: ProfileTabsProps) => {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
@@ -104,10 +107,10 @@ const ProfileTabs = ({ user, setUser, tabValue, setTabValue}: ProfileTabsProps) 
         <ProfileFavorite user={user} />
       </TabPanel>
       <TabPanel value={tabValue} index={4}>
-        <ProfileFollowers user={user} setUser={setUser}/>
+        <ProfileFollowers user={user} setUser={setUser} />
       </TabPanel>
       <TabPanel value={tabValue} index={5}>
-        <ProfileFollowing user={user} setUser={setUser}/>
+        <ProfileFollowing user={user} setUser={setUser} />
       </TabPanel>
     </Box>
   );

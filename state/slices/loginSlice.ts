@@ -1,25 +1,27 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import type { RootState } from '../store'
-
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import type { RootState } from "../store";
 
 interface LoginState {
-  value: boolean
+  value: boolean;
 }
-
 
 const initialState: LoginState = {
-  value: false
-}
+  value: false,
+};
 
 export const loginSlice = createSlice({
-  name: 'login',
+  name: "login",
   initialState,
   reducers: {
-    closeLoginPage: state => {state.value = false},
-    openLoginPage: state => {state.value = true},
-  }
-})
+    closeLoginPage: (state) => {
+      state.value = false;
+    },
+    openLoginPage: (state) => {
+      state.value = true;
+    },
+  },
+});
 
-export const { closeLoginPage, openLoginPage } = loginSlice.actions
+export const { closeLoginPage, openLoginPage } = loginSlice.actions;
 
-export default loginSlice.reducer
+export default loginSlice.reducer;

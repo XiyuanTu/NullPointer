@@ -1,10 +1,8 @@
-import { config } from "./../../../middleware";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import connectDB from "../../../utils/connectDB";
 import Note from "../../../models/note/noteModel";
-
 import mongoose from "mongoose";
 import { FileOrFolder, NoteInfo } from "../../../types/constants";
 import Folder from "../../../models/note/folderModel";
@@ -38,7 +36,7 @@ export default async function handler(
   if (req.method === "PATCH") {
     const { id } = req.query;
     const { property, value } = req.body;
-    let returnValue
+    let returnValue;
 
     try {
       await connectDB();
@@ -55,19 +53,19 @@ export default async function handler(
               name: value.name,
             });
           }
-          break
+          break;
 
         case NoteInfo.Like:
           note = await Note.findByIdAndUpdate(id, {
             $inc: { like: value },
           }).lean();
-          break
+          break;
 
         case NoteInfo.Bookmark:
           note = await Note.findByIdAndUpdate(id, {
             $inc: { bookmark: value },
           }).lean();
-          break
+          break;
 
         //other properties
         default:
@@ -94,11 +92,13 @@ export default async function handler(
     try {
       await connectDB();
 
-      const note = await Note.findById(id)
-      const commentIds = note.comments.map((comment: mongoose.Types.ObjectId) => comment + '')
-      const commentIdsToDelete = await getCommentIds(commentIds)
+      const note = await Note.findById(id);
+      const commentIds = note.comments.map(
+        (comment: mongoose.Types.ObjectId) => comment + ""
+      );
+      const commentIdsToDelete = await getCommentIds(commentIds);
 
-      await Comment.deleteMany({_id: {$in: commentIdsToDelete}})
+      await Comment.deleteMany({ _id: { $in: commentIdsToDelete } });
 
       if (type === FileOrFolder.File) {
         await Note.deleteOne({ _id: id });

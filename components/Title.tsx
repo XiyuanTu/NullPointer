@@ -1,8 +1,7 @@
-import { useState, useRef, useEffect } from "react";
-import { Box, Typography, TextField, InputBase } from "@mui/material";
+import { useState, useEffect } from "react";
+import { Box, Typography, InputBase } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import axios from "axios";
-import { showFeedback, closeFeedback } from "../state/slices/feedbackSlice";
 import { Feedback, NoteInfo } from "../types/constants";
 import { feedback } from "../utils/feedback";
 import { setNote } from "../state/slices/noteSlice";
@@ -29,9 +28,13 @@ const Title = () => {
         property: NoteInfo.Title,
         value: { title: title.trim() },
       });
-      dispatch(setNote({...note!, title: title.trim()}))
+      dispatch(setNote({ ...note!, title: title.trim() }));
     } catch (e) {
-      feedback(dispatch, Feedback.Error, "Fail to update the title in the database. Internal error. Please try later...")
+      feedback(
+        dispatch,
+        Feedback.Error,
+        "Fail to update the title in the database. Internal error. Please try later..."
+      );
     }
   };
 

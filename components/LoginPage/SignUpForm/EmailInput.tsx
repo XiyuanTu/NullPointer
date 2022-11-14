@@ -5,12 +5,7 @@ import {
   emailFormatCheck,
   verifyEmail,
 } from "../../../utils/auth/emailValidation";
-
 import { useDispatch } from "react-redux";
-import {
-  showFeedback,
-  closeFeedback,
-} from "../../../state/slices/feedbackSlice";
 import { Feedback } from "../../../types/constants";
 import { feedback } from "../../../utils/feedback";
 
@@ -54,7 +49,11 @@ const EmailInput = ({ inputRef, setEmailStatus }: IProps) => {
       setEmailInputShowError(false);
       setIsValidEmail(true);
     } catch (e) {
-      feedback(dispatch, Feedback.Error, "Can not connect to server. Please try later.")
+      feedback(
+        dispatch,
+        Feedback.Error,
+        "Can not connect to server. Please try later."
+      );
     }
   };
 

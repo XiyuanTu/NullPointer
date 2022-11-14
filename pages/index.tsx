@@ -1,33 +1,33 @@
-import { useEffect } from 'react'
+import { useEffect } from "react";
 import MarkdownEditorForShow from "../components/MDEditor/ForShow";
 import Footer from "../components/Footer";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import { useSession } from "next-auth/react";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
 function HomePage() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  
+
   useEffect(() => {
     if (session) {
-      router.push('/notes')
+      router.push("/notes");
     }
-  }, [session])
+  }, [session]);
 
   return (
     <>
       <Box
         sx={{
           display: "flex",
-          mt: '9vh',
+          mt: "9vh",
           px: "8rem",
           pb: "3.5rem",
-          height: '79vh',
+          height: "79vh",
           gap: "6rem",
-          bgcolor: '#ffffff'
+          bgcolor: "#ffffff",
         }}
       >
         <Box sx={{ mt: "6rem" }}>
@@ -58,12 +58,11 @@ function HomePage() {
         </Box>
       </Box>
 
-      <Divider sx={{height: '1vh', bgcolor: '#ffffff'}}/>
+      <Divider sx={{ height: "1vh", bgcolor: "#ffffff" }} />
 
-      <Footer/>
+      <Footer />
     </>
   );
 }
 
 export default HomePage;
-

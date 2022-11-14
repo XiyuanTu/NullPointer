@@ -6,24 +6,14 @@ import { feedback } from "../../utils/feedback";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import {
   Button,
-  Tooltip,
-  Card,
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CardActions,
-  Avatar,
   IconButton,
   Typography,
   TextField,
   Box,
   List,
   ListItem,
-  ListItemButton,
-  ListItemIcon,
   ListItemText,
   ListItemAvatar,
-  Collapse,
   Divider,
   Chip,
   Menu,
@@ -31,6 +21,7 @@ import {
   Dialog,
   DialogTitle,
   DialogActions,
+  CircularProgress,
 } from "@mui/material";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
@@ -42,11 +33,17 @@ interface IProps {
   comment: ConvertedComment;
   noteAuthorId: string;
   user: User;
-  noteId: string,
-  setCommentCount: React.Dispatch<React.SetStateAction<number>>
+  noteId: string;
+  setCommentCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const Comment = ({ comment, noteAuthorId, user, noteId, setCommentCount }: IProps) => {
+const Comment = ({
+  comment,
+  noteAuthorId,
+  user,
+  noteId,
+  setCommentCount,
+}: IProps) => {
   const dispatch = useAppDispatch();
 
   const [replies, setReplies] = useState(comment.children);
@@ -94,7 +91,7 @@ const Comment = ({ comment, noteAuthorId, user, noteId, setCommentCount }: IProp
       setNewReplies((state) => [returnValue, ...state]);
       setReplyContent("");
       setIsReplying(false);
-      setCommentCount(state => state + 1)
+      setCommentCount((state) => state + 1);
     } catch (e) {
       feedback(
         dispatch,
@@ -123,9 +120,7 @@ const Comment = ({ comment, noteAuthorId, user, noteId, setCommentCount }: IProp
       } else {
         const {
           data: { returnValue },
-        } = await axios.delete(
-          `/api/comment/${comment._id}`
-        );
+        } = await axios.delete(`/api/comment/${comment._id}`);
         setDeletedAt(returnValue);
       }
       setIsDeleted((state) => !state);
@@ -195,8 +190,11 @@ const Comment = ({ comment, noteAuthorId, user, noteId, setCommentCount }: IProp
   }, [author]);
 
   if (!author) {
-    //should return loading
-    return <></>;
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return (
@@ -445,7 +443,7 @@ const Comment = ({ comment, noteAuthorId, user, noteId, setCommentCount }: IProp
       </ListItem>
 
       {/* reply display section  */}
-      {((replies.length > 0 && showCount > 0) || (newReplies.length > 0)) && (
+      {((replies.length > 0 && showCount > 0) || newReplies.length > 0) && (
         <Box sx={{ display: "flex", pl: 4 }}>
           <Divider orientation="vertical" variant="middle" flexItem />
           <List disablePadding={true} sx={{ flex: 1 }}>

@@ -5,8 +5,6 @@ import {
   Button,
   CardActions,
   IconButton,
-  Box,
-  Grid,
   CardActionArea,
 } from "@mui/material";
 import { useCallback, useState } from "react";
@@ -18,7 +16,6 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { IconButtonProps } from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useRouter } from "next/router";
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -30,7 +27,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
   transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-  margin: 'auto',
+  margin: "auto",
   transition: theme.transitions.create("transform", {
     duration: theme.transitions.duration.shortest,
   }),
@@ -41,8 +38,8 @@ interface IProps {
 }
 
 const ContentItem = ({ note }: IProps) => {
-  const {_id, title, tags, mdText } = note;
-  const router = useRouter()
+  const { _id, title, tags, mdText } = note;
+  const router = useRouter();
   const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = useCallback(() => {
@@ -50,8 +47,8 @@ const ContentItem = ({ note }: IProps) => {
   }, []);
 
   const handleRedirect = useCallback(() => {
-    router.push('/notes/' + _id)
-  }, [])
+    router.push("/notes/" + _id);
+  }, []);
 
   return (
     <Card
@@ -71,7 +68,7 @@ const ContentItem = ({ note }: IProps) => {
         <CardContent sx={{ pt: 0.5, pb: 0 }}>
           {tags.map((tag) => (
             <Button
-              onClick={e => e.preventDefault()}
+              onClick={(e) => e.preventDefault()}
               key={tag}
               sx={{
                 py: 0,
@@ -98,41 +95,43 @@ const ContentItem = ({ note }: IProps) => {
         </CardContent>
       )}
       <CardActionArea onClick={handleRedirect}>
-      {/* note content  */}
-      <CardContent sx={{ maxHeight: expanded ? "none" : 300, overflowY: "hidden" }}>
-        <ReactMarkdown
-          skipHtml={true}
-          className="markdown-body"
-          components={{
-            code({
-              node,
-              inline,
-              className,
-              children,
-              style,
-              ...props
-            }: CodeProps) {
-              const match = /language-(\w+)/.exec(className || "");
-              return !inline && match ? (
-                <SyntaxHighlighter
-                  children={String(children).replace(/\n$/, "")}
-                  wrapLongLines={true}
-                  language={match[1]}
-                  PreTag="div"
-                  {...props}
-                />
-              ) : (
-                <code className={className} {...props}>
-                  {children}
-                </code>
-              );
-            },
-          }}
-          remarkPlugins={[remarkGfm]}
+        {/* note content  */}
+        <CardContent
+          sx={{ maxHeight: expanded ? "none" : 300, overflowY: "hidden" }}
         >
-          {mdText}
-        </ReactMarkdown>
-      </CardContent>
+          <ReactMarkdown
+            skipHtml={true}
+            className="markdown-body"
+            components={{
+              code({
+                node,
+                inline,
+                className,
+                children,
+                style,
+                ...props
+              }: CodeProps) {
+                const match = /language-(\w+)/.exec(className || "");
+                return !inline && match ? (
+                  <SyntaxHighlighter
+                    children={String(children).replace(/\n$/, "")}
+                    wrapLongLines={true}
+                    language={match[1]}
+                    PreTag="div"
+                    {...props}
+                  />
+                ) : (
+                  <code className={className} {...props}>
+                    {children}
+                  </code>
+                );
+              },
+            }}
+            remarkPlugins={[remarkGfm]}
+          >
+            {mdText}
+          </ReactMarkdown>
+        </CardContent>
       </CardActionArea>
       <CardActions
         sx={{

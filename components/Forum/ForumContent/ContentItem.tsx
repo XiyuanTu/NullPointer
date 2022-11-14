@@ -12,29 +12,19 @@ import {
   Chip,
   Card,
   CardHeader,
-  CardMedia,
   CardContent,
   CardActions,
-  Avatar,
   IconButton,
   Typography,
   TextField,
   Box,
   List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  ListItemAvatar,
-  Collapse,
-  Divider,
   Menu,
   MenuItem,
   CardActionArea,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { IconButtonProps } from "@mui/material/IconButton";
-import { red } from "@mui/material/colors";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -75,12 +65,7 @@ interface IProps {
   setNotes: React.Dispatch<React.SetStateAction<ForumNote[] | null>>;
 }
 
-const ContentItem = ({
-  note,
-  user,
-  setCurrentUser,
-  setNotes,
-}: IProps) => {
+const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
   const {
     _id: noteId,
     mdText,
@@ -356,10 +341,6 @@ const ContentItem = ({
       state: isBookmark,
     },
   ];
-
-  if (!session) {
-    return <></>;
-  }
 
   return (
     <Card

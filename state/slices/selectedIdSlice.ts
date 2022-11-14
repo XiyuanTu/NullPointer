@@ -1,24 +1,24 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import type { RootState } from '../store'
-
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import type { RootState } from "../store";
 
 interface SelectedIdState {
-  value: string
+  value: string;
 }
-
 
 const initialState: SelectedIdState = {
-  value: 'root'
-}
+  value: "root",
+};
 
 export const selectedIdSlice = createSlice({
-  name: 'selectedId',
+  name: "selectedId",
   initialState,
   reducers: {
-    setSelectedId: (state, action: PayloadAction<string>) => {state.value = action.payload},
-  }
-})
+    setSelectedId: (state, action: PayloadAction<string>) => {
+      state.value = action.payload;
+    },
+  },
+});
 
-export const { setSelectedId } = selectedIdSlice.actions
+export const { setSelectedId } = selectedIdSlice.actions;
 
-export default selectedIdSlice.reducer
+export default selectedIdSlice.reducer;

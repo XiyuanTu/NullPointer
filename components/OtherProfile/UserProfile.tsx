@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import EditIcon from "@mui/icons-material/Edit";
-import { useRouter } from "next/router";
 import { useCallback, useRef, useState } from "react";
 import { useAppDispatch } from "../../state/hooks";
 import { Action, Feedback, UserInfo } from "../../types/constants";
@@ -22,7 +21,12 @@ interface IProps {
   setOtherUser: React.Dispatch<React.SetStateAction<User>>;
 }
 
-const UserProfile = ({ user, setTabValue, otherUser, setOtherUser }: IProps) => {
+const UserProfile = ({
+  user,
+  setTabValue,
+  otherUser,
+  setOtherUser,
+}: IProps) => {
   const { _id: userId } = user;
   const { _id: otherUserId } = otherUser;
   const dispatch = useAppDispatch();
@@ -31,43 +35,40 @@ const UserProfile = ({ user, setTabValue, otherUser, setOtherUser }: IProps) => 
   const [description, setDescription] = useState(otherUser.description);
   const [isEditingDescription, setIsEditingDescription] = useState(false);
 
-  const handleFollowAndFollowing = useCallback(
-    async () => {
-      try {
-        await axios.patch(`/api/user/${userId}`, {
-          property: UserInfo.Following,
-          action: otherUser.followers.includes(userId)
-            ? Action.Pull
-            : Action.Push,
-          value: { following: otherUserId },
-        });
-        await axios.patch(`/api/user/${otherUserId}`, {
-          property: UserInfo.Followers,
-          action: otherUser.followers.includes(userId)
-            ? Action.Pull
-            : Action.Push,
-          value: { followers: userId },
-        });
+  const handleFollowAndFollowing = useCallback(async () => {
+    try {
+      await axios.patch(`/api/user/${userId}`, {
+        property: UserInfo.Following,
+        action: otherUser.followers.includes(userId)
+          ? Action.Pull
+          : Action.Push,
+        value: { following: otherUserId },
+      });
+      await axios.patch(`/api/user/${otherUserId}`, {
+        property: UserInfo.Followers,
+        action: otherUser.followers.includes(userId)
+          ? Action.Pull
+          : Action.Push,
+        value: { followers: userId },
+      });
 
-        let newFollowers = [];
-        if (otherUser.followers.includes(userId)) {
-          newFollowers = otherUser.followers.filter(
-            (followerId) => followerId !== userId
-          );
-        } else {
-          newFollowers = [...otherUser.followers, userId];
-        }
-        setOtherUser({ ...otherUser, followers: newFollowers });
-      } catch (e) {
-        feedback(
-          dispatch,
-          Feedback.Error,
-          "Fail to process. Internal error. Please try later."
+      let newFollowers = [];
+      if (otherUser.followers.includes(userId)) {
+        newFollowers = otherUser.followers.filter(
+          (followerId) => followerId !== userId
         );
+      } else {
+        newFollowers = [...otherUser.followers, userId];
       }
-    },
-    [user, otherUser]
-  );
+      setOtherUser({ ...otherUser, followers: newFollowers });
+    } catch (e) {
+      feedback(
+        dispatch,
+        Feedback.Error,
+        "Fail to process. Internal error. Please try later."
+      );
+    }
+  }, [user, otherUser]);
 
   const handleEditBtn = useCallback(() => {
     setIsEditingDescription((state) => !state);
@@ -257,7 +258,7 @@ const UserProfile = ({ user, setTabValue, otherUser, setOtherUser }: IProps) => 
         sx={{ textTransform: "none", width: "100%", mt: 1, bgcolor: "#fff" }}
         onClick={handleFollowAndFollowing}
       >
-        {otherUser.followers.includes(userId) ? 'Following' : 'Follow'} 
+        {otherUser.followers.includes(userId) ? "Following" : "Follow"}
       </Button>
     </Box>
   );

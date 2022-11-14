@@ -6,31 +6,20 @@ import { feedback } from "../../utils/feedback";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import {
   Button,
-  Tooltip,
-  Card,
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CardActions,
-  Avatar,
   IconButton,
   Typography,
   TextField,
   Box,
-  List,
   ListItem,
-  ListItemButton,
-  ListItemIcon,
   ListItemText,
   ListItemAvatar,
-  Collapse,
-  Divider,
   Chip,
   Menu,
   MenuItem,
   Dialog,
   DialogTitle,
   DialogActions,
+  CircularProgress,
 } from "@mui/material";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
@@ -148,9 +137,7 @@ const ReplyComment = ({
       } else {
         const {
           data: { returnValue },
-        } = await axios.delete(
-          `/api/comment/${comment._id}`
-        );
+        } = await axios.delete(`/api/comment/${comment._id}`);
         setDeletedAt(returnValue);
       }
       setIsDeleted((state) => !state);
@@ -187,14 +174,10 @@ const ReplyComment = ({
         if (comment.to) {
           const {
             data: { comment: replyToComment },
-          } = await axios.get(
-            `/api/comment/${comment.to}`
-          );
+          } = await axios.get(`/api/comment/${comment.to}`);
           const {
             data: { user: replyTo },
-          } = await axios.get(
-            `/api/user/${replyToComment.userId}`
-          );
+          } = await axios.get(`/api/user/${replyToComment.userId}`);
           setReplyTo(replyTo);
         }
       } catch (err) {
@@ -212,7 +195,11 @@ const ReplyComment = ({
   }, [author]);
 
   if (!author) {
-    return <></>;
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center"}}>
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return (
@@ -286,9 +273,7 @@ const ReplyComment = ({
                     {(replyTo._id === user._id ||
                       replyTo._id === noteAuthorId) && (
                       <Chip
-                        label={
-                          replyTo._id === noteAuthorId ? "Author" : "You"
-                        }
+                        label={replyTo._id === noteAuthorId ? "Author" : "You"}
                         variant="outlined"
                         size="small"
                         sx={{ ml: 1 }}

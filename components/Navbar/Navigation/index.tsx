@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback } from "react";
 import { useRouter } from "next/router";
 import { useSession, signOut } from "next-auth/react";
 import ForumOutlinedIcon from "@mui/icons-material/ForumOutlined";
@@ -6,14 +6,11 @@ import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
-import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import NavbarMenuItem from "./NavbarMenuItem";
 
 import { openLoginPage } from "../../../state/slices/loginSlice";
 import { useAppDispatch } from "../../../state/hooks";
-import UserAvatar from "../../UserAvatar";
 import { Tooltip } from "@mui/material";
 
 const Navigation = () => {
@@ -34,7 +31,6 @@ const Navigation = () => {
   return (
     <Box sx={{ display: "flex", gap: 10 }}>
       {session &&
-        // <UserAvatar image={session.user.image} name={session.user.name}/>
         (session.user.image ? (
           <Tooltip title="Profile" arrow>
             <Avatar

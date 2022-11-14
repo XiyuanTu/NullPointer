@@ -1,7 +1,6 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Box,
-  Divider,
   Typography,
   Button,
   List,
@@ -13,14 +12,10 @@ import {
   Avatar,
   ButtonBase,
 } from "@mui/material";
-import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import DescriptionIcon from "@mui/icons-material/Description";
-import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import StarIcon from "@mui/icons-material/Star";
-
 import { useRouter } from "next/router";
 import axios from "axios";
 import { Action, Feedback, UserInfo } from "../../types/constants";

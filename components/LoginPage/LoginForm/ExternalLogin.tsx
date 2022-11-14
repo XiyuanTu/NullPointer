@@ -1,16 +1,9 @@
 import { Button } from "@mui/material";
 import { IconType } from "react-icons";
-import { signIn} from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useAppDispatch } from "../../../state/hooks";
-import {
-  closeFeedback,
-  showFeedback,
-} from "../../../state/slices/feedbackSlice";
 import { Feedback } from "../../../types/constants";
 import { feedback } from "../../../utils/feedback";
-import { closeLoginPage } from "../../../state/slices/loginSlice";
-import { useRouter } from "next/router";
-import { useState, useEffect } from 'react'
 
 type Provider = "Facebook" | "Google" | "Github";
 
@@ -20,7 +13,6 @@ interface IProps {
 }
 
 const ExternalLogin = ({ icon: Icon, provider }: IProps) => {
-  const router = useRouter();
   const dispatch = useAppDispatch();
 
   const handleOnClick = () => {

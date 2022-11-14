@@ -1,10 +1,9 @@
-import { useState, useRef, useEffect } from "react";
 import TreeView from "@mui/lab/TreeView";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import FolderIcon from "@mui/icons-material/Folder";
 import DescriptionIcon from "@mui/icons-material/Description";
-import StyledTreeItem from "./StyledTreeItem"; 
+import StyledTreeItem from "./StyledTreeItem";
 import { useAppSelector, useAppDispatch } from "../../../state/hooks";
 import { setSelectedId } from "../../../state/slices/selectedIdSlice";
 
@@ -54,29 +53,25 @@ export default function FileTree({
         flex: 1,
         overflowY: "auto",
         overflowX: "hidden",
-        '&::-webkit-scrollbar': {
+        "&::-webkit-scrollbar": {
           width: 8,
         },
-        '&::-webkit-scrollbar-thumb': {
-          backgroundColor: 'transparent',
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "transparent",
           borderRadius: 5,
-          // outline: '1px solid slategrey',
-          '&:hover': {
-            backgroundColor: '#F8F8FF',
+          "&:hover": {
+            backgroundColor: "#F8F8FF",
           },
-          '&:active': {
-            backgroundColor: '#4682B4',
-          }
-        }
+          "&:active": {
+            backgroundColor: "#4682B4",
+          },
+        },
       }}
       multiSelect={true}
       selected={selectedId === "root" ? [] : [selectedId]}
       onNodeSelect={handleSelect}
       expanded={expanded}
       onNodeToggle={handleToggle}
-      // onNodeFocus={(e: React.SyntheticEvent, nodeIds: Array<string> | string) =>
-      //   console.log("focus: " + nodeIds)
-      // }
     >
       {renderTree(data, data, data, setData, folderIds, setFolderIds)}
     </TreeView>
@@ -136,28 +131,3 @@ const renderTree = (
     />
   );
 };
-
-//   // Return an array that puts nodes of the same level in an array in order of the level
-// const reconstructData = (data: RenderTree) => {
-//   if (!Array.isArray(data.children)) return [[data]];
-
-//   const result = [[data]];
-//   let childrenArr = data.children;
-
-//   while (childrenArr.length > 0) {
-//     let newChildren: RenderTree[] = [];
-//     let nextLayer: RenderTree[] = [];
-//     result.push(nextLayer);
-
-//     childrenArr.map((child) => {
-//       nextLayer.push(child);
-//       child.children && newChildren.push(...child.children);
-//     });
-//     childrenArr = newChildren;
-//   }
-
-//   return result;
-// };
-
-// const reconstructedData = reconstructData(rawData);
-// console.log(reconstructedData)

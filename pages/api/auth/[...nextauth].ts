@@ -19,7 +19,7 @@ export const authOptions: NextAuthOptions = {
     }),
     GitHubProvider({
       clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!
+      clientSecret: process.env.GITHUB_SECRET!,
     }),
     CredentialsProvider({
       type: "credentials",
@@ -42,85 +42,98 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Wrong password");
         }
 
-        return {name: userAccount.username, email}
+        return { name: userAccount.username, email };
       },
     }),
   ],
   pages: {
-      signIn: '/',
+    signIn: "/",
   },
   callbacks: {
-    async signIn({user, account, profile, email, credentials}) {
-      if (credentials) return true
+    async signIn({ user, account, profile, email, credentials }) {
+      if (credentials) return true;
 
-      const { name, email:userEmail, image } = user
-      const { provider, providerAccountId } = account
+      const { name, email: userEmail, image } = user;
+      const { provider, providerAccountId } = account;
 
       await connectDB();
 
-      let externalUser
+      let externalUser;
 
-      switch(provider) {
-        case 'google':
-          externalUser = await GoogleUser.findOne({externalId: providerAccountId})
-          break
-        case 'github':
-          externalUser = await GithubUser.findOne({externalId: providerAccountId})
-          break
+      switch (provider) {
+        case "google":
+          externalUser = await GoogleUser.findOne({
+            externalId: providerAccountId,
+          });
+          break;
+        case "github":
+          externalUser = await GithubUser.findOne({
+            externalId: providerAccountId,
+          });
+          break;
       }
 
-      if (externalUser) return true
+      if (externalUser) return true;
 
       try {
-        const userAccount = new UserAccount({username: name, email: userEmail, avatar: image});
+        const userAccount = new UserAccount({
+          username: name,
+          email: userEmail,
+          avatar: image,
+        });
         const newUserAccount = await userAccount.save();
-        let newUser 
-        switch(provider) {
-          case 'google':
-            newUser = new GoogleUser({userId: newUserAccount._id, externalId: providerAccountId})
-            break
-          case 'github':
-            newUser = new GithubUser({userId: newUserAccount._id, externalId: providerAccountId})
-            break
+        let newUser;
+        switch (provider) {
+          case "google":
+            newUser = new GoogleUser({
+              userId: newUserAccount._id,
+              externalId: providerAccountId,
+            });
+            break;
+          case "github":
+            newUser = new GithubUser({
+              userId: newUserAccount._id,
+              externalId: providerAccountId,
+            });
+            break;
         }
         await newUser.save();
-        return true
+        return true;
       } catch (error) {
-        return false
+        return false;
       }
     },
     async jwt({ token, account }) {
       if (account) {
-        token.provider = account.provider
+        token.provider = account.provider;
       }
-      return token
+      return token;
     },
     async session({ session, token }) {
-      const provider = token.provider
+      const provider = token.provider;
       await connectDB();
 
-      let user
+      let user;
 
-      if (provider === 'credentials') {
+      if (provider === "credentials") {
         user = await UserAccount.findOne({ email: session.user.email });
-        session.user.id = user._id
+        session.user.id = user._id;
       } else {
         switch (provider) {
-          case 'google':
-            user = await GoogleUser.findOne({externalId: token.sub})
-            break
-          case 'github':
-            user = await GithubUser.findOne({externalId: token.sub})
-            break  
+          case "google":
+            user = await GoogleUser.findOne({ externalId: token.sub });
+            break;
+          case "github":
+            user = await GithubUser.findOne({ externalId: token.sub });
+            break;
         }
-        session.user.id = user.userId
+        session.user.id = user.userId;
         user = await UserAccount.findById(user.userId);
       }
-      if (user.avatar) session.user.image = user.avatar
-      return session
-    }
+      if (user.avatar) session.user.image = user.avatar;
+      return session;
+    },
   },
-
 };
 
 export default NextAuth(authOptions);

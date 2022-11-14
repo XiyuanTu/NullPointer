@@ -1,4 +1,4 @@
-import { FileOrFolder } from './../../../types/constants';
+import { FileOrFolder } from "./../../../types/constants";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
@@ -18,22 +18,21 @@ export default async function handler(
   const { id } = session.user;
 
   if (req.method === "POST") {
-    
     const { name, belongTo, createdAt, lastModified, type } = req.body;
 
     try {
       let nodeId;
-      await connectDB()
+      await connectDB();
       if (type === FileOrFolder.File) {
-        const note = {name, userId: id, createdAt, lastModified}
+        const note = { name, userId: id, createdAt, lastModified };
         let newNote;
         if (belongTo) {
-          newNote = new Note({ ...note, belongTo});
+          newNote = new Note({ ...note, belongTo });
         } else {
           newNote = new Note(note);
         }
         await newNote.save();
-        nodeId = newNote._id + ''
+        nodeId = newNote._id + "";
       } else {
         let newFolder;
         if (belongTo) {
@@ -49,11 +48,11 @@ export default async function handler(
           });
         }
         await newFolder.save();
-        nodeId = newFolder._id + ''
+        nodeId = newFolder._id + "";
       }
       return res.status(200).json({ nodeId });
     } catch (err) {
-      return res.status(500).json({ message: "Fail to process"  });
+      return res.status(500).json({ message: "Fail to process" });
     }
   }
 }

@@ -1,9 +1,7 @@
-import React, { useEffect } from "react";
-import { Box, Typography, Tooltip, IconButton, TextField } from "@mui/material";
+import { Box, Typography, Tooltip, IconButton } from "@mui/material";
 import { BsFolderPlus } from "react-icons/bs";
 import { AiOutlineFileAdd } from "react-icons/ai";
 import { GoFold, GoUnfold } from "react-icons/go";
-import { v4 as uuidv4 } from "uuid";
 import { useAppSelector, useAppDispatch } from "../../state/hooks";
 import {
   getNodeAndParentById,
@@ -11,7 +9,6 @@ import {
   nameGenerator,
 } from "../../utils/fileSystem";
 import axios from "axios";
-import { closeFeedback, showFeedback } from "../../state/slices/feedbackSlice";
 import { Feedback, FileOrFolder } from "../../types/constants";
 import { feedback } from "../../utils/feedback";
 
@@ -34,21 +31,25 @@ const Header = ({
 }: IProps) => {
   const selectedId = useAppSelector((state) => state.selectedId.value);
   const dispatch = useAppDispatch();
-  
 
   const handleCreateNewNote = async () => {
     const res = getNodeAndParentById(selectedId, data)!;
     try {
       let requestBody: any = {
         lastModified: new Date(),
-      }
+      };
       //if the selected node is not the root node
       if (Array.isArray(res)) {
         const [node, parent] = res;
         //if the selected node is a folder
         if (node.children) {
           const name = nameGenerator(FileOrFolder.File, node);
-          requestBody = {...requestBody, name, belongTo: node.id, type: FileOrFolder.File}
+          requestBody = {
+            ...requestBody,
+            name,
+            belongTo: node.id,
+            type: FileOrFolder.File,
+          };
           const {
             data: { nodeId },
           } = await axios.post("/api/note", requestBody);
@@ -64,7 +65,7 @@ const Header = ({
           }
         } else {
           const name = nameGenerator(FileOrFolder.File, parent);
-          requestBody = {...requestBody, name, type: FileOrFolder.File}
+          requestBody = { ...requestBody, name, type: FileOrFolder.File };
           if (parent.id !== "root") {
             requestBody.belongTo = node.id;
           }
@@ -81,7 +82,7 @@ const Header = ({
         }
       } else {
         const name = nameGenerator(FileOrFolder.File, res);
-        requestBody = {...requestBody, name, type: FileOrFolder.File}
+        requestBody = { ...requestBody, name, type: FileOrFolder.File };
         const {
           data: { nodeId },
         } = await axios.post("/api/note", requestBody);
@@ -95,7 +96,11 @@ const Header = ({
       }
       setData({ ...data });
     } catch (err) {
-      feedback(dispatch, Feedback.Error, "Fail to create the file. Internal error. Please try later.")
+      feedback(
+        dispatch,
+        Feedback.Error,
+        "Fail to create the file. Internal error. Please try later."
+      );
     }
   };
 
@@ -172,7 +177,11 @@ const Header = ({
       setData({ ...data });
       setFolderIds([...folderIds, newNode.id]);
     } catch (err) {
-      feedback(dispatch, Feedback.Error, "Fail to create the folder. Internal error. Please try later.")
+      feedback(
+        dispatch,
+        Feedback.Error,
+        "Fail to create the folder. Internal error. Please try later."
+      );
     }
   };
 

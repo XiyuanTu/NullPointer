@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Box, Divider, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import FileTree from "./FileTree";
 import Header from "./Header";
-import { getFolderIds } from "../../utils/fileSystem";
 import NoteInfoComponent from "./NoteInfoComponent";
 
 interface IProps {
@@ -21,43 +20,40 @@ const Sidebar = ({
   const [data, setData] = useState(convertedData);
   const [expanded, setExpanded] = useState<string[]>([]);
 
-  
   return (
-    <>
-      <Box
-        sx={{
-          height: "91vh",
-          overflowX: "hidden",
-          whiteSpace: "nowrap",
-          display: "flex",
-          flexFlow: 'column',
-          bgcolor: '#ffffff'
-        }}
-      >
-        {showInfo ? (
-          <NoteInfoComponent />
-        ) : (
-          <>
-            <Header
-              data={data}
-              setData={setData}
-              folderIds={folderIds}
-              setFolderIds={setFolderIds}
-              expanded={expanded}
-              setExpanded={setExpanded}
-            />
-            <FileTree
-              data={data}
-              setData={setData}
-              folderIds={folderIds}
-              setFolderIds={setFolderIds}
-              expanded={expanded}
-              setExpanded={setExpanded}
-            />
-          </>
-        )}
-      </Box>
-    </>
+    <Box
+      sx={{
+        height: "91vh",
+        overflowX: "hidden",
+        whiteSpace: "nowrap",
+        display: "flex",
+        flexFlow: "column",
+        bgcolor: "#ffffff",
+      }}
+    >
+      {showInfo ? (
+        <NoteInfoComponent />
+      ) : (
+        <>
+          <Header
+            data={data}
+            setData={setData}
+            folderIds={folderIds}
+            setFolderIds={setFolderIds}
+            expanded={expanded}
+            setExpanded={setExpanded}
+          />
+          <FileTree
+            data={data}
+            setData={setData}
+            folderIds={folderIds}
+            setFolderIds={setFolderIds}
+            expanded={expanded}
+            setExpanded={setExpanded}
+          />
+        </>
+      )}
+    </Box>
   );
 };
 

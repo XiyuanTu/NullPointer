@@ -1,5 +1,6 @@
 import {
   Box,
+  CircularProgress,
   FormControl,
   InputLabel,
   MenuItem,
@@ -21,7 +22,7 @@ interface IProps {
 const ProfileBookmarks = ({ user }: IProps) => {
   const { bookmarks, blocks } = user;
   const [rawNotes, setRawNotes] = useState<Note[] | null>(null);
-  const [sortedNotes, setSortedNotes] = useState<Note[]>([]);
+  const [sortedNotes, setSortedNotes] = useState<Note[] | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("createdAt");
   const [order, setOrder] = useState("latest");
@@ -52,7 +53,11 @@ const ProfileBookmarks = ({ user }: IProps) => {
       } = await axios.get("/api/notes", {
         params: { value: bookmarks },
       });
-      setRawNotes(notes.filter((note: Note) => note.public && !blocks.includes(note.userId)));
+      setRawNotes(
+        notes.filter(
+          (note: Note) => note.public && !blocks.includes(note.userId)
+        )
+      );
     })();
   }, []);
 
@@ -68,7 +73,15 @@ const ProfileBookmarks = ({ user }: IProps) => {
     }
   }, [rawNotes, sortBy, order]);
 
-  if (rawNotes && rawNotes.length === 0) {
+  if (!sortedNotes) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 20 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (sortedNotes && sortedNotes.length === 0) {
     return (
       <Box
         sx={{
@@ -168,4 +181,3 @@ const ProfileBookmarks = ({ user }: IProps) => {
 };
 
 export default ProfileBookmarks;
-

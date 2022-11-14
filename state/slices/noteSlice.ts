@@ -1,24 +1,24 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import type { RootState } from '../store'
-
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import type { RootState } from "../store";
 
 interface NoteState {
-  value: Note | undefined
+  value: Note | undefined;
 }
-
 
 const initialState: NoteState = {
-  value: undefined
-}
+  value: undefined,
+};
 
 export const noteSlice = createSlice({
-  name: 'note',
+  name: "note",
   initialState,
   reducers: {
-    setNote: (state, action: PayloadAction<Note | undefined>) => {state.value = action.payload},
-  }
-})
+    setNote: (state, action: PayloadAction<Note | undefined>) => {
+      state.value = action.payload;
+    },
+  },
+});
 
-export const { setNote } = noteSlice.actions
+export const { setNote } = noteSlice.actions;
 
-export default noteSlice.reducer
+export default noteSlice.reducer;

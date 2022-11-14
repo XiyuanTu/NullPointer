@@ -2,7 +2,7 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import { MDEditorProps } from "@uiw/react-md-editor";
 import dynamic from "next/dynamic";
-import { useState, useEffect,  } from "react";
+import { useState } from "react";
 import {
   bold,
   italic,

@@ -1,5 +1,6 @@
 import {
   Box,
+  CircularProgress,
   FormControl,
   InputLabel,
   MenuItem,
@@ -11,7 +12,6 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import axios from "axios";
 import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
-import { NoteInfo } from "../../../types/constants";
 import { sortingCompareFn } from "../../../utils/profile";
 import ContentItem from "./ContentItem";
 
@@ -24,7 +24,7 @@ const ProfileNotes = ({ user, otherUser }: IProps) => {
   const { _id: userId, blocks } = user;
   const { _id: otherUserId } = otherUser;
   const [rawNotes, setRawNotes] = useState<Note[] | null>(null);
-  const [sortedNotes, setSortedNotes] = useState<Note[]>([]);
+  const [sortedNotes, setSortedNotes] = useState<Note[] | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("createdAt");
   const [order, setOrder] = useState("latest");
@@ -68,7 +68,15 @@ const ProfileNotes = ({ user, otherUser }: IProps) => {
     }
   }, [rawNotes, sortBy, order]);
 
-  if (rawNotes && rawNotes.length === 0) {
+  if (!sortedNotes) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 20 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (sortedNotes && sortedNotes.length === 0) {
     return (
       <Box
         sx={{
@@ -168,4 +176,3 @@ const ProfileNotes = ({ user, otherUser }: IProps) => {
 };
 
 export default ProfileNotes;
-

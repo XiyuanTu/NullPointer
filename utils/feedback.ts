@@ -1,7 +1,6 @@
 import { closeFeedback, showFeedback } from "../state/slices/feedbackSlice";
 import { AppDispatch } from "../state/store";
 import { Feedback } from "../types/constants";
-import { useAppDispatch } from "./../state/hooks";
 
 export const feedback = (
   dispatch: AppDispatch,
@@ -10,7 +9,6 @@ export const feedback = (
   setTime = true,
   amount = 2000
 ) => {
-  
   dispatch(
     showFeedback({
       severity,

@@ -1,13 +1,9 @@
-import { config } from "./../../../middleware";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import connectDB from "../../../utils/connectDB";
-import Note from "../../../models/note/noteModel";
-
 import mongoose from "mongoose";
 import { Action, UserInfo } from "../../../types/constants";
-import Folder from "../../../models/note/folderModel";
 import UserAccount from "../../../models/user/userAccountModel";
 
 export default async function handler(

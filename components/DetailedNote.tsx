@@ -1,16 +1,9 @@
 import axios from "axios";
-import { GetServerSideProps } from "next";
-import { unstable_getServerSession } from "next-auth";
 import { useCallback, useEffect, useRef, useState } from "react";
-import Note from "../models/note/noteModel";
-import UserAccount from "../models/user/userAccountModel";
 import { useAppDispatch } from "../state/hooks";
 import { Action, Feedback, NoteInfo, UserInfo } from "../types/constants";
-import connectDB from "../utils/connectDB";
 import { feedback } from "../utils/feedback";
 import { convertCount, convertDate } from "../utils/forum";
-import { convertNote, convertUser } from "../utils/notes";
-import { authOptions } from "../pages/api/auth/[...nextauth]";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -19,29 +12,20 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import Grid from "@mui/material/Unstable_Grid2";
-import { Router, SvgIconComponent } from "@mui/icons-material";
+import { SvgIconComponent } from "@mui/icons-material";
 import {
   Button,
   Tooltip,
   Chip,
   Card,
   CardHeader,
-  CardMedia,
   CardContent,
   CardActions,
-  Avatar,
   IconButton,
   Typography,
   TextField,
   Box,
   List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  ListItemAvatar,
-  Collapse,
-  Divider,
   Menu,
   MenuItem,
 } from "@mui/material";
@@ -265,12 +249,10 @@ const DetailedNote = ({ user, note, author }: IProps) => {
   }, []);
 
   const handleSearchForTag = useCallback((tag: string) => {
-    router.push(
-      {
-        pathname: "/forum",
-        query: { search: tag },
-      }
-    );
+    router.push({
+      pathname: "/forum",
+      query: { search: tag },
+    });
   }, []);
 
   const handleToProfile = useCallback(() => {
@@ -482,9 +464,7 @@ const DetailedNote = ({ user, note, author }: IProps) => {
       )}
 
       {/* note content  */}
-      <CardContent
-      // sx={{ maxHeight: expanded ? "none" : 200, overflowY: "hidden" }}
-      >
+      <CardContent>
         <ReactMarkdown
           skipHtml={true}
           className="markdown-body"

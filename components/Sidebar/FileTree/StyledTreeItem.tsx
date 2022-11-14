@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { styled } from "@mui/material/styles";
 import {
   Box,
@@ -272,7 +272,6 @@ function StyledTreeItem(props: StyledTreeItemProps) {
       /* otherwise if the user set it to 'favorite' and then turn to the userinfo page, 
       when they come back to this page, they will see it's still not favorite */
       nodeObj.favorite = !isFavorite;
-
     } catch (error) {
       feedback(
         dispatch,
@@ -290,7 +289,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
       const value: { public: boolean; firstPublicAt?: Date | null } = {
         public: !isPublic,
       };
-      let date = new Date()
+      let date = new Date();
       if (!nodeObj.firstPublicAt) {
         value.firstPublicAt = date;
       }
@@ -306,7 +305,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
       nodeObj.public = !isPublic;
 
       if (note && nodeObj.id === note._id && !note.firstPublicAt) {
-        dispatch(setNote({...note, firstPublicAt: date.toLocaleString()}))
+        dispatch(setNote({ ...note, firstPublicAt: date.toLocaleString() }));
       }
     } catch (error) {
       feedback(

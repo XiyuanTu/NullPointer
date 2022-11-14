@@ -1,10 +1,6 @@
 import {
   Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
   Pagination,
-  Select,
   Typography,
   CircularProgress,
   List,
@@ -13,7 +9,6 @@ import {
   ListItemText,
   Button,
 } from "@mui/material";
-import { SelectChangeEvent } from "@mui/material/Select";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -23,7 +18,6 @@ import { Action, Feedback, UserInfo } from "../../../types/constants";
 import { feedback } from "../../../utils/feedback";
 import { convertCount } from "../../../utils/forum";
 import UserAvatar from "../../UserAvatar";
-import ContentItem from "./ContentItem";
 
 interface IProps {
   user: User;
@@ -210,7 +204,6 @@ const ProfileFollowing = ({ user, setUser }: IProps) => {
                 <Button
                   variant="contained"
                   sx={{
-                    // width: "50%",
                     fontFamily: "inherit",
                     fontSize: 13,
                     textTransform: "none",

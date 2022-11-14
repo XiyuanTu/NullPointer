@@ -14,11 +14,9 @@ export const verifyUsername = async (username: string) => {
   try {
     const {
       data: { message },
-    } = await axios.get<Data>(
-      `/api/validation/username/${username}`
-    );
+    } = await axios.get<Data>(`/api/validation/username/${username}`);
     return message;
   } catch (err) {
-    throw 'Can not connect to server.'
+    throw "Can not connect to server.";
   }
 };

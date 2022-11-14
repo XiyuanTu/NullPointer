@@ -1,5 +1,4 @@
-import { Paper, Box, Container } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
+import { Box, Container } from "@mui/material";
 import ForumContent from "../../components/Forum/ForumContent";
 import { unstable_getServerSession } from "next-auth/next";
 import { GetServerSideProps } from "next";
@@ -9,26 +8,23 @@ import Note from "../../models/note/noteModel";
 import { convertForumData, convertUser } from "../../utils/notes";
 import UserInfoComponent from "../../components/Forum/UserInfoComponent";
 import UserAccount from "../../models/user/userAccountModel";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useState } from "react";
 
 interface IProps {
   convertedData: [];
   convertedUser: User;
-  convertedWhoToFollow: User[]
+  convertedWhoToFollow: User[];
 }
 
-const Forum = ({ convertedData, convertedUser, convertedWhoToFollow }: IProps) => {
-
-  const [followingCount, setFollowingCount] = useState(convertedUser.following.length);
-  const [currentUser, setCurrentUser] = useState(convertedUser)
-  //作废，在这里保存user状态
+const Forum = ({
+  convertedData,
+  convertedUser,
+  convertedWhoToFollow,
+}: IProps) => {
+  const [currentUser, setCurrentUser] = useState(convertedUser);
 
   return (
-    <Container
-      maxWidth="lg"
-      sx={{ display: "flex", pt: 3, mt: "9vh" }}
-    >
+    <Container maxWidth="lg" sx={{ display: "flex", pt: 3, mt: "9vh" }}>
       <Box sx={{ width: "75%", mr: 2 }}>
         <ForumContent
           convertedData={convertedData}
@@ -66,15 +62,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   ).lean();
 
   const convertedData = await convertForumData(notes);
-  convertedData.sort((a, b) => b.like - a.like)
+  convertedData.sort((a, b) => b.like - a.like);
 
-  const whoToFollow: User[] = await UserAccount.find({_id: {$nin: [...convertedUser.blocks, ...convertedUser.following, id]}}, { email: 0, password: 0 }).lean()
+  const whoToFollow: User[] = await UserAccount.find(
+    {
+      _id: { $nin: [...convertedUser.blocks, ...convertedUser.following, id] },
+    },
+    { email: 0, password: 0 }
+  ).lean();
 
-  const convertedWhoToFollow = whoToFollow.map(user => convertUser(user)).sort((a, b) => b.following.length - a.following.length).slice(0, 6)
+  const convertedWhoToFollow = whoToFollow
+    .map((user) => convertUser(user))
+    .sort((a, b) => b.following.length - a.following.length)
+    .slice(0, 6);
 
   return { props: { convertedData, convertedUser, convertedWhoToFollow } };
 };
 
 export default Forum;
-
-

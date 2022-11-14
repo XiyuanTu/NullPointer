@@ -1,14 +1,11 @@
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
-
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-import { useSession } from "next-auth/react";
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
 
 const NavbarSearch = () => {
-  const { data: session, status } = useSession();
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
@@ -76,7 +73,7 @@ const NavbarSearch = () => {
           color: "#667481",
           bgcolor: "#fafafa",
           fontSize: "15px",
-          width: "100%"
+          width: "100%",
         }}
         inputProps={{ "aria-label": "Search..." }}
       />

@@ -1,4 +1,4 @@
-import { hash, compare } from 'bcryptjs';
+import { hash, compare } from "bcryptjs";
 
 export async function hashPassword(password: string) {
   const hashedPassword = await hash(password, 12);
@@ -10,8 +10,7 @@ export async function verifyPassword(password: string, hashedPassword: string) {
   return isValid;
 }
 
-
 export const passwordFormatCheck = (password: string) => {
-    const regex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
-    return regex.test(password);
+  const regex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");
+  return regex.test(password);
 };

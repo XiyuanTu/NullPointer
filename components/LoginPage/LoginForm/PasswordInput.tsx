@@ -14,11 +14,16 @@ import { useFormControl } from "@mui/material/FormControl";
 interface IProps {
   inputRef: React.RefObject<HTMLInputElement>;
   setPasswordStatus: React.Dispatch<React.SetStateAction<boolean>>;
-  isValidPassword: boolean,
+  isValidPassword: boolean;
   setIsValidPassword: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PasswordInput = ({ inputRef, setPasswordStatus, isValidPassword, setIsValidPassword }: IProps) => {
+const PasswordInput = ({
+  inputRef,
+  setPasswordStatus,
+  isValidPassword,
+  setIsValidPassword,
+}: IProps) => {
   const { focused } = useFormControl() || {};
 
   const [showPassword, setShowPassword] = useState(false);

@@ -1,8 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 import { BsGithub } from "react-icons/bs";
-import { FaFacebookSquare } from "react-icons/fa";
 import { Box, Button, Stack, Divider, Typography } from "@mui/material";
 import Logo from "../../Logo";
 import EmailInput from "./EmailInput";
@@ -10,25 +9,18 @@ import PasswordInput from "../LoginForm/PasswordInput";
 import ExternalLogin from "./ExternalLogin";
 import { useAppDispatch } from "../../../state/hooks";
 import { closeLoginPage } from "../../../state/slices/loginSlice";
-import {
-  showFeedback,
-  closeFeedback,
-} from "../../../state/slices/feedbackSlice";
+import { closeFeedback } from "../../../state/slices/feedbackSlice";
 import { Feedback } from "../../../types/constants";
 import { feedback } from "../../../utils/feedback";
-import { useRouter } from "next/router";
 
 interface IProps {
   setLoggingIn: (state: boolean) => void;
 }
 
 const LoginForm = ({ setLoggingIn }: IProps) => {
-  const router = useRouter()
   const dispatch = useAppDispatch();
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-
-  const { data: session, status } = useSession();
 
   // get the state from the email and password component, so that we can decide if the button should be disabled
   const [emailStatus, setEmailStatus] = useState(false);
@@ -37,7 +29,7 @@ const LoginForm = ({ setLoggingIn }: IProps) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    feedback(dispatch, Feedback.Info, "Logging in...", false)
+    feedback(dispatch, Feedback.Info, "Logging in...", false);
 
     const res = await signIn("credentials", {
       email: emailRef.current!.value,
@@ -50,9 +42,13 @@ const LoginForm = ({ setLoggingIn }: IProps) => {
       dispatch(closeFeedback());
     } else {
       if (res!.error === "undefined") {
-        feedback(dispatch, Feedback.Error, "Can not connect to server. Please try later...")
+        feedback(
+          dispatch,
+          Feedback.Error,
+          "Can not connect to server. Please try later..."
+        );
       } else {
-        feedback(dispatch, Feedback.Error, "Incorrect email or password.")
+        feedback(dispatch, Feedback.Error, "Incorrect email or password.");
         passwordRef.current!.value = "";
         setPasswordStatus(false);
         setIsValidPassword(false);
@@ -111,7 +107,7 @@ const LoginForm = ({ setLoggingIn }: IProps) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          mt: 2
+          mt: 2,
         }}
       >
         <Typography sx={{ mr: 1, fontSize: "0.875rem" }}>

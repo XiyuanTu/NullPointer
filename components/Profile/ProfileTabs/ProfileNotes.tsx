@@ -1,5 +1,6 @@
 import {
   Box,
+  CircularProgress,
   FormControl,
   InputLabel,
   MenuItem,
@@ -11,7 +12,6 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import axios from "axios";
 import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
-import { NoteInfo } from "../../../types/constants";
 import { sortingCompareFn } from "../../../utils/profile";
 import ContentItem from "./ContentItem";
 
@@ -22,7 +22,7 @@ interface IProps {
 const ProfileNotes = ({ user }: IProps) => {
   const { _id: userId, blocks } = user;
   const [rawNotes, setRawNotes] = useState<Note[] | null>(null);
-  const [sortedNotes, setSortedNotes] = useState<Note[]>([]);
+  const [sortedNotes, setSortedNotes] = useState<Note[] | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [category, setCategory] = useState("all");
   const [sortBy, setSortBy] = useState("createdAt");
@@ -55,7 +55,7 @@ const ProfileNotes = ({ user }: IProps) => {
     (async function getNotes() {
       const {
         data: { notes },
-      } = await axios.get('/api/notes/' + userId);
+      } = await axios.get("/api/notes/" + userId);
       setRawNotes(notes);
     })();
   }, []);
@@ -93,7 +93,15 @@ const ProfileNotes = ({ user }: IProps) => {
     }
   }, [rawNotes, category, sortBy, order]);
 
-  if (rawNotes && rawNotes.length === 0) {
+  if (!sortedNotes) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 20 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (sortedNotes && sortedNotes.length === 0) {
     return (
       <Box
         sx={{
@@ -129,8 +137,8 @@ const ProfileNotes = ({ user }: IProps) => {
           py: 1.5,
           position: "sticky",
           top: 112,
-          bgcolor: 'rgb(241, 242, 242)',
-          zIndex: 99
+          bgcolor: "rgb(241, 242, 242)",
+          zIndex: 99,
         }}
       >
         <Typography>
@@ -207,4 +215,3 @@ const ProfileNotes = ({ user }: IProps) => {
 };
 
 export default ProfileNotes;
-
