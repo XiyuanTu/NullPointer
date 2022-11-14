@@ -47,7 +47,7 @@ const SignUpForm = ({ setLoggingIn }: IProps) => {
     const password = passwordRef.current!.value;
     const formData = { username, email, password };
     try {
-      await axios.post("http://localhost:3000/api/auth/signup", formData);
+      await axios.post("/api/auth/signup", formData);
 
       feedback(dispatch, Feedback.Success, "Sign up successfully. Logging in...", false)
 

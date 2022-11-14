@@ -235,13 +235,13 @@ const UserCard = ({
 
   const handleFollowAndFollowing = useCallback(async () => {
     try {
-      await axios.patch(`http://localhost:3000/api/user/${user._id}`, {
+      await axios.patch(`/api/user/${user._id}`, {
         property: UserInfo.Following,
         action: isFollowing ? Action.Pull : Action.Push,
         value: { following: recommendedUser._id },
       });
       await axios.patch(
-        `http://localhost:3000/api/user/${recommendedUser._id}`,
+        `/api/user/${recommendedUser._id}`,
         {
           property: UserInfo.Followers,
           action: isFollowing ? Action.Pull : Action.Push,

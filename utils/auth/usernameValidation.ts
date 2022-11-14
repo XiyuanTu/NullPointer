@@ -15,7 +15,7 @@ export const verifyUsername = async (username: string) => {
     const {
       data: { message },
     } = await axios.get<Data>(
-      `http://localhost:3000/api/validation/username/${username}`
+      `/api/validation/username/${username}`
     );
     return message;
   } catch (err) {

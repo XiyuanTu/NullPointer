@@ -54,7 +54,7 @@ import { sortingCompareFn } from "../../../utils/profile";
       (async function getNotes() {
         const {
           data: { notes },
-        } = await axios.get('http://localhost:3000/api/notes/' + userId);
+        } = await axios.get('/api/notes/' + userId);
         setRawNotes(notes.filter((note: Note) => note.favorite));
       })();
     }, []);

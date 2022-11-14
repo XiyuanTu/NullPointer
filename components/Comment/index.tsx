@@ -84,7 +84,7 @@ const Comment = ({ comment, noteAuthorId, user, noteId, setCommentCount }: IProp
     try {
       const {
         data: { returnValue },
-      } = await axios.post("http://localhost:3000/api/comment", {
+      } = await axios.post("/api/comment", {
         noteId,
         to: comment._id,
         userId: user._id,
@@ -117,14 +117,14 @@ const Comment = ({ comment, noteAuthorId, user, noteId, setCommentCount }: IProp
     setOpenDeleteDialog(false);
     try {
       if (isDeleted) {
-        await axios.patch(`http://localhost:3000/api/comment/${comment._id}`, {
+        await axios.patch(`/api/comment/${comment._id}`, {
           property: CommentInfo.DeletedAt,
         });
       } else {
         const {
           data: { returnValue },
         } = await axios.delete(
-          `http://localhost:3000/api/comment/${comment._id}`
+          `/api/comment/${comment._id}`
         );
         setDeletedAt(returnValue);
       }
@@ -146,7 +146,7 @@ const Comment = ({ comment, noteAuthorId, user, noteId, setCommentCount }: IProp
 
   const handleLike = useCallback(async () => {
     try {
-      await axios.patch(`http://localhost:3000/api/comment/${comment._id}`, {
+      await axios.patch(`/api/comment/${comment._id}`, {
         property: CommentInfo.Likes,
         action: isLike ? Action.Pull : Action.Push,
         value: { likes: author!._id },
@@ -178,7 +178,7 @@ const Comment = ({ comment, noteAuthorId, user, noteId, setCommentCount }: IProp
       try {
         const {
           data: { user },
-        } = await axios.get(`http://localhost:3000/api/user/${comment.userId}`);
+        } = await axios.get(`/api/user/${comment.userId}`);
         setAuthor(user);
       } catch (err) {
         feedback(

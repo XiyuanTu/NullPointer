@@ -56,14 +56,14 @@ const ProfileFollowers = ({ user, setUser, otherUser }: IProps) => {
   const handleFollowAndFollowing = useCallback(
     async (followerId: string) => {
       try {
-        await axios.patch(`http://localhost:3000/api/user/${userId}`, {
+        await axios.patch(`/api/user/${userId}`, {
           property: UserInfo.Following,
           action: user.following.includes(followerId)
             ? Action.Pull
             : Action.Push,
           value: { following: followerId },
         });
-        await axios.patch(`http://localhost:3000/api/user/${followerId}`, {
+        await axios.patch(`/api/user/${followerId}`, {
           property: UserInfo.Followers,
           action: user.following.includes(followerId)
             ? Action.Pull
@@ -106,7 +106,7 @@ const ProfileFollowers = ({ user, setUser, otherUser }: IProps) => {
     (async function getNotes() {
       const {
         data: { users },
-      } = await axios.get("http://localhost:3000/api/users", {
+      } = await axios.get("/api/users", {
         params: { value: otherUser.followers },
       });
       setFollowers(users);

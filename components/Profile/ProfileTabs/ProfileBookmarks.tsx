@@ -49,7 +49,7 @@ const ProfileBookmarks = ({ user }: IProps) => {
     (async function getNotes() {
       const {
         data: { notes },
-      } = await axios.get("http://localhost:3000/api/notes", {
+      } = await axios.get("/api/notes", {
         params: { value: bookmarks },
       });
       setRawNotes(notes.filter((note: Note) => note.public && !blocks.includes(note.userId)));

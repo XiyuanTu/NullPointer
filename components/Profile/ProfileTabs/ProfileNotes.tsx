@@ -55,7 +55,7 @@ const ProfileNotes = ({ user }: IProps) => {
     (async function getNotes() {
       const {
         data: { notes },
-      } = await axios.get('http://localhost:3000/api/notes/' + userId);
+      } = await axios.get('/api/notes/' + userId);
       setRawNotes(notes);
     })();
   }, []);

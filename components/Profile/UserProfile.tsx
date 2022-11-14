@@ -46,7 +46,7 @@ const UserProfile = ({ user, setTabValue }: IProps) => {
     setIsEditingDescription((state) => !state);
     try {
       const newDescription = inputRef.current!.value.trim();
-      await axios.patch(`http://localhost:3000/api/user/${userId}`, {
+      await axios.patch(`/api/user/${userId}`, {
         property: UserInfo.Description,
         value: { description: newDescription },
       });
@@ -92,7 +92,7 @@ const UserProfile = ({ user, setTabValue }: IProps) => {
           "https://api.cloudinary.com/v1_1/dfk7ged9a/image/upload",
           formData
         );
-        await axios.patch(`http://localhost:3000/api/user/${userId}`, {
+        await axios.patch(`/api/user/${userId}`, {
           property: UserInfo.Avatar,
           value: { avatar: url },
         });

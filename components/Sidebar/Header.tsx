@@ -51,7 +51,7 @@ const Header = ({
           requestBody = {...requestBody, name, belongTo: node.id, type: FileOrFolder.File}
           const {
             data: { nodeId },
-          } = await axios.post("http://localhost:3000/api/note", requestBody);
+          } = await axios.post("/api/note", requestBody);
           const newNode = {
             id: nodeId,
             name,
@@ -70,7 +70,7 @@ const Header = ({
           }
           const {
             data: { nodeId },
-          } = await axios.post("http://localhost:3000/api/note", requestBody);
+          } = await axios.post("/api/note", requestBody);
           const newNode = {
             id: nodeId,
             name,
@@ -84,7 +84,7 @@ const Header = ({
         requestBody = {...requestBody, name, type: FileOrFolder.File}
         const {
           data: { nodeId },
-        } = await axios.post("http://localhost:3000/api/note", requestBody);
+        } = await axios.post("/api/note", requestBody);
         const newNode = {
           id: nodeId,
           name,
@@ -112,7 +112,7 @@ const Header = ({
           const name = nameGenerator(FileOrFolder.Folder, node);
           const {
             data: { nodeId },
-          } = await axios.post("http://localhost:3000/api/note", {
+          } = await axios.post("/api/note", {
             name,
             belongTo: node.id,
             type: FileOrFolder.Folder,
@@ -140,7 +140,7 @@ const Header = ({
           }
           const {
             data: { nodeId },
-          } = await axios.post("http://localhost:3000/api/note", requestBody);
+          } = await axios.post("/api/note", requestBody);
           newNode = {
             id: nodeId,
             name,
@@ -155,7 +155,7 @@ const Header = ({
         const name = nameGenerator(FileOrFolder.Folder, res);
         const {
           data: { nodeId },
-        } = await axios.post("http://localhost:3000/api/note", {
+        } = await axios.post("/api/note", {
           name,
           type: FileOrFolder.Folder,
         });

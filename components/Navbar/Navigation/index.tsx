@@ -23,7 +23,7 @@ const Navigation = () => {
   const dispatch = useAppDispatch();
 
   const handleLogOut = useCallback(async () => {
-    await signOut({ callbackUrl: "http://localhost:3000/", redirect: false });
+    await signOut({ callbackUrl: "/", redirect: false });
     router.push("/");
   }, []);
 

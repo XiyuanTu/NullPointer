@@ -121,7 +121,7 @@ const DetailedNote = ({ user, note, author }: IProps) => {
     if (!openComment) {
       const {
         data: { convertedComments },
-      } = await axios.get("http://localhost:3000/api/comment", {
+      } = await axios.get("/api/comment", {
         params: { commentIds },
       });
       setNoteComments(convertedComments);
@@ -136,12 +136,12 @@ const DetailedNote = ({ user, note, author }: IProps) => {
       ? following.filter((id) => id !== authorId)
       : [...following, authorId];
     try {
-      await axios.patch(`http://localhost:3000/api/user/${userId}`, {
+      await axios.patch(`/api/user/${userId}`, {
         property: UserInfo.Following,
         action: isFollowing ? Action.Pull : Action.Push,
         value: { following: authorId },
       });
-      await axios.patch(`http://localhost:3000/api/user/${authorId}`, {
+      await axios.patch(`/api/user/${authorId}`, {
         property: UserInfo.Followers,
         action: isFollowing ? Action.Pull : Action.Push,
         value: { followers: userId },
@@ -157,12 +157,12 @@ const DetailedNote = ({ user, note, author }: IProps) => {
 
   const handleLike = useCallback(async () => {
     try {
-      await axios.patch(`http://localhost:3000/api/user/${userId}`, {
+      await axios.patch(`/api/user/${userId}`, {
         property: UserInfo.Likes,
         action: isLike ? Action.Pull : Action.Push,
         value: { likes: noteId },
       });
-      await axios.patch(`http://localhost:3000/api/note/${noteId}`, {
+      await axios.patch(`/api/note/${noteId}`, {
         property: NoteInfo.Like,
         value: isLike ? -1 : 1,
       });
@@ -180,12 +180,12 @@ const DetailedNote = ({ user, note, author }: IProps) => {
 
   const handleBookmark = useCallback(async () => {
     try {
-      await axios.patch(`http://localhost:3000/api/user/${userId}`, {
+      await axios.patch(`/api/user/${userId}`, {
         property: UserInfo.Bookmarks,
         action: isBookmark ? Action.Pull : Action.Push,
         value: { bookmarks: noteId },
       });
-      await axios.patch(`http://localhost:3000/api/note/${noteId}`, {
+      await axios.patch(`/api/note/${noteId}`, {
         property: NoteInfo.Bookmark,
         value: isBookmark ? -1 : 1,
       });
@@ -212,7 +212,7 @@ const DetailedNote = ({ user, note, author }: IProps) => {
     try {
       const {
         data: { returnValue },
-      } = await axios.post("http://localhost:3000/api/comment", {
+      } = await axios.post("/api/comment", {
         userId,
         content: commentContent.trim(),
         noteId,
@@ -249,7 +249,7 @@ const DetailedNote = ({ user, note, author }: IProps) => {
   const handleBlock = useCallback(async () => {
     handleCloseMoreActions();
     try {
-      await axios.patch(`http://localhost:3000/api/user/${userId}`, {
+      await axios.patch(`/api/user/${userId}`, {
         property: UserInfo.Blocks,
         action: Action.Push,
         value: { blocks: authorId },

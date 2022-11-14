@@ -15,7 +15,7 @@ export const verifyEmail = async (email: string) => {
   try {
     const {
       data: { message },
-    } = await axios.get<Data>(`http://localhost:3000/api/validation/email/${email}`);
+    } = await axios.get<Data>(`/api/validation/email/${email}`);
     return message;
   } catch (err) {
     throw 'Can not connect to server.'

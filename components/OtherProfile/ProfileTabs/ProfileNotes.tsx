@@ -48,7 +48,7 @@ const ProfileNotes = ({ user, otherUser }: IProps) => {
     (async function getNotes() {
       const {
         data: { notes },
-      } = await axios.get("http://localhost:3000/api/notes/" + otherUserId);
+      } = await axios.get("/api/notes/" + otherUserId);
       setRawNotes(notes.filter((note: Note) => note.public));
     })();
   }, []);

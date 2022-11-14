@@ -84,7 +84,7 @@ const ReplyComment = ({
     try {
       const {
         data: { returnValue },
-      } = await axios.post("http://localhost:3000/api/comment", {
+      } = await axios.post("/api/comment", {
         noteId,
         to: comment._id,
         userId: user._id,
@@ -113,7 +113,7 @@ const ReplyComment = ({
 
   const handleLike = useCallback(async () => {
     try {
-      await axios.patch(`http://localhost:3000/api/comment/${comment._id}`, {
+      await axios.patch(`/api/comment/${comment._id}`, {
         property: CommentInfo.Likes,
         action: isLike ? Action.Pull : Action.Push,
         value: { likes: author!._id },
@@ -142,14 +142,14 @@ const ReplyComment = ({
     setOpenDeleteDialog(false);
     try {
       if (isDeleted) {
-        await axios.patch(`http://localhost:3000/api/comment/${comment._id}`, {
+        await axios.patch(`/api/comment/${comment._id}`, {
           property: CommentInfo.DeletedAt,
         });
       } else {
         const {
           data: { returnValue },
         } = await axios.delete(
-          `http://localhost:3000/api/comment/${comment._id}`
+          `/api/comment/${comment._id}`
         );
         setDeletedAt(returnValue);
       }
@@ -181,19 +181,19 @@ const ReplyComment = ({
       try {
         const {
           data: { user: author },
-        } = await axios.get(`http://localhost:3000/api/user/${comment.userId}`);
+        } = await axios.get(`/api/user/${comment.userId}`);
         setAuthor(author);
 
         if (comment.to) {
           const {
             data: { comment: replyToComment },
           } = await axios.get(
-            `http://localhost:3000/api/comment/${comment.to}`
+            `/api/comment/${comment.to}`
           );
           const {
             data: { user: replyTo },
           } = await axios.get(
-            `http://localhost:3000/api/user/${replyToComment.userId}`
+            `/api/user/${replyToComment.userId}`
           );
           setReplyTo(replyTo);
         }

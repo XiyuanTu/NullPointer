@@ -136,7 +136,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
     feedback(dispatch, Feedback.Info, "Deleting the file/folder...", false);
 
     try {
-      await axios.delete(`http://localhost:3000/api/note/${nodeObj.id}`, {
+      await axios.delete(`/api/note/${nodeObj.id}`, {
         data: {
           type:
             nodeObj.children === undefined
@@ -222,7 +222,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
       }
 
       try {
-        await axios.patch(`http://localhost:3000/api/note/${nodeObj.id}`, {
+        await axios.patch(`/api/note/${nodeObj.id}`, {
           property: NoteInfo.Name,
           value: { ...nodeObj, name: inputValue },
         });
@@ -263,7 +263,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
     e.stopPropagation();
 
     try {
-      await axios.patch(`http://localhost:3000/api/note/${nodeObj.id}`, {
+      await axios.patch(`/api/note/${nodeObj.id}`, {
         property: NoteInfo.Favorite,
         value: { favorite: !isFavorite },
       });
@@ -295,7 +295,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
         value.firstPublicAt = date;
       }
 
-      await axios.patch(`http://localhost:3000/api/note/${nodeObj.id}`, {
+      await axios.patch(`/api/note/${nodeObj.id}`, {
         property: NoteInfo.Public,
         value,
       });

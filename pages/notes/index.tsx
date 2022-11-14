@@ -81,7 +81,7 @@ const Notes = ({ convertedData }: IProps) => {
       (async function getNote() {
         const {
           data: { note },
-        } = await axios.get(`http://localhost:3000/api/note/${selectedId}`);
+        } = await axios.get(`/api/note/${selectedId}`);
         note.createdAt = note.createdAt.toLocaleString();
         note.lastModified = note.lastModified.toLocaleString();
         if (note.firstPublicAt) {

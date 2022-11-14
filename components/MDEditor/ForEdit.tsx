@@ -121,7 +121,7 @@ const MarkdownEditorForEdit = ({ height }: MarkdownEditor) => {
     feedback(dispatch, Feedback.Info, "Saving the note...", false)
     try {
       const lastModified = new Date()
-      await axios.patch(`http://localhost:3000/api/note/${note!._id}`, {
+      await axios.patch(`/api/note/${note!._id}`, {
         property: 'multiple',
         value: { mdText: value, lastModified},
       });

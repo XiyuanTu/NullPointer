@@ -25,7 +25,7 @@ const Title = () => {
     setIsUpdating(false);
 
     try {
-      await axios.patch(`http://localhost:3000/api/note/${note!._id}`, {
+      await axios.patch(`/api/note/${note!._id}`, {
         property: NoteInfo.Title,
         value: { title: title.trim() },
       });

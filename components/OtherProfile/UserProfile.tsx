@@ -34,14 +34,14 @@ const UserProfile = ({ user, setTabValue, otherUser, setOtherUser }: IProps) => 
   const handleFollowAndFollowing = useCallback(
     async () => {
       try {
-        await axios.patch(`http://localhost:3000/api/user/${userId}`, {
+        await axios.patch(`/api/user/${userId}`, {
           property: UserInfo.Following,
           action: otherUser.followers.includes(userId)
             ? Action.Pull
             : Action.Push,
           value: { following: otherUserId },
         });
-        await axios.patch(`http://localhost:3000/api/user/${otherUserId}`, {
+        await axios.patch(`/api/user/${otherUserId}`, {
           property: UserInfo.Followers,
           action: otherUser.followers.includes(userId)
             ? Action.Pull
@@ -77,7 +77,7 @@ const UserProfile = ({ user, setTabValue, otherUser, setOtherUser }: IProps) => 
     setIsEditingDescription((state) => !state);
     try {
       const newDescription = inputRef.current!.value.trim();
-      await axios.patch(`http://localhost:3000/api/user/${otherUserId}`, {
+      await axios.patch(`/api/user/${otherUserId}`, {
         property: UserInfo.Description,
         value: { description: newDescription },
       });

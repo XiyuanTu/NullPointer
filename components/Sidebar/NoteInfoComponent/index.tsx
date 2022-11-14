@@ -100,7 +100,7 @@ const Tags = ({ note }: IProps) => {
   useEffect(() => {
     return () => {
       (async () => {
-        await axios.patch(`http://localhost:3000/api/note/${note._id}`, {
+        await axios.patch(`/api/note/${note._id}`, {
           property: NoteInfo.Tags,
           value: { tags },
         });
