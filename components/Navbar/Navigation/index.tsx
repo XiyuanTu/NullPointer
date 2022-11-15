@@ -24,10 +24,6 @@ const Navigation = () => {
     router.push("/");
   }, []);
 
-  const handleCurrentUserProfile = useCallback(() => {
-    router.push("/profile");
-  }, []);
-
   return (
     <Box sx={{ display: "flex", gap: 10 }}>
       {session &&
@@ -41,7 +37,7 @@ const Navigation = () => {
                 "&:hover": { cursor: "pointer" },
               }}
               src={session.user.image}
-              onClick={handleCurrentUserProfile}
+              onClick={() => router.push("/profile")}
             />
           </Tooltip>
         ) : (
@@ -53,7 +49,7 @@ const Navigation = () => {
                 color: "primary.main",
                 "&:hover": { cursor: "pointer" },
               }}
-              onClick={handleCurrentUserProfile}
+              onClick={() => router.push("/profile")}
             >
               {session.user.name!.substring(0, 1).toUpperCase()}
             </Avatar>
