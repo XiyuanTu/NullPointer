@@ -111,7 +111,7 @@ const LoginForm = ({ setLoggingIn }: IProps) => {
         }}
       >
         <Typography sx={{ mr: 1, fontSize: "0.875rem" }}>
-          Don't have an account?
+          Don&apos;t have an account?
         </Typography>
         <Button
           onClick={() => setLoggingIn(false)}

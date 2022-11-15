@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 
-// const MONGODB_URI = process.env.MONGODB_URI
-const MONGODB_URI = "mongodb://localhost:27017/";
+const MONGODB_URI = process.env.MONGODB_URI!
+// const MONGODB_URI = "mongodb+srv://xiyuan:q1QUveieEqdZtY03@cluster0.a5mk1lf.mongodb.net/?retryWrites=true&w=majority";
+
 
 if (!MONGODB_URI) {
   throw new Error(
@@ -39,6 +40,7 @@ async function connectDB() {
     cached.conn = await cached.promise;
   } catch (e) {
     cached.promise = null;
+    console.log(e)
     throw e;
   }
 

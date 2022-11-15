@@ -132,7 +132,7 @@ const ForumContent = ({ convertedData, user: currentUser, setCurrentUser }: IPro
             fontSize: 20,
           }}
         >
-          We couldn't find anything!
+          We couldn&apos;t find anything!
         </Typography>
         <Image src="/no_data.jpg" width={900} height={590} />
       </Box>
@@ -157,7 +157,7 @@ const ForumContent = ({ convertedData, user: currentUser, setCurrentUser }: IPro
         >
           <Typography>
             {(currentPage - 1) * 8 + 1} -{" "}
-            {Math.min(currentPage * 8, notes.length)} of {notes.length} results for "{router.query.search}"
+            {Math.min(currentPage * 8, notes.length)} of {notes.length} results for &quot;{router.query.search}&quot;
           </Typography>
           <Box>
             <FormControl sx={{ mr: 1 }} size="small">
