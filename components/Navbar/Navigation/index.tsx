@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSession, signOut } from "next-auth/react";
 import ForumOutlinedIcon from "@mui/icons-material/ForumOutlined";
@@ -12,10 +12,12 @@ import NavbarMenuItem from "./NavbarMenuItem";
 import { openLoginPage } from "../../../state/slices/loginSlice";
 import { useAppDispatch } from "../../../state/hooks";
 import { Tooltip } from "@mui/material";
+import { useIsRouterChanging } from "../../../hooks";
 
 const Navigation = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const isRouterChanging = useIsRouterChanging(); 
 
   const dispatch = useAppDispatch();
 
@@ -37,7 +39,7 @@ const Navigation = () => {
                 "&:hover": { cursor: "pointer" },
               }}
               src={session.user.image}
-              onClick={() => router.push("/profile")}
+              onClick={() => !isRouterChanging && router.push("/profile")}
             />
           </Tooltip>
         ) : (
@@ -49,7 +51,7 @@ const Navigation = () => {
                 color: "primary.main",
                 "&:hover": { cursor: "pointer" },
               }}
-              onClick={() => router.push("/profile")}
+              onClick={() => !isRouterChanging && router.push("/profile")}
             >
               {session.user.name!.substring(0, 1).toUpperCase()}
             </Avatar>
