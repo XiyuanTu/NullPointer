@@ -1,11 +1,17 @@
+import dynamic from 'next/dynamic'
 import { Tabs, Tab, Box } from "@mui/material";
-import ProfileBookmarks from "./ProfileBookmarks";
-import ProfileFavorite from "./ProfileFavorite";
-import ProfileFollowers from "./ProfileFollowers";
-import ProfileFollowing from "./ProfileFollowing";
-import ProfileLikes from "./ProfileLikes";
-import ProfileNotes from "./ProfileNotes";
-
+// import ProfileBookmarks from "./ProfileBookmarks";
+// import ProfileFavorite from "./ProfileFavorite";
+// import ProfileFollowers from "./ProfileFollowers";
+// import ProfileFollowing from "./ProfileFollowing";
+// import ProfileLikes from "./ProfileLikes";
+// import ProfileNotes from "./ProfileNotes";
+const ProfileBookmarks = dynamic(() => import("./ProfileBookmarks"))
+const ProfileFavorite = dynamic(() => import("./ProfileFavorite"))
+const ProfileFollowers = dynamic(() => import("./ProfileFollowers"))
+const ProfileFollowing = dynamic(() => import("./ProfileFollowing"))
+const ProfileLikes = dynamic(() => import("./ProfileLikes"))
+const ProfileNotes = dynamic(() => import("./ProfileNotes"))
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
