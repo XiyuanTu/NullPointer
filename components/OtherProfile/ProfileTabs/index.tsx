@@ -1,8 +1,8 @@
 import { Tabs, Tab, Box } from "@mui/material";
-import ProfileFollowers from "./ProfileFollowers";
-import ProfileFollowing from "./ProfileFollowing";
-import ProfileNotes from "./ProfileNotes";
-
+import dynamic from "next/dynamic";
+const ProfileFollowers = dynamic(() => import("./ProfileFollowers"));
+const ProfileFollowing = dynamic(() => import("./ProfileFollowing"));
+const ProfileNotes = dynamic(() => import("./ProfileNotes"));
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -34,7 +34,7 @@ function a11yProps(index: number) {
 
 interface ProfileTabsProps {
   user: User;
-  setUser: React.Dispatch<React.SetStateAction<User>>;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   tabValue: number;
   setTabValue: React.Dispatch<React.SetStateAction<number>>;
   otherUser: User;

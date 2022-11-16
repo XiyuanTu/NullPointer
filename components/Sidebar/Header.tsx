@@ -14,9 +14,9 @@ import { feedback } from "../../utils/feedback";
 
 interface IProps {
   data: RenderTree;
-  setData: React.Dispatch<React.SetStateAction<RenderTree>>;
+  setData: React.Dispatch<React.SetStateAction<RenderTree | null>>;
   folderIds: string[];
-  setFolderIds: React.Dispatch<React.SetStateAction<string[]>>;
+  setFolderIds: React.Dispatch<React.SetStateAction<string[] | null>>;
   expanded: string[];
   setExpanded: React.Dispatch<React.SetStateAction<string[]>>;
 }

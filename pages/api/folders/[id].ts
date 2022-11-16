@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import connectDB from "../../../utils/connectDB";
-import Note from "../../../models/note/noteModel";
+import Folder from "../../../models/note/folderModel";
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,8 +17,9 @@ export default async function handler(
   if (req.method === "GET") {
     try {
       await connectDB();
-      const notes = await Note.find({ userId: id }, { __v: 0 }).lean();
-      return res.status(200).json({ notes });
+      const folders = await Folder.find({ userId: id }, { userId: 0, __v: 0 }).lean();
+      
+      return res.status(200).json({ folders });
     } catch (err) {
       return res.status(500).json({ message: "Fail to process" });
     }

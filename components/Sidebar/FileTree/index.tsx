@@ -9,9 +9,9 @@ import { setSelectedId } from "../../../state/slices/selectedIdSlice";
 
 interface IProps {
   data: RenderTree;
-  setData: React.Dispatch<React.SetStateAction<RenderTree>>;
+  setData: React.Dispatch<React.SetStateAction<RenderTree | null>>;
   folderIds: string[];
-  setFolderIds: React.Dispatch<React.SetStateAction<string[]>>;
+  setFolderIds: React.Dispatch<React.SetStateAction<string[] | null>>;
   expanded: string[];
   setExpanded: React.Dispatch<React.SetStateAction<string[]>>;
 }
@@ -82,9 +82,9 @@ const renderTree = (
   nodes: RenderTree, // The node that is going to be rendered
   parentNode: RenderTree,
   data: RenderTree, // It won't change, so that every node component can manipulate the whole data
-  setData: React.Dispatch<React.SetStateAction<RenderTree>>,
+  setData: React.Dispatch<React.SetStateAction<RenderTree | null>>,
   folderIds: string[],
-  setFolderIds: React.Dispatch<React.SetStateAction<string[]>>
+  setFolderIds: React.Dispatch<React.SetStateAction<string[] | null>>
 ): any => {
   if (nodes.level === -1) {
     if (!nodes.children) {

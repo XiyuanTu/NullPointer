@@ -18,7 +18,7 @@ interface IProps {
   user: User;
   setTabValue: React.Dispatch<React.SetStateAction<number>>;
   otherUser: User;
-  setOtherUser: React.Dispatch<React.SetStateAction<User>>;
+  setOtherUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 const UserProfile = ({

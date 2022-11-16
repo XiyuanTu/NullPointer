@@ -1,27 +1,20 @@
-import { Box, Container } from "@mui/material";
-import { GetServerSideProps } from "next";
-import { unstable_getServerSession } from "next-auth";
-import UserAccount from "../../models/user/userAccountModel";
-import connectDB from "../../utils/connectDB";
-import { convertUser } from "../../utils/notes";
-import { authOptions } from "../api/auth/[...nextauth]";
+import { Box, Container, CircularProgress } from "@mui/material";
 import ProfileTabs from "../../components/OtherProfile/ProfileTabs";
 import UserProfile from "../../components/OtherProfile/UserProfile";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
+import { useAppDispatch } from "../../state/hooks";
+import axios from "axios";
+import { feedback } from "../../utils/feedback";
+import { Feedback } from "../../types/constants";
 
-interface IProps {
-  user: User;
-  otherUser: User;
-}
-
-const OtherUserProfile = ({
-  user: currentUser,
-  otherUser: currentOtherUser,
-}: IProps) => {
+const OtherUserProfile = () => {
   const router = useRouter();
-  const [user, setUser] = useState(currentUser);
-  const [otherUser, setOtherUser] = useState(currentOtherUser);
+  const { data: session, status } = useSession();
+  const dispatch = useAppDispatch();
+  const [user, setUser] = useState<User | null>(null);
+  const [otherUser, setOtherUser] = useState<User | null>(null);
   const [tabValue, setTabValue] = useState(0);
 
   /* When navigating to the same page in Next.js, 
@@ -29,10 +22,37 @@ const OtherUserProfile = ({
   /profile/1 and /profile/2 are considered the same page
   This is the workaround */
   useEffect(() => {
-    setUser(currentUser);
-    setOtherUser(currentOtherUser);
-    setTabValue(0);
-  }, [router.query.id]);
+    try {
+      if (session) {
+        (async function getUser() {
+          const {
+            data: { user },
+          } = await axios.get("/api/user/" + session.user.id);
+          setUser(user);
+          const {
+            data: { user: currentOtherUser },
+          } = await axios.get("/api/user/" + router.query.id);
+          setUser(user);
+          setOtherUser(currentOtherUser);
+          setTabValue(0);
+        })();
+      }
+    } catch (e) {
+      feedback(
+        dispatch,
+        Feedback.Error,
+        "Fail to process. Internal error. Please try later."
+      );
+    }
+  }, [session, router.query.id]);
+
+  if (!user || !otherUser) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: "48vh" }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Container maxWidth="lg" sx={{ display: "flex", pt: 3, mt: "9vh" }}>
@@ -55,30 +75,6 @@ const OtherUserProfile = ({
       </Box>
     </Container>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
-
-  const {
-    user: { id },
-  } = session!;
-
-  const otherUserId = context.params!.id;
-
-  await connectDB();
-
-  let user = await UserAccount.findById(id).lean();
-  let otherUser = await UserAccount.findById(otherUserId).lean();
-
-  user = convertUser(user);
-  otherUser = convertUser(otherUser);
-
-  return { props: { user, otherUser } };
 };
 
 export default OtherUserProfile;

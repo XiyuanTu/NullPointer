@@ -1,23 +1,17 @@
-import { Box, Container } from "@mui/material";
-import { GetServerSideProps } from "next";
-import { unstable_getServerSession } from "next-auth";
-import UserAccount from "../../models/user/userAccountModel";
-import connectDB from "../../utils/connectDB";
-import { convertUser } from "../../utils/notes";
-import { authOptions } from "../api/auth/[...nextauth]";
+import { Box, Container, CircularProgress } from "@mui/material";
 import ProfileTabs from "../../components/Profile/ProfileTabs";
 import UserProfile from "../../components/Profile/UserProfile";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-
-interface IProps {
-  user: User;
-}
+import { feedback } from "../../utils/feedback";
+import { Feedback } from "../../types/constants";
+import { useAppDispatch } from "../../state/hooks";
 
 const CurrentUserProfile = () => {
   const { data: session, status } = useSession();
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [tabValue, setTabValue] = useState(
@@ -35,12 +29,20 @@ const CurrentUserProfile = () => {
         })();
       }
     } catch (e) {
-      console.log(e);
+      feedback(
+        dispatch,
+        Feedback.Error,
+        "Fail to process. Internal error. Please try later."
+      );
     }
   }, [session]);
 
   if (!user) {
-    return <>Loading...</>;
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: "48vh" }}>
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return (
@@ -59,25 +61,5 @@ const CurrentUserProfile = () => {
     </Container>
   );
 };
-
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const session = await unstable_getServerSession(
-//     context.req,
-//     context.res,
-//     authOptions
-//   );
-
-//   const {
-//     user: { id },
-//   } = session!;
-
-//   await connectDB();
-
-//   let user = await UserAccount.findById(id).lean();
-
-//   user = convertUser(user);
-
-//   return { props: { user } };
-// };
 
 export default CurrentUserProfile;
