@@ -7,19 +7,41 @@ import { convertUser } from "../../utils/notes";
 import { authOptions } from "../api/auth/[...nextauth]";
 import ProfileTabs from "../../components/Profile/ProfileTabs";
 import UserProfile from "../../components/Profile/UserProfile";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 interface IProps {
   user: User;
 }
 
-const CurrentUserProfile = ({ user: currentUser }: IProps) => {
+const CurrentUserProfile = () => {
+  const { data: session, status } = useSession();
   const router = useRouter();
-  const [user, setUser] = useState(currentUser);
+  const [user, setUser] = useState<User | null>(null);
   const [tabValue, setTabValue] = useState(
     router.query.tabValue ? parseInt(router.query.tabValue as string) : 0
   );
+
+  useEffect(() => {
+    try {
+      if (session) {
+        (async function getUser() {
+          const {
+            data: { user },
+          } = await axios.get("/api/user/" + session.user.id);
+          setUser(user);
+        })();
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }, [session]);
+
+  if (!user) {
+    return <>Loading...</>;
+  }
 
   return (
     <Container maxWidth="lg" sx={{ display: "flex", pt: 3, mt: "9vh" }}>

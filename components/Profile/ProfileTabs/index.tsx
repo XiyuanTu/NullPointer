@@ -43,7 +43,7 @@ function a11yProps(index: number) {
 
 interface ProfileTabsProps {
   user: User;
-  setUser: React.Dispatch<React.SetStateAction<User>>;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   tabValue: number;
   setTabValue: React.Dispatch<React.SetStateAction<number>>;
 }

@@ -21,7 +21,7 @@ import UserAvatar from "../../UserAvatar";
 
 interface IProps {
   user: User;
-  setUser: React.Dispatch<React.SetStateAction<User>>;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 const ProfileFollowers = ({ user, setUser }: IProps) => {
