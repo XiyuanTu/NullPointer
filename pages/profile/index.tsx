@@ -60,24 +60,24 @@ const CurrentUserProfile = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const session = await unstable_getServerSession(
+//     context.req,
+//     context.res,
+//     authOptions
+//   );
 
-  const {
-    user: { id },
-  } = session!;
+//   const {
+//     user: { id },
+//   } = session!;
 
-  await connectDB();
+//   await connectDB();
 
-  let user = await UserAccount.findById(id).lean();
+//   let user = await UserAccount.findById(id).lean();
 
-  user = convertUser(user);
+//   user = convertUser(user);
 
-  return { props: { user } };
-};
+//   return { props: { user } };
+// };
 
 export default CurrentUserProfile;
