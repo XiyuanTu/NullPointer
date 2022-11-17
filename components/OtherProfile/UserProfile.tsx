@@ -1,14 +1,6 @@
-import {
-  Box,
-  TextField,
-  Typography,
-  Tooltip,
-  IconButton,
-  Button,
-} from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import axios from "axios";
-import EditIcon from "@mui/icons-material/Edit";
-import { useCallback, useRef, useState } from "react";
+import { useCallback } from "react";
 import { useAppDispatch } from "../../state/hooks";
 import { Action, Feedback, UserInfo } from "../../types/constants";
 import { feedback } from "../../utils/feedback";
@@ -30,10 +22,6 @@ const UserProfile = ({
   const { _id: userId } = user;
   const { _id: otherUserId } = otherUser;
   const dispatch = useAppDispatch();
-
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-  const [description, setDescription] = useState(otherUser.description);
-  const [isEditingDescription, setIsEditingDescription] = useState(false);
 
   const handleFollowAndFollowing = useCallback(async () => {
     try {
@@ -69,28 +57,6 @@ const UserProfile = ({
       );
     }
   }, [user, otherUser]);
-
-  const handleEditBtn = useCallback(() => {
-    setIsEditingDescription((state) => !state);
-  }, []);
-
-  const handleOnBlur = useCallback(async () => {
-    setIsEditingDescription((state) => !state);
-    try {
-      const newDescription = inputRef.current!.value.trim();
-      await axios.patch(`/api/user/${otherUserId}`, {
-        property: UserInfo.Description,
-        value: { description: newDescription },
-      });
-      setDescription(newDescription);
-    } catch (err) {
-      feedback(
-        dispatch,
-        Feedback.Error,
-        `Fail to update the user description. Internal error. Please try later.`
-      );
-    }
-  }, []);
 
   const handleFollowingBtn = useCallback(() => {
     setTabValue(2);
@@ -138,20 +104,7 @@ const UserProfile = ({
         }}
       >
         {/* user description */}
-        {isEditingDescription ? (
-          <TextField
-            inputRef={inputRef}
-            autoFocus
-            fullWidth
-            minRows={3}
-            multiline
-            defaultValue={description}
-            onBlur={handleOnBlur}
-            sx={{
-              "& .MuiInputBase-root": { borderRadius: 0, py: 1, pl: 2 },
-            }}
-          />
-        ) : description ? (
+        {otherUser.description && (
           <Typography
             variant="body2"
             sx={{
@@ -161,29 +114,7 @@ const UserProfile = ({
               wordBreak: "break-word",
             }}
           >
-            {description}
-            <Tooltip title="Edit" arrow>
-              <IconButton
-                aria-label="Edit"
-                size="small"
-                sx={{ p: 0.5, color: "gray" }}
-                onClick={handleEditBtn}
-              >
-                <EditIcon sx={{ fontSize: 18 }} />
-              </IconButton>
-            </Tooltip>
-          </Typography>
-        ) : (
-          <Typography
-            variant="body2"
-            sx={{
-              fontFamily: "inherit",
-              color: "gray",
-              "&:hover": { cursor: "pointer", textDecoration: "underline" },
-            }}
-            onClick={handleEditBtn}
-          >
-            Write a description about yourself
+            {otherUser.description}
           </Typography>
         )}
       </Box>
