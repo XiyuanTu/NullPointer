@@ -1,18 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import connectDB from "../../../utils/connectDB";
 import UserAccount from "../../../models/user/userAccountModel";
-import {
-  emailFormatCheck,
-  verifyEmail,
-} from "../../../utils/auth/emailValidation";
+import { emailFormatCheck } from "../../../utils/auth/emailValidation";
 import {
   passwordFormatCheck,
   hashPassword,
 } from "../../../utils/auth/passwordValidation";
-import {
-  usernameFormatCheck,
-  verifyUsername,
-} from "../../../utils/auth/usernameValidation";
+import { usernameFormatCheck } from "../../../utils/auth/usernameValidation";
 
 export default async function handler(
   req: NextApiRequest,
@@ -37,8 +31,12 @@ export default async function handler(
   }
 
   try {
-    const isUsernameNotTaken = await verifyUsername(username);
-    const isEmailNotTaken = await verifyEmail(email);
+    await connectDB();
+
+    const isUsernameNotTaken =
+      (await UserAccount.findOne({ username })) === null;
+    const isEmailNotTaken = (await UserAccount.findOne({ email })) === null;
+    console.log(isEmailNotTaken);
 
     if (!isUsernameNotTaken) {
       return res
@@ -50,7 +48,6 @@ export default async function handler(
       return res.status(422).json({ message: "Email has already been taken!" });
     }
 
-    await connectDB();
     const hashedPassword = await hashPassword(password);
     const userAccount = new UserAccount({
       username,
@@ -60,6 +57,7 @@ export default async function handler(
     await userAccount.save();
     res.status(200).json({ message: "success" });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ message: "Fail to process" });
   }
 }
