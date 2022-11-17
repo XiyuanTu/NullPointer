@@ -38,10 +38,11 @@ import { feedback } from "../../../utils/feedback";
 import { useAppDispatch } from "../../../state/hooks";
 import { Action, Feedback, NoteInfo, UserInfo } from "../../../types/constants";
 import UserAvatar from "../../UserAvatar";
-import { convertCount, convertDate } from "../../../utils/forum";
-import Comment from "../../Comment";
+import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { convertCount, convertDate } from "../../../utils/note";
+const Comment = dynamic(() => import('../../Comment'))
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -61,7 +62,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 interface IProps {
   note: ForumNote;
   user: User;
-  setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
+  setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
   setNotes: React.Dispatch<React.SetStateAction<ForumNote[] | null>>;
 }
 

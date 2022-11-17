@@ -3,10 +3,8 @@ import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import connectDB from "../../../utils/connectDB";
 import Note from "../../../models/note/noteModel";
-import Folder from "../../../models/note/folderModel";
-import mongoose from "mongoose";
-import { getComments } from "../../../utils/notes";
 import Comment from "../../../models/note/commentModel";
+import { getComments } from "../../../utils/comment";
 
 export default async function handler(
   req: NextApiRequest,

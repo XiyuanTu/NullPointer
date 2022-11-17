@@ -24,8 +24,8 @@ import {
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { convertDate } from "../../utils/forum";
 import UserAvatar from "../UserAvatar";
+import { convertDate } from "../../utils/note";
 
 interface IProps {
   comment: ConvertedComment;

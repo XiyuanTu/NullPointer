@@ -16,7 +16,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useAppDispatch } from "../../../state/hooks";
 import { Action, Feedback, UserInfo } from "../../../types/constants";
 import { feedback } from "../../../utils/feedback";
-import { convertCount } from "../../../utils/forum";
+import { convertCount } from "../../../utils/note";
 import UserAvatar from "../../UserAvatar";
 
 interface IProps {

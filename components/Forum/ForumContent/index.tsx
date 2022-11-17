@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import {
-  List,
   Box,
   Typography,
   FormControl,
@@ -14,12 +13,12 @@ import {
 import ContentItem from "./ContentItem";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { calRelevance } from "../../../utils/forum";
+import { calRelevance } from "../../../utils/note";
 
 interface IProps {
   convertedData: ForumNote[];
   user: User;
-  setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
+  setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 const ForumContent = ({ convertedData, user: currentUser, setCurrentUser }: IProps) => {

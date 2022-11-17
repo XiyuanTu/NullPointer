@@ -3,7 +3,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useAppDispatch } from "../state/hooks";
 import { Action, Feedback, NoteInfo, UserInfo } from "../types/constants";
 import { feedback } from "../utils/feedback";
-import { convertCount, convertDate } from "../utils/forum";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -35,8 +34,10 @@ import { CodeProps } from "react-markdown/lib/ast-to-react";
 import remarkGfm from "remark-gfm";
 import "github-markdown-css";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import Comment from "./Comment";
 import { useRouter } from "next/router";
+import { convertCount, convertDate } from "../utils/note";
+import dynamic from "next/dynamic";
+const Comment = dynamic(() => import("./Comment"));
 
 interface IProps {
   user: User;

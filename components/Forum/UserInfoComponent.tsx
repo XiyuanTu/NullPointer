@@ -45,7 +45,7 @@ const info = ["Contact Me", "FAQs", "Source Code", "Terms and Privacy"];
 
 interface IProps {
   user: User;
-  setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
+  setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
   whoToFollow: User[];
 }
 
@@ -213,7 +213,7 @@ export default UserInfoComponent;
 interface UserCardIProps {
   recommendedUser: User;
   user: User;
-  setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
+  setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 const UserCard = ({

@@ -7,7 +7,8 @@ import mongoose from "mongoose";
 import { FileOrFolder, NoteInfo } from "../../../types/constants";
 import Folder from "../../../models/note/folderModel";
 import Comment from "../../../models/note/commentModel";
-import { getCommentIds } from "../../../utils/notes";
+import { getCommentIds } from "../../../utils/comment";
+
 
 export default async function handler(
   req: NextApiRequest,
