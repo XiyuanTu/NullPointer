@@ -189,7 +189,7 @@ const Header = ({
         "Fail to create the folder. Internal error. Please try later."
       );
     }
-    setIsCreateFolderBtnDisabled(true)
+    setIsCreateFolderBtnDisabled(false)
   };
 
   const handleExpandAll = () => {

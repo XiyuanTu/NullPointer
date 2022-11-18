@@ -5,9 +5,15 @@ interface IProps {
   icon: SvgIconComponent;
   tooltipTitle: string;
   onClick: (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  disabled?: boolean;
 }
 
-const NavbarMenuItem = ({ icon: Icon, tooltipTitle, onClick }: IProps) => {
+const NavbarMenuItem = ({
+  icon: Icon,
+  tooltipTitle,
+  onClick,
+  disabled,
+}: IProps) => {
   return (
     <Tooltip title={tooltipTitle} arrow>
       <Box
@@ -26,19 +32,22 @@ const NavbarMenuItem = ({ icon: Icon, tooltipTitle, onClick }: IProps) => {
           },
         }}
       >
-        <IconButton
-          sx={{ "&:hover": { bgcolor: "transparent" } }}
-          onClick={onClick}
-        >
-          <Icon
-            sx={{
-              color: "primary.main",
-              flex: 1,
-              fontSize: "1.25rem",
-              lineHeight: "1.75rem",
-            }}
-          />{" "}
-        </IconButton>
+        <span>
+          <IconButton
+            sx={{ "&:hover": { bgcolor: "transparent" } }}
+            disabled={disabled}
+            onClick={onClick}
+          >
+            <Icon
+              sx={{
+                color: "primary.main",
+                flex: 1,
+                fontSize: "1.25rem",
+                lineHeight: "1.75rem",
+              }}
+            />{" "}
+          </IconButton>
+        </span>
       </Box>
     </Tooltip>
   );

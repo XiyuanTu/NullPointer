@@ -104,17 +104,19 @@ const Navigation = () => {
               icon={ForumOutlinedIcon}
               tooltipTitle="forum"
               onClick={handleNavigateToForum}
-              // disabled={is}
+              disabled={isToForumBtnDisabled}
             />
             <NavbarMenuItem
               icon={CreateOutlinedIcon}
               tooltipTitle="notebook"
               onClick={handleNavigateToNotebook}
+              disabled={isToNotebookBtnDisabled}
             />
             <NavbarMenuItem
               icon={LogoutIcon}
               tooltipTitle="log out"
               onClick={handleLogOut}
+              disabled={isSignOutBtnDisabled}
             />
           </>
         ) : (

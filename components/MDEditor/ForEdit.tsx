@@ -46,7 +46,6 @@ const MarkdownEditorForEdit = ({ height }: MarkdownEditor) => {
   const [startSave, setStartSave] = useState(false);
   const [value, setValue] = useState<string | undefined>("");
   const [isJustRendered, setIsJustRendered] = useState(true);
-  const [isSaveBtnDisabled, setIsSaveBtnDisabled] = useState(false);
 
   const saveBtn: ICommand = {
     name: "save",
@@ -59,7 +58,6 @@ const MarkdownEditorForEdit = ({ height }: MarkdownEditor) => {
           aria-label="save"
           //seems it can't get the latest component's states, so have to do it this way
           //bug: after it is clicked, it will be focused. Don't know how to remove it
-          disabled={isSaveBtnDisabled}
           onClick={(e) => {
             e.stopPropagation();
             setStartSave(true);
@@ -119,9 +117,6 @@ const MarkdownEditorForEdit = ({ height }: MarkdownEditor) => {
   }, [startSave]);
 
   const save = async () => {
-
-    setIsSaveBtnDisabled(true);
-
     feedback(dispatch, Feedback.Info, "Saving the note...", false);
     try {
       const lastModified = new Date();
@@ -142,7 +137,6 @@ const MarkdownEditorForEdit = ({ height }: MarkdownEditor) => {
         "Fail to save the note. Internal error. Please try later."
       );
     }
-    setIsSaveBtnDisabled(false);
   }
 
   return (
