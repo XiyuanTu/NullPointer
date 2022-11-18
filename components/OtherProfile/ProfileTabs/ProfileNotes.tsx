@@ -76,7 +76,7 @@ const ProfileNotes = ({ user, otherUser }: IProps) => {
     );
   }
 
-  if (sortedNotes && sortedNotes.length === 0) {
+  if (rawNotes && rawNotes.length === 0) {
     return (
       <Box
         sx={{
@@ -94,7 +94,7 @@ const ProfileNotes = ({ user, otherUser }: IProps) => {
             fontSize: 20,
           }}
         >
-          You have not written any note yet!
+          This user has not written any note yet!
         </Typography>
         <Image src="/no_data.jpg" width={900} height={500} />
       </Box>

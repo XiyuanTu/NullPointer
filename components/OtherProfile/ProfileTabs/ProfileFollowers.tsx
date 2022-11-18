@@ -141,7 +141,7 @@ const ProfileFollowers = ({ user, setUser, otherUser }: IProps) => {
             fontSize: 20,
           }}
         >
-          You do not have any follower yet!
+          This user does not have any follower yet!
         </Typography>
         <Image src="/no_data.jpg" width={900} height={500} />
       </Box>

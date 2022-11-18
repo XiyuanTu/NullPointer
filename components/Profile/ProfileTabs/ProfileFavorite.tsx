@@ -101,7 +101,7 @@ const ProfileFavorite = ({ user }: IProps) => {
     );
   }
 
-  if (sortedNotes && sortedNotes.length === 0) {
+  if (rawNotes && rawNotes.length === 0) {
     return (
       <Box
         sx={{

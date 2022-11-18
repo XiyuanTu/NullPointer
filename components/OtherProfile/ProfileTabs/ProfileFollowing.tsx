@@ -140,7 +140,7 @@ const ProfileFollowing = ({ user, setUser, otherUser }: IProps) => {
             fontSize: 20,
           }}
         >
-          You are not following anyone!
+          This user is not following anyone!
         </Typography>
         <Image src="/no_data.jpg" width={900} height={500} />
       </Box>
