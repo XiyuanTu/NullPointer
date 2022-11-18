@@ -9,7 +9,6 @@ import Folder from "../../../models/note/folderModel";
 import Comment from "../../../models/note/commentModel";
 import { getCommentIds } from "../../../utils/comment";
 
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -93,15 +92,14 @@ export default async function handler(
     try {
       await connectDB();
 
-      const note = await Note.findById(id);
-      const commentIds = note.comments.map(
-        (comment: mongoose.Types.ObjectId) => comment + ""
-      );
-      const commentIdsToDelete = await getCommentIds(commentIds);
-
-      await Comment.deleteMany({ _id: { $in: commentIdsToDelete } });
-
       if (type === FileOrFolder.File) {
+        const note = await Note.findById(id);
+        const commentIds = note.comments.map(
+          (comment: mongoose.Types.ObjectId) => comment + ""
+        );
+        const commentIdsToDelete = await getCommentIds(commentIds);
+
+        await Comment.deleteMany({ _id: { $in: commentIdsToDelete } });
         await Note.deleteOne({ _id: id });
       } else {
         const folder = await Folder.findById(id);
@@ -132,10 +130,22 @@ export default async function handler(
 
         await getIds(folder, folderIds, fileIds);
         await Folder.deleteMany({ _id: { $in: folderIds } });
+        
+        const commentIds: string[] = []
+        for (let fileId of fileIds) {
+          const note = await Note.findById(fileId);
+          note.comments.forEach(
+            (comment: mongoose.Types.ObjectId) => commentIds.push(comment + "")
+          );
+        }
+        const commentIdsToDelete = await getCommentIds(commentIds);
+
+        await Comment.deleteMany({ _id: { $in: commentIdsToDelete } });
         await Note.deleteMany({ _id: { $in: fileIds } });
       }
       return res.status(200).json({ message: "Success" });
     } catch (error) {
+      console.log(error);
       return res.status(500).json({ message: "Fail to process" });
     }
   }
