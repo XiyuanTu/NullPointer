@@ -94,7 +94,7 @@ const ProfileNotes = ({ user, otherUser }: IProps) => {
             fontSize: 20,
           }}
         >
-          This user has not written any note yet!
+          The user has not written any note yet!
         </Typography>
         <Image src="/no_data.jpg" width={900} height={500} />
       </Box>

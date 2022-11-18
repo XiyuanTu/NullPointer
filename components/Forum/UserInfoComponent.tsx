@@ -180,7 +180,10 @@ const UserInfoComponent = ({ user, setCurrentUser, whoToFollow }: IProps) => {
         <List>
           {listButtons.map((listButtons, index) => (
             <ListItem key={listButtons.text} disablePadding>
-              <ListItemButton disabled={profileBtnDisabled === index} onClick={() => handleNavigateToProfile(index)}>
+              <ListItemButton
+                disabled={profileBtnDisabled === index}
+                onClick={() => handleNavigateToProfile(index)}
+              >
                 <ListItemIcon>{listButtons.icon}</ListItemIcon>
                 <ListItemText
                   sx={{ fontFamily: "inherit", color: "#8590a6" }}
@@ -229,9 +232,10 @@ const UserCard = ({
   const [isFollowing, setIsFollowing] = useState(
     user.following.includes(recommendedUser._id)
   );
-
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const [isFollowBtnDisabled, setIsFollowBtnDisabled] = useState(false);
+  const [isToProfileBtnDisabled, setIsToProfileBtnDisabled] = useState(false);
 
   const handleFollowAndFollowing = useCallback(async () => {
     if (isFollowBtnDisabled) {
@@ -265,6 +269,12 @@ const UserCard = ({
     setIsFollowBtnDisabled(false);
   }, [isFollowing, isFollowBtnDisabled]);
 
+  const handleNavigateToProfile = useCallback(async () => {
+    setIsToProfileBtnDisabled(true);
+    await router.push("/profile");
+    setIsToProfileBtnDisabled(false);
+  }, []);
+
   useEffect(() => {
     setIsFollowing(user.following.includes(recommendedUser._id));
   }, [user.following]);
@@ -273,26 +283,36 @@ const UserCard = ({
     <CardHeader
       avatar={
         recommendedUser.avatar ? (
-          <Avatar src={recommendedUser.avatar} aria-label="username" />
+          <ButtonBase
+            disabled={isToProfileBtnDisabled}
+            onClick={handleNavigateToProfile}
+          >
+            <Avatar src={recommendedUser.avatar} aria-label="username" />
+          </ButtonBase>
         ) : (
-          <Avatar src={recommendedUser.avatar} aria-label="username">
-            {recommendedUser.username.substring(0, 1).toUpperCase()}
-          </Avatar>
+          <ButtonBase
+            disabled={isToProfileBtnDisabled}
+            onClick={handleNavigateToProfile}
+          >
+            <Avatar src={recommendedUser.avatar} aria-label="username">
+              {recommendedUser.username.substring(0, 1).toUpperCase()}
+            </Avatar>
+          </ButtonBase>
         )
       }
       title={
-        <Typography
-          variant="body2"
+        <ButtonBase
           sx={{
-            width: "100%",
             fontWeight: "bold",
             fontFamily: "inherit",
             wordBreak: "break-word",
+            lineHeight: 1.7,
           }}
-          component="span"
+          disabled={isToProfileBtnDisabled}
+          onClick={handleNavigateToProfile}
         >
           {recommendedUser.username}
-        </Typography>
+        </ButtonBase>
       }
       subheader={
         <Typography
