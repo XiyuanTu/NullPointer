@@ -269,9 +269,9 @@ const UserCard = ({
     setIsFollowBtnDisabled(false);
   }, [isFollowing, isFollowBtnDisabled]);
 
-  const handleNavigateToProfile = useCallback(async () => {
+  const handleNavigateToProfile = useCallback(async (userId: string) => {
     setIsToProfileBtnDisabled(true);
-    await router.push("/profile");
+    await router.push("/profile/" + userId);
     setIsToProfileBtnDisabled(false);
   }, []);
 
@@ -285,14 +285,14 @@ const UserCard = ({
         recommendedUser.avatar ? (
           <ButtonBase
             disabled={isToProfileBtnDisabled}
-            onClick={handleNavigateToProfile}
+            onClick={() => handleNavigateToProfile(recommendedUser._id)}
           >
             <Avatar src={recommendedUser.avatar} aria-label="username" />
           </ButtonBase>
         ) : (
           <ButtonBase
             disabled={isToProfileBtnDisabled}
-            onClick={handleNavigateToProfile}
+            onClick={() => handleNavigateToProfile(recommendedUser._id)}
           >
             <Avatar src={recommendedUser.avatar} aria-label="username">
               {recommendedUser.username.substring(0, 1).toUpperCase()}
@@ -309,7 +309,7 @@ const UserCard = ({
             lineHeight: 1.7,
           }}
           disabled={isToProfileBtnDisabled}
-          onClick={handleNavigateToProfile}
+          onClick={() => handleNavigateToProfile(recommendedUser._id)}
         >
           {recommendedUser.username}
         </ButtonBase>
