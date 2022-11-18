@@ -2,16 +2,19 @@ import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback, useState } from "react";
 import { useRouter } from "next/router";
 
 const NavbarSearch = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const [isSearchBtnDisabled, setIsSearchBtnDisabled] = useState(false)
 
-  const handleSearch = useCallback(() => {
+  const handleSearch = useCallback(async() => {
+
+    setIsSearchBtnDisabled(true);
     if (router.pathname === "/forum") {
-      router.push(
+      await router.push(
         {
           pathname: "/forum",
           query: { search: inputRef.current!.value.trim() },
@@ -20,11 +23,12 @@ const NavbarSearch = () => {
         { shallow: true }
       );
     } else {
-      router.push({
+      await router.push({
         pathname: "/forum",
         query: { search: inputRef.current!.value.trim() },
       });
     }
+    setIsSearchBtnDisabled(false)
   }, [router.pathname]);
 
   const handleEnter = useCallback((e: KeyboardEvent) => {
@@ -81,6 +85,7 @@ const NavbarSearch = () => {
         type="button"
         sx={{ p: "4px" }}
         aria-label="search"
+        disabled={isSearchBtnDisabled}
         onClick={handleSearch}
       >
         <SearchIcon sx={{ color: "primary.main", fontSize: "20px" }} />

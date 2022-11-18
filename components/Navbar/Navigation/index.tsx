@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useSession, signOut } from "next-auth/react";
 import ForumOutlinedIcon from "@mui/icons-material/ForumOutlined";
@@ -8,22 +8,53 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import NavbarMenuItem from "./NavbarMenuItem";
-
 import { openLoginPage } from "../../../state/slices/loginSlice";
 import { useAppDispatch } from "../../../state/hooks";
-import { Tooltip } from "@mui/material";
-import { useIsRouterChanging } from "../../../hooks";
+import { ButtonBase, Tooltip } from "@mui/material";
+import { feedback } from "../../../utils/feedback";
+import { Feedback } from "../../../types/constants";
 
 const Navigation = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const isRouterChanging = useIsRouterChanging(); 
-
+  const [isSignOutBtnDisabled, setIsSignInBtnDisabled] = useState(false);
+  const [isToProfileBtnDisabled, setIsToProfileBtnDisabled] = useState(false);
+  const [isToNotebookBtnDisabled, setIsToNotebookBtnDisabled] = useState(false);
+  const [isToForumBtnDisabled, setIsToForumBtnDisabled] = useState(false);
   const dispatch = useAppDispatch();
 
   const handleLogOut = useCallback(async () => {
-    await signOut({ callbackUrl: "/", redirect: false });
-    router.push("/");
+    setIsSignInBtnDisabled(true);
+
+    try {
+      await signOut({ callbackUrl: "/", redirect: false });
+      await router.push("/");
+    } catch (e) {
+      feedback(
+        dispatch,
+        Feedback.Error,
+        "Fail to log out. Internal error. Please try later."
+      );
+    }
+    setIsSignInBtnDisabled(true);
+  }, []);
+
+  const handleNavigateToProfile = useCallback(async () => {
+    setIsToProfileBtnDisabled(true);
+    await router.push("/profile");
+    setIsToProfileBtnDisabled(false);
+  }, []);
+
+  const handleNavigateToForum = useCallback(async () => {
+    setIsToForumBtnDisabled(true);
+    await router.push("/forum");
+    setIsToForumBtnDisabled(false);
+  }, []);
+
+  const handleNavigateToNotebook = useCallback(async () => {
+    setIsToNotebookBtnDisabled(true);
+    await router.push("/notes");
+    setIsToNotebookBtnDisabled(false);
   }, []);
 
   return (
@@ -31,30 +62,39 @@ const Navigation = () => {
       {session &&
         (session.user.image ? (
           <Tooltip title="Profile" arrow>
-            <Avatar
-              sx={{
-                width: "2rem",
-                height: "2rem",
-                color: "primary.main",
-                "&:hover": { cursor: "pointer" },
-              }}
-              src={session.user.image}
-              onClick={() => !isRouterChanging && router.push("/profile")}
-            />
+            <ButtonBase
+              disabled={isToProfileBtnDisabled}
+              onClick={handleNavigateToProfile}
+            >
+              <Avatar
+                sx={{
+                  width: "2rem",
+                  height: "2rem",
+                  color: "primary.main",
+                  "&:hover": { cursor: "pointer" },
+                }}
+                src={session.user.image}
+              />
+            </ButtonBase>
           </Tooltip>
         ) : (
           <Tooltip title="Profile" arrow>
-            <Avatar
-              sx={{
-                width: "2rem",
-                height: "2rem",
-                color: "primary.main",
-                "&:hover": { cursor: "pointer" },
-              }}
-              onClick={() => !isRouterChanging && router.push("/profile")}
+            <ButtonBase
+              disabled={isToProfileBtnDisabled}
+              onClick={handleNavigateToProfile}
             >
-              {session.user.name!.substring(0, 1).toUpperCase()}
-            </Avatar>
+              <Avatar
+                sx={{
+                  width: "2rem",
+                  height: "2rem",
+                  color: "primary.main",
+                  "&:hover": { cursor: "pointer" },
+                }}
+                onClick={handleNavigateToProfile}
+              >
+                {session.user.name!.substring(0, 1).toUpperCase()}
+              </Avatar>
+            </ButtonBase>
           </Tooltip>
         ))}
       <Box sx={{ display: "flex", gap: 1 }}>
@@ -63,12 +103,13 @@ const Navigation = () => {
             <NavbarMenuItem
               icon={ForumOutlinedIcon}
               tooltipTitle="forum"
-              onClick={() => router.push("/forum")}
+              onClick={handleNavigateToForum}
+              // disabled={is}
             />
             <NavbarMenuItem
               icon={CreateOutlinedIcon}
               tooltipTitle="notebook"
-              onClick={() => router.push("/notes")}
+              onClick={handleNavigateToNotebook}
             />
             <NavbarMenuItem
               icon={LogoutIcon}

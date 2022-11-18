@@ -49,19 +49,21 @@ interface IProps {
   whoToFollow: User[];
 }
 
-const UserInfoComponent = ({
-  user,
-  setCurrentUser,
-  whoToFollow,
-}: IProps) => {
+const UserInfoComponent = ({ user, setCurrentUser, whoToFollow }: IProps) => {
   const router = useRouter();
+  const [profileBtnDisabled, setProfileBtnDisabled] = useState(-1);
+  const [isToNotebookBtnDisabled, setIsToNotebookBtnDisabled] = useState(false);
 
-  const handleNavigateToProfile = useCallback((tabValue: number) => {
-    router.push({ pathname: "/profile", query: { tabValue } });
+  const handleNavigateToProfile = useCallback(async (tabValue: number) => {
+    setProfileBtnDisabled(tabValue);
+    await router.push({ pathname: "/profile", query: { tabValue } });
+    setProfileBtnDisabled(-1);
   }, []);
 
-  const handleCreateNote = useCallback(() => {
-    router.push("/notes");
+  const handleCreateNote = useCallback(async () => {
+    setIsToNotebookBtnDisabled(true);
+    await router.push("/notes");
+    setIsToNotebookBtnDisabled(false);
   }, []);
 
   return (
@@ -97,6 +99,7 @@ const UserInfoComponent = ({
 
       <Box sx={{ display: "flex", mt: 1 }}>
         <Button
+          disabled={profileBtnDisabled === 4}
           onClick={() => handleNavigateToProfile(4)}
           sx={{
             bgcolor: "#ffffff",
@@ -130,6 +133,7 @@ const UserInfoComponent = ({
           </Typography>
         </Button>
         <Button
+          disabled={profileBtnDisabled === 5}
           onClick={() => handleNavigateToProfile(5)}
           sx={{
             bgcolor: "#ffffff",
@@ -166,6 +170,7 @@ const UserInfoComponent = ({
       <Button
         variant="outlined"
         sx={{ textTransform: "none", width: "100%", mt: 1, bgcolor: "#fff" }}
+        disabled={isToNotebookBtnDisabled}
         onClick={handleCreateNote}
       >
         Create Note
@@ -175,7 +180,7 @@ const UserInfoComponent = ({
         <List>
           {listButtons.map((listButtons, index) => (
             <ListItem key={listButtons.text} disablePadding>
-              <ListItemButton onClick={() => handleNavigateToProfile(index)}>
+              <ListItemButton disabled={profileBtnDisabled === index} onClick={() => handleNavigateToProfile(index)}>
                 <ListItemIcon>{listButtons.icon}</ListItemIcon>
                 <ListItemText
                   sx={{ fontFamily: "inherit", color: "#8590a6" }}
@@ -221,28 +226,29 @@ const UserCard = ({
   user,
   setCurrentUser,
 }: UserCardIProps) => {
-
   const [isFollowing, setIsFollowing] = useState(
     user.following.includes(recommendedUser._id)
   );
 
   const dispatch = useAppDispatch();
+  const [isFollowBtnDisabled, setIsFollowBtnDisabled] = useState(false);
 
   const handleFollowAndFollowing = useCallback(async () => {
+    if (isFollowBtnDisabled) {
+      return;
+    }
+    setIsFollowBtnDisabled(true);
     try {
       await axios.patch(`/api/user/${user._id}`, {
         property: UserInfo.Following,
         action: isFollowing ? Action.Pull : Action.Push,
         value: { following: recommendedUser._id },
       });
-      await axios.patch(
-        `/api/user/${recommendedUser._id}`,
-        {
-          property: UserInfo.Followers,
-          action: isFollowing ? Action.Pull : Action.Push,
-          value: { followers: user._id },
-        }
-      );
+      await axios.patch(`/api/user/${recommendedUser._id}`, {
+        property: UserInfo.Followers,
+        action: isFollowing ? Action.Pull : Action.Push,
+        value: { followers: user._id },
+      });
 
       let newFollowing;
       newFollowing = isFollowing
@@ -256,7 +262,8 @@ const UserCard = ({
         "Fail to process. Internal error. Please try later."
       );
     }
-  }, [isFollowing]);
+    setIsFollowBtnDisabled(false);
+  }, [isFollowing, isFollowBtnDisabled]);
 
   useEffect(() => {
     setIsFollowing(user.following.includes(recommendedUser._id));
@@ -299,6 +306,7 @@ const UserCard = ({
         <Button
           variant="text"
           sx={{ textTransform: "none" }}
+          disabled={isFollowBtnDisabled}
           onClick={handleFollowAndFollowing}
         >
           {isFollowing ? "Following" : "+ Follow"}

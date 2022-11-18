@@ -114,6 +114,11 @@ function StyledTreeItem(props: StyledTreeItemProps) {
   const [isFavorite, setIsFavorite] = useState(nodeObj.favorite);
   const [isPublic, setIsPublic] = useState(nodeObj.public);
 
+  const [isDeleteBtnDisabled, setIsDeleteBtnDisabled] = useState(false)
+  const [isFavoriteBtnDisabled, setIsFavoriteBtnDisabled] = useState(false)
+  const [isPublicBtnDisabled, setIsPublicBtnDisabled] = useState(false)
+  const [isRenameBtnDisabled, setIsRenameBtnDisabled] = useState(false)
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const dispatch = useAppDispatch();
@@ -134,6 +139,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
 
   const handleDelete = async () => {
     feedback(dispatch, Feedback.Info, "Deleting the file/folder...", false);
+    setIsDeleteBtnDisabled(true)
 
     try {
       await axios.delete(`/api/note/${nodeObj.id}`, {
@@ -177,10 +183,12 @@ function StyledTreeItem(props: StyledTreeItemProps) {
         "Fail to delete. Internal error. Please try later."
       );
     }
+    setIsDeleteBtnDisabled(false)
   };
 
   const handleRename = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.stopPropagation();
+    setIsRenameBtnDisabled(true)
     setIsRenaming(true);
   };
 
@@ -255,13 +263,14 @@ function StyledTreeItem(props: StyledTreeItemProps) {
     setIsRenaming(false);
     setIsInputValid(true);
     setInputHelperText("");
+    setIsRenameBtnDisabled(false)
   };
 
   const handleFavoriteBtn = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.stopPropagation();
-
+    setIsFavoriteBtnDisabled(true)
     try {
       await axios.patch(`/api/note/${nodeObj.id}`, {
         property: NoteInfo.Favorite,
@@ -279,12 +288,14 @@ function StyledTreeItem(props: StyledTreeItemProps) {
         "Fail to update. Internal error. Please try later."
       );
     }
+    setIsFavoriteBtnDisabled(false)
   };
 
   const handlePublicBtn = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.stopPropagation();
+    setIsPublicBtnDisabled(true)
     try {
       const value: { public: boolean; firstPublicAt?: Date | null } = {
         public: !isPublic,
@@ -314,6 +325,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
         "Fail to update. Internal error. Please try later."
       );
     }
+    setIsPublicBtnDisabled(false)
   };
 
   const actions = [
@@ -321,11 +333,13 @@ function StyledTreeItem(props: StyledTreeItemProps) {
       name: "Rename",
       icon: <DriveFileRenameOutlineOutlinedIcon sx={{ fontSize: 15 }} />,
       onClick: handleRename,
+      disabled: isRenameBtnDisabled
     },
     {
       name: "Delete",
       icon: <DeleteIcon sx={{ fontSize: 15 }} />,
       onClick: handleDeleteBtn,
+      disabled: isDeleteBtnDisabled
     },
     {
       name: "Favorite",
@@ -336,6 +350,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
       ),
       onClick: handleFavoriteBtn,
       type: FileOrFolder.File,
+      disabled: isFavoriteBtnDisabled
     },
     {
       name: isPublic ? "Public" : "Private",
@@ -346,6 +361,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
       ),
       onClick: handlePublicBtn,
       type: FileOrFolder.File,
+      disabled: isPublicBtnDisabled
     },
   ];
 
@@ -392,6 +408,7 @@ function StyledTreeItem(props: StyledTreeItemProps) {
                       aria-label={action.name}
                       size="small"
                       sx={{ p: 0.5, color: "inherit" }}
+                      disabled={action.disabled}
                       onClick={action.onClick}
                     >
                       {action.icon}

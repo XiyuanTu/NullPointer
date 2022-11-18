@@ -1,6 +1,6 @@
 import { Box, Typography, Button } from "@mui/material";
 import axios from "axios";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useAppDispatch } from "../../state/hooks";
 import { Action, Feedback, UserInfo } from "../../types/constants";
 import { feedback } from "../../utils/feedback";
@@ -22,8 +22,10 @@ const UserProfile = ({
   const { _id: userId } = user;
   const { _id: otherUserId } = otherUser;
   const dispatch = useAppDispatch();
+  const [isFollowBtnDisabled, setIsFollowBtnDisabled] = useState(false)
 
   const handleFollowAndFollowing = useCallback(async () => {
+    setIsFollowBtnDisabled(true)
     try {
       await axios.patch(`/api/user/${userId}`, {
         property: UserInfo.Following,
@@ -56,6 +58,7 @@ const UserProfile = ({
         "Fail to process. Internal error. Please try later."
       );
     }
+    setIsFollowBtnDisabled(false)
   }, [user, otherUser]);
 
   const handleFollowingBtn = useCallback(() => {
@@ -187,6 +190,7 @@ const UserProfile = ({
       <Button
         variant="outlined"
         sx={{ textTransform: "none", width: "100%", mt: 1, bgcolor: "#fff" }}
+        disabled={isFollowBtnDisabled}
         onClick={handleFollowAndFollowing}
       >
         {otherUser.followers.includes(userId) ? "Following" : "Follow"}

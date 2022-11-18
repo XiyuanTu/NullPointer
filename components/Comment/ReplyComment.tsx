@@ -57,6 +57,9 @@ const ReplyComment = ({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openMore = Boolean(anchorEl);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [isReplyBtnDisabled, setIsReplyBtnDisabled] = useState(false);
+  const [isDeleteBtnDisabled, setIsDeleteBtnDisabled] = useState(false);
+  const [isLikeBtnDisabled, setIsLikeBtnDisabled] = useState(false);
 
   const handleStartReply = useCallback(() => {
     setIsReplying(true);
@@ -70,6 +73,7 @@ const ReplyComment = ({
   );
 
   const handleAddReply = useCallback(async () => {
+    setIsReplyBtnDisabled(true);
     try {
       const {
         data: { returnValue },
@@ -92,6 +96,7 @@ const ReplyComment = ({
         "Fail to add the reply. Internal error. Please try later."
       );
     }
+    setIsReplyBtnDisabled(false);
   }, [user, replyContent]);
 
   const handleReplyContentOnBlur = useCallback(() => {
@@ -101,6 +106,8 @@ const ReplyComment = ({
   }, [replyContent]);
 
   const handleLike = useCallback(async () => {
+    setIsLikeBtnDisabled(true);
+
     try {
       await axios.patch(`/api/comment/${comment._id}`, {
         property: CommentInfo.Likes,
@@ -116,6 +123,7 @@ const ReplyComment = ({
         "Fail to like the comment. Internal error. Please try later."
       );
     }
+    setIsLikeBtnDisabled(false);
   }, [isLike, comment._id, author]);
 
   const handleDelete = useCallback(() => {
@@ -129,6 +137,9 @@ const ReplyComment = ({
 
   const handleDeleteComment = useCallback(async () => {
     setOpenDeleteDialog(false);
+
+    setIsDeleteBtnDisabled(true);
+
     try {
       if (isDeleted) {
         await axios.patch(`/api/comment/${comment._id}`, {
@@ -150,6 +161,7 @@ const ReplyComment = ({
         } the comment. Internal error. Please try later.`
       );
     }
+    setIsDeleteBtnDisabled(false);
   }, [isDeleted, comment]);
 
   const handleOpenMore = useCallback(
@@ -196,7 +208,7 @@ const ReplyComment = ({
 
   if (!author) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center"}}>
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
         <CircularProgress />
       </Box>
     );
@@ -318,7 +330,7 @@ const ReplyComment = ({
                 sx={{ mr: 1 }}
               />
               <Chip
-                disabled={replyContent.trim() === ""}
+                disabled={replyContent.trim() === "" || isReplyBtnDisabled}
                 label={
                   <Typography
                     component="span"
@@ -352,7 +364,7 @@ const ReplyComment = ({
                 {/* like section  */}
                 {isLike ? (
                   <IconButton
-                    disabled={user._id === author._id || isDeleted}
+                    disabled={user._id === author._id || isLikeBtnDisabled}
                     aria-label="like"
                     onClick={handleLike}
                     sx={{ p: 0 }}
@@ -459,7 +471,11 @@ const ReplyComment = ({
                   } this comment?`}
                 </DialogTitle>
                 <DialogActions>
-                  <Button onClick={handleDeleteComment} autoFocus>
+                  <Button
+                    disabled={isDeleteBtnDisabled}
+                    onClick={handleDeleteComment}
+                    autoFocus
+                  >
                     Yes
                   </Button>
                   <Button onClick={handleCancelDelete}>Cancel</Button>

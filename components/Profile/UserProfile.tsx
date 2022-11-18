@@ -31,9 +31,12 @@ const UserProfile = ({ user, setTabValue }: IProps) => {
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [isHoveringAvatar, setIsHoveringAvatar] = useState(false);
   const [imageUrl, setImageUrl] = useState(user.avatar);
+  const [isToNotebookBtnDisabled, setIsToNotebookBtnDisabled] = useState(false);
 
-  const handleCreateNote = useCallback(() => {
-    router.push("/notes");
+  const handleCreateNote = useCallback(async () => {
+    setIsToNotebookBtnDisabled(true);
+    await router.push("/notes");
+    setIsToNotebookBtnDisabled(false);
   }, []);
 
   const handleEditBtn = useCallback(() => {
@@ -295,6 +298,7 @@ const UserProfile = ({ user, setTabValue }: IProps) => {
       <Button
         variant="outlined"
         sx={{ textTransform: "none", width: "100%", mt: 1, bgcolor: "#fff" }}
+        disabled={isToNotebookBtnDisabled}
         onClick={handleCreateNote}
       >
         Create Note

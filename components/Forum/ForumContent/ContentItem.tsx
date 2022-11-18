@@ -8,6 +8,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { SvgIconComponent } from "@mui/icons-material";
 import {
   Button,
+  ButtonBase,
   Tooltip,
   Chip,
   Card,
@@ -42,7 +43,7 @@ import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { convertCount, convertDate } from "../../../utils/note";
-const Comment = dynamic(() => import('../../Comment'))
+const Comment = dynamic(() => import("../../Comment"));
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -121,23 +122,45 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openMoreActions = Boolean(anchorEl);
 
+  const [isGetCommentBtnDisabled, setIsGetCommentBtnDisabled] = useState(false);
+  const [isFollowBtnDisabled, setIsFollowBtnDisabled] = useState(false);
+  const [isLikeBtnDisabled, setIsLikeBtnDisabled] = useState(false);
+  const [isBookmarkBtnDisabled, setIsBookmarkBtnDisabled] = useState(false);
+  const [isAddCommentBtnDisabled, setIsAddCommentBtnDisabled] = useState(false);
+  const [isBlockBtnDisabled, setIsBlockBtnDisabled] = useState(false);
+  const [isToDetailedNoteBtnDisabled, setIsToDetailedNoteBtnDisabled] =
+    useState(false);
+  const [isSearchBtnDisabled, setIsSearchBtnDisabled] = useState(false);
+  const [isToProfileBtnDisabled, setIsToProfileBtnDisabled] = useState(false);
+
   const dispatch = useAppDispatch();
   const router = useRouter();
 
   const handleGetComment = useCallback(async () => {
-    if (!openComment) {
-      const {
-        data: { convertedComments },
-      } = await axios.get("/api/comment", {
-        params: { commentIds },
-      });
-      setNoteComments(convertedComments);
-      setNewNoteComments([]);
+    setIsGetCommentBtnDisabled(true);
+    try {
+      if (!openComment) {
+        const {
+          data: { convertedComments },
+        } = await axios.get("/api/comment", {
+          params: { commentIds },
+        });
+        setNoteComments(convertedComments);
+        setNewNoteComments([]);
+      }
+      setOpenComment((state) => !state);
+    } catch (e) {
+      feedback(
+        dispatch,
+        Feedback.Error,
+        "Fail to get comments. Internal error. Please try later."
+      );
     }
-    setOpenComment((state) => !state);
+    setIsGetCommentBtnDisabled(false);
   }, [openComment, commentIds]);
 
   const handleFollow = useCallback(async () => {
+    setIsFollowBtnDisabled(true);
     try {
       await axios.patch(`/api/user/${userId}`, {
         property: UserInfo.Following,
@@ -162,9 +185,11 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
         "Fail to delete. Internal error. Please try later."
       );
     }
+    setIsFollowBtnDisabled(false);
   }, [isFollowing, following]);
 
   const handleLike = useCallback(async () => {
+    setIsLikeBtnDisabled(true);
     try {
       await axios.patch(`/api/user/${userId}`, {
         property: UserInfo.Likes,
@@ -185,9 +210,11 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
         "Fail to delete. Internal error. Please try later."
       );
     }
+    setIsLikeBtnDisabled(false);
   }, [isLike]);
 
   const handleBookmark = useCallback(async () => {
+    setIsBookmarkBtnDisabled(true);
     try {
       await axios.patch(`/api/user/${userId}`, {
         property: UserInfo.Bookmarks,
@@ -208,6 +235,7 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
         "Fail to delete. Internal error. Please try later."
       );
     }
+    setIsBookmarkBtnDisabled(false);
   }, [isBookmark]);
 
   const handleExpandClick = useCallback(() => {
@@ -222,6 +250,7 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
   );
 
   const handleAddComment = useCallback(async () => {
+    setIsAddCommentBtnDisabled(true);
     try {
       const {
         data: { returnValue },
@@ -242,6 +271,7 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
         "Fail to add comment. Internal error. Please try later."
       );
     }
+    setIsAddCommentBtnDisabled(false);
   }, [commentContent]);
 
   const handleShowMore = useCallback(() => {
@@ -260,6 +290,7 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
   }, []);
 
   const handleBlock = useCallback(async () => {
+    setIsBlockBtnDisabled(true);
     handleCloseMoreActions();
     try {
       await axios.patch(`/api/user/${userId}`, {
@@ -277,14 +308,18 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
         `Fail to block the user. Internal error. Please try later.`
       );
     }
+    setIsBlockBtnDisabled(false);
   }, []);
 
-  const handleToDetailedNote = useCallback(() => {
-    router.push("/notes/" + noteId);
+  const handleToDetailedNote = useCallback(async () => {
+    setIsToDetailedNoteBtnDisabled(true);
+    await router.push("/notes/" + noteId);
+    setIsToDetailedNoteBtnDisabled(false);
   }, []);
 
-  const handleSearchForTag = useCallback((tag: string) => {
-    router.push(
+  const handleSearchForTag = useCallback(async (tag: string) => {
+    setIsSearchBtnDisabled(true);
+    await router.push(
       {
         pathname: "/forum",
         query: { search: tag },
@@ -292,14 +327,17 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
       undefined,
       { shallow: true }
     );
+    setIsSearchBtnDisabled(false);
   }, []);
 
-  const handleToProfile = useCallback(() => {
+  const handleToProfile = useCallback(async () => {
+    setIsToProfileBtnDisabled(true);
     if (authorId === userId) {
-      router.push("/profile");
+      await router.push("/profile");
     } else {
-      router.push("/profile/" + authorId);
+      await router.push("/profile/" + authorId);
     }
+    setIsToProfileBtnDisabled(false);
   }, []);
 
   useEffect(() => {
@@ -326,6 +364,7 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
       info: convertCount(commentCount),
       icon: ChatBubbleOutlineIcon,
       onClick: handleGetComment,
+      disabledState: isGetCommentBtnDisabled,
     },
     {
       label: "Like",
@@ -333,6 +372,7 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
       icon: isLike ? FavoriteIcon : FavoriteBorderIcon,
       onClick: handleLike,
       state: isLike,
+      disabledState: isLikeBtnDisabled,
     },
     {
       label: "Bookmark",
@@ -340,6 +380,7 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
       icon: isBookmark ? BookmarkIcon : BookmarkBorderOutlinedIcon,
       onClick: handleBookmark,
       state: isBookmark,
+      disabledState: isBookmarkBtnDisabled,
     },
   ];
 
@@ -350,12 +391,13 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
       {/* author info */}
       <CardHeader
         avatar={
-          <Box
+          <ButtonBase
+            disabled={isToProfileBtnDisabled}
             onClick={handleToProfile}
             sx={{ "&:hover": { cursor: "pointer" } }}
           >
             <UserAvatar image={authorAvatar} name={authorName} />
-          </Box>
+          </ButtonBase>
         }
         action={
           userId !== authorId && (
@@ -386,7 +428,9 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
                   },
                 }}
               >
-                <MenuItem onClick={handleBlock}>Block</MenuItem>
+                <MenuItem onClick={handleBlock} disabled={isBlockBtnDisabled}>
+                  Block
+                </MenuItem>
                 <MenuItem onClick={handleCloseMoreActions}>Report</MenuItem>
               </Menu>
             </>
@@ -394,19 +438,18 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
         }
         title={
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Typography
-              onClick={handleToProfile}
-              variant="body2"
+            <ButtonBase
               sx={{
                 fontWeight: "bold",
                 fontFamily: "inherit",
                 lineHeight: 1.7,
                 "&:hover": { cursor: "pointer" },
               }}
-              component="span"
+              disabled={isToProfileBtnDisabled}
+              onClick={handleToProfile}
             >
               {authorName}
-            </Typography>
+            </ButtonBase>
             {userId === authorId ? (
               <Chip
                 label={"You"}
@@ -419,10 +462,9 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
                 <Typography variant="body2" component="span">
                   &nbsp;·&nbsp;
                 </Typography>
-                <Typography
-                  variant="body2"
-                  component="span"
+                <ButtonBase
                   sx={{
+                    fontSize: "0.875rem",
                     fontFamily: "inherit",
                     color: isFollowing ? "#939598" : "#2e69ff",
                     "&:hover": {
@@ -430,10 +472,11 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
                       textDecoration: "underline",
                     },
                   }}
+                  disabled={isFollowBtnDisabled}
                   onClick={handleFollow}
                 >
                   {isFollowing ? "Following" : "Follow"}
-                </Typography>
+                </ButtonBase>
               </>
             )}
           </Box>
@@ -490,6 +533,7 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
                 ":hover": { backgroundColor: "#d0e3f1", border: "none" },
               }}
               variant="outlined"
+              disabled={isSearchBtnDisabled}
               onClick={() => handleSearchForTag(tag)}
             >
               <Typography
@@ -502,7 +546,10 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
           ))}
         </CardContent>
       )}
-      <CardActionArea onClick={handleToDetailedNote}>
+      <CardActionArea
+        disabled={isToDetailedNoteBtnDisabled}
+        onClick={handleToDetailedNote}
+      >
         {/* note content  */}
         <CardContent
           sx={{ maxHeight: expanded ? "none" : 200, overflowY: "hidden" }}
@@ -594,7 +641,9 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
                   <UserAvatar image={userAvatar} name={username} />
                 </Box>
                 <Button
-                  disabled={commentContent.trim() === ""}
+                  disabled={
+                    commentContent.trim() === "" || isAddCommentBtnDisabled
+                  }
                   variant="contained"
                   sx={{
                     width: "50%",
@@ -676,14 +725,16 @@ interface ActionButtonIProps {
     info?: string;
     onClick: () => void;
     state?: boolean;
+    disabledState: boolean;
   };
 }
 
 const ActionButton = ({ action }: ActionButtonIProps) => {
-  const { label, icon: Icon, info, onClick, state } = action;
+  const { label, icon: Icon, info, onClick, state, disabledState } = action;
   return (
     <Tooltip title={label} arrow placement="top">
       <IconButton
+        disabled={disabledState}
         aria-label={label}
         size="small"
         sx={{ borderRadius: "20%", color: state ? "#007fff" : "" }}

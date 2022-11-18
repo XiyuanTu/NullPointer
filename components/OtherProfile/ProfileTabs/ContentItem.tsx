@@ -41,13 +41,17 @@ const ContentItem = ({ note }: IProps) => {
   const { _id, title, tags, mdText } = note;
   const router = useRouter();
   const [expanded, setExpanded] = useState(false);
+  const [isToDetailedNoteBtnDisabled, setIsToDetailedNoteBtnDisabled] = useState(false);
 
   const handleExpandClick = useCallback(() => {
     setExpanded((state) => !state);
   }, []);
 
-  const handleRedirect = useCallback(() => {
-    router.push("/notes/" + _id);
+  const handleToDetailedNote = useCallback(async() => {
+
+    setIsToDetailedNoteBtnDisabled(true);
+    await router.push("/notes/" + _id);
+    setIsToDetailedNoteBtnDisabled(false);
   }, []);
 
   return (
@@ -94,7 +98,7 @@ const ContentItem = ({ note }: IProps) => {
           ))}
         </CardContent>
       )}
-      <CardActionArea onClick={handleRedirect}>
+      <CardActionArea disabled={isToDetailedNoteBtnDisabled} onClick={handleToDetailedNote}>
         {/* note content  */}
         <CardContent
           sx={{ maxHeight: expanded ? "none" : 300, overflowY: "hidden" }}

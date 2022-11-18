@@ -26,9 +26,13 @@ const LoginForm = ({ setLoggingIn }: IProps) => {
   const [emailStatus, setEmailStatus] = useState(false);
   const [passwordStatus, setPasswordStatus] = useState(false);
   const [isValidPassword, setIsValidPassword] = useState(false);
+  const [isSignInBtnDisabled, setIsSignInBtnDisabled] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setIsSignInBtnDisabled(true);
+
     feedback(dispatch, Feedback.Info, "Logging in...", false);
 
     const res = await signIn("credentials", {
@@ -54,6 +58,8 @@ const LoginForm = ({ setLoggingIn }: IProps) => {
         setIsValidPassword(false);
       }
     }
+
+    setIsSignInBtnDisabled(false);
   };
 
   return (
@@ -74,7 +80,7 @@ const LoginForm = ({ setLoggingIn }: IProps) => {
         setIsValidPassword={setIsValidPassword}
       />
       <Button
-        disabled={!emailStatus || !passwordStatus}
+        disabled={!emailStatus || !passwordStatus || isSignInBtnDisabled}
         type="submit"
         variant="contained"
         sx={{ mb: 3, textTransform: "none", borderRadius: 10 }}

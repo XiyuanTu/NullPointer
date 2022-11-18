@@ -27,9 +27,13 @@ const SignUpForm = ({ setLoggingIn }: IProps) => {
   const [usernameStatus, setUsernameStatus] = useState(false);
   const [emailStatus, setEmailStatus] = useState(false);
   const [passwordStatus, setPasswordStatus] = useState(false);
+  const [isSignUpBtnDisabled, setIsSignUpBtnDisabled] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setIsSignUpBtnDisabled(true);
+
     const username = usernameRef.current!.value;
     const email = emailRef.current!.value;
     const password = passwordRef.current!.value;
@@ -59,6 +63,8 @@ const SignUpForm = ({ setLoggingIn }: IProps) => {
         "Fail to sign up. Internal error. Please try later."
       );
     }
+
+    setIsSignUpBtnDisabled(false);
   };
 
   return (
@@ -103,7 +109,12 @@ const SignUpForm = ({ setLoggingIn }: IProps) => {
         type="submit"
         variant="contained"
         sx={{ mb: 3, textTransform: "none", borderRadius: 10 }}
-        disabled={!usernameStatus || !emailStatus || !passwordStatus}
+        disabled={
+          !usernameStatus ||
+          !emailStatus ||
+          !passwordStatus ||
+          isSignUpBtnDisabled
+        }
       >
         Sign Up
       </Button>

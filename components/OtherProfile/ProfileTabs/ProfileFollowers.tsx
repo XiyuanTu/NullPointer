@@ -8,6 +8,7 @@ import {
   ListItemAvatar,
   ListItemText,
   Button,
+  ButtonBase,
 } from "@mui/material";
 import axios from "axios";
 import Image from "next/image";
@@ -30,6 +31,9 @@ const ProfileFollowers = ({ user, setUser, otherUser }: IProps) => {
   const router = useRouter();
   const [followers, setFollowers] = useState<User[] | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isFollowBtnDisabled, setIsFollowBtnDisabled] = useState(false);
+  const [isToProfileBtnDisabled, setIsToProfileBtnDisabled] = useState(false);
+
   const dispatch = useAppDispatch();
 
   const handlePageOnChange = useCallback(
@@ -39,16 +43,19 @@ const ProfileFollowers = ({ user, setUser, otherUser }: IProps) => {
     []
   );
 
-  const handleToProfile = useCallback((followerId: string) => {
+  const handleToProfile = useCallback(async (followerId: string) => {
+    setIsToProfileBtnDisabled(true);
     if (followerId === userId) {
-      router.push("/profile");
+      await router.push("/profile");
     } else {
-      router.push("/profile/" + followerId);
+      await router.push("/profile/" + followerId);
     }
+    setIsToProfileBtnDisabled(false);
   }, []);
 
   const handleFollowAndFollowing = useCallback(
     async (followerId: string) => {
+      setIsFollowBtnDisabled(true);
       try {
         await axios.patch(`/api/user/${userId}`, {
           property: UserInfo.Following,
@@ -88,6 +95,7 @@ const ProfileFollowers = ({ user, setUser, otherUser }: IProps) => {
           "Fail to process. Internal error. Please try later."
         );
       }
+      setIsFollowBtnDisabled(true);
     },
     [followers, user]
   );
@@ -173,28 +181,32 @@ const ProfileFollowers = ({ user, setUser, otherUser }: IProps) => {
                 alignItems="center"
                 sx={{ bgcolor: "white" }}
               >
-                <ListItemAvatar
-                  sx={{ "&:hover": { cursor: "pointer" } }}
-                  onClick={() => handleToProfile(follower._id)}
-                >
-                  <UserAvatar
-                    name={follower.username}
-                    image={follower.avatar}
-                  />
+                <ListItemAvatar>
+                  <ButtonBase
+                    disabled={isToProfileBtnDisabled}
+                    sx={{ "&:hover": { cursor: "pointer" } }}
+                    onClick={() => handleToProfile(follower._id)}
+                  >
+                    <UserAvatar
+                      name={follower.username}
+                      image={follower.avatar}
+                    />
+                  </ButtonBase>
                 </ListItemAvatar>
                 <ListItemText
                   primary={
-                    <Typography
+                    <ButtonBase
+                      disabled={isToProfileBtnDisabled}
                       onClick={() => handleToProfile(follower._id)}
-                      component="span"
                       sx={{
+                        fontSize: "1rem",
                         fontFamily: "inherit",
                         fontWeight: "bold",
                         "&:hover": { cursor: "pointer" },
                       }}
                     >
                       {follower.username}
-                    </Typography>
+                    </ButtonBase>
                   }
                   secondary={`${convertCount(follower.followers.length)} ${
                     follower.followers.length === 1 ? "follower" : "followers"
@@ -202,7 +214,7 @@ const ProfileFollowers = ({ user, setUser, otherUser }: IProps) => {
                 />
                 <Button
                   variant="contained"
-                  disabled={userId === follower._id}
+                  disabled={userId === follower._id || isFollowBtnDisabled}
                   sx={{
                     fontFamily: "inherit",
                     fontSize: 13,

@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import { Feedback, FileOrFolder } from "../../types/constants";
 import { feedback } from "../../utils/feedback";
+import { useState } from "react";
 
 interface IProps {
   data: RenderTree;
@@ -31,8 +32,11 @@ const Header = ({
 }: IProps) => {
   const selectedId = useAppSelector((state) => state.selectedId.value);
   const dispatch = useAppDispatch();
+  const [isCreateNoteBtnDisabled, setIsCreateNoteBtnDisabled] = useState(false)
+  const [isCreateFolderBtnDisabled, setIsCreateFolderBtnDisabled] = useState(false)
 
   const handleCreateNewNote = async () => {
+    setIsCreateNoteBtnDisabled(true)
     const res = getNodeAndParentById(selectedId, data)!;
     try {
       let requestBody: any = {
@@ -102,9 +106,11 @@ const Header = ({
         "Fail to create the file. Internal error. Please try later."
       );
     }
+    setIsCreateNoteBtnDisabled(false)
   };
 
   const handleCreateNewFolder = async () => {
+    setIsCreateFolderBtnDisabled(true)
     const res = getNodeAndParentById(selectedId, data)!;
 
     try {
@@ -183,6 +189,7 @@ const Header = ({
         "Fail to create the folder. Internal error. Please try later."
       );
     }
+    setIsCreateFolderBtnDisabled(true)
   };
 
   const handleExpandAll = () => {
@@ -210,6 +217,7 @@ const Header = ({
             aria-label="Create New Note"
             size="small"
             sx={{ p: 0.5, color: "black" }}
+            disabled={isCreateNoteBtnDisabled}
             onClick={handleCreateNewNote}
           >
             <AiOutlineFileAdd />
@@ -220,6 +228,7 @@ const Header = ({
             aria-label="Create New Folder"
             size="small"
             sx={{ p: 0.5, color: "black" }}
+            disabled={isCreateFolderBtnDisabled}
             onClick={handleCreateNewFolder}
           >
             <BsFolderPlus />
