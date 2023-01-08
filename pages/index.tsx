@@ -26,11 +26,12 @@ function HomePage() {
           px: "8rem",
           pb: "3.5rem",
           height: "79vh",
-          gap: "6rem",
           bgcolor: "#ffffff",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
-        <Box sx={{ mt: "6rem" }}>
+        <Box sx={{ ml: "6rem" }}>
           <Typography
             sx={{
               color: "primary.main",
@@ -53,8 +54,9 @@ function HomePage() {
             itaque animi officia odit quos.
           </Typography>
         </Box>
-        <Box sx={{ mt: "4rem", width: "42rem" }}>
-          <MarkdownEditorForShow height={450} />
+
+        <Box sx={{ mr: "6rem", width: "50rem" }}>
+          <MarkdownEditorForShow height={500} />
         </Box>
       </Box>
 
