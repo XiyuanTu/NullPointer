@@ -53,6 +53,15 @@ const ContentItem = ({ note }: IProps) => {
     setIsToDetailedNoteBtnDisabled(false);
   }, []);
 
+  const handleSearchForTag = useCallback((tag: string) => {
+    router.push(
+     {
+       pathname: "/forum",
+       query: { search: tag },
+     },
+   );
+ }, []);
+
   return (
     <Card
       sx={{ boxShadow: "none", mb: 1, bgcolor: "#fff", overflow: "visible" }}
@@ -71,7 +80,7 @@ const ContentItem = ({ note }: IProps) => {
         <CardContent sx={{ pt: 0.5, pb: 0 }}>
           {tags.map((tag) => (
             <Button
-              onClick={(e) => e.preventDefault()}
+              onClick={() => handleSearchForTag(tag)}
               key={tag}
               sx={{
                 py: 0,

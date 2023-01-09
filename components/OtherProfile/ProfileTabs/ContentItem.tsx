@@ -47,6 +47,15 @@ const ContentItem = ({ note }: IProps) => {
     setExpanded((state) => !state);
   }, []);
 
+  const handleSearchForTag = useCallback((tag: string) => {
+     router.push(
+      {
+        pathname: "/forum",
+        query: { search: tag },
+      },
+    );
+  }, []);
+
   const handleToDetailedNote = useCallback(async() => {
 
     setIsToDetailedNoteBtnDisabled(true);
@@ -72,7 +81,6 @@ const ContentItem = ({ note }: IProps) => {
         <CardContent sx={{ pt: 0.5, pb: 0 }}>
           {tags.map((tag) => (
             <Button
-              onClick={(e) => e.preventDefault()}
               key={tag}
               sx={{
                 py: 0,
@@ -87,6 +95,7 @@ const ContentItem = ({ note }: IProps) => {
                 ":hover": { backgroundColor: "#d0e3f1", border: "none" },
               }}
               variant="outlined"
+              onClick={() => handleSearchForTag(tag)}
             >
               <Typography
                 noWrap={true}

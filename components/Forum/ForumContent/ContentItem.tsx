@@ -130,7 +130,6 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
   const [isBlockBtnDisabled, setIsBlockBtnDisabled] = useState(false);
   const [isToDetailedNoteBtnDisabled, setIsToDetailedNoteBtnDisabled] =
     useState(false);
-  const [isSearchBtnDisabled, setIsSearchBtnDisabled] = useState(false);
   const [isToProfileBtnDisabled, setIsToProfileBtnDisabled] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -317,9 +316,8 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
     setIsToDetailedNoteBtnDisabled(false);
   }, []);
 
-  const handleSearchForTag = useCallback(async (tag: string) => {
-    setIsSearchBtnDisabled(true);
-    await router.push(
+  const handleSearchForTag = useCallback((tag: string) => {
+    router.push(
       {
         pathname: "/forum",
         query: { search: tag },
@@ -327,7 +325,6 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
       undefined,
       { shallow: true }
     );
-    setIsSearchBtnDisabled(false);
   }, []);
 
   const handleToProfile = useCallback(async () => {
@@ -533,7 +530,6 @@ const ContentItem = ({ note, user, setCurrentUser, setNotes }: IProps) => {
                 ":hover": { backgroundColor: "#d0e3f1", border: "none" },
               }}
               variant="outlined"
-              disabled={isSearchBtnDisabled}
               onClick={() => handleSearchForTag(tag)}
             >
               <Typography
