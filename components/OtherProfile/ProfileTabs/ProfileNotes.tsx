@@ -111,7 +111,7 @@ const ProfileNotes = ({ user, otherUser }: IProps) => {
           px: 1,
           py: 1.5,
           position: "sticky",
-          top: 112,
+          top: '15vh',
           bgcolor: "rgb(241, 242, 242)",
           zIndex: 99,
         }}

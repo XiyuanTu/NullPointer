@@ -149,7 +149,7 @@ const ForumContent = ({ convertedData, user: currentUser, setCurrentUser }: IPro
             px: 1,
             py: 1.5,
             position: "sticky",
-            top: 64,
+            top: "9vh",
             bgcolor: "rgb(241, 242, 242)",
             zIndex: 99,
           }}
