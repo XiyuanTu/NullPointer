@@ -56,10 +56,11 @@ const ProfileTabs = ({
     <Box sx={{ width: "100%" }}>
       <Box
         sx={{
+          height: "6vh",
           borderBottom: 1,
           borderColor: "divider",
           position: "sticky",
-          top: 64,
+          top: '9vh',
           bgcolor: "rgb(241, 242, 242)",
           zIndex: 99,
         }}
