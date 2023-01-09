@@ -41,7 +41,22 @@ const listButtons = [
   },
 ];
 
-const info = ["Contact Me", "FAQs", "Source Code", "Terms and Privacy"];
+const infoList = [
+  {
+    description: "Contact Me",
+    path: 'https://www.linkedin.com/in/xiyuan'
+  },
+  {
+    description: "Source Code",
+    path: 'https://github.com/XiyuanTu/NullPointer'
+  },
+  {
+    description: "FAQs",
+  },
+  {
+    description: "Terms and Privacy",
+  },
+];
 
 interface IProps {
   user: User;
@@ -65,6 +80,10 @@ const UserInfoComponent = ({ user, setCurrentUser, whoToFollow }: IProps) => {
     await router.push("/notes");
     setIsToNotebookBtnDisabled(false);
   }, []);
+
+  const navigateToExternalUrl = useCallback((path: string) => {
+    window.location.href = path
+  }, [])
 
   return (
     <Box>
@@ -196,7 +215,7 @@ const UserInfoComponent = ({ user, setCurrentUser, whoToFollow }: IProps) => {
       </Box>
 
       <Box sx={{ p: 2 }}>
-        {info.map((info, index) => (
+        {infoList.map((info, index) => (
           <ButtonBase
             key={index}
             sx={{
@@ -207,8 +226,9 @@ const UserInfoComponent = ({ user, setCurrentUser, whoToFollow }: IProps) => {
                 textDecoration: "underline",
               },
             }}
+            onClick={() => info.path && navigateToExternalUrl(info.path)}
           >
-            {info}
+            {info.description}
           </ButtonBase>
         ))}
       </Box>
