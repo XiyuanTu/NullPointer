@@ -36,7 +36,7 @@ const LoginPage = () => {
           bgcolor: "#fff",
           border: "1px solid #dbdbdb",
           width: "30vw",
-          minHeight: "90vh",
+          minHeight: "80vh",
         }}
       >
         <Fab
