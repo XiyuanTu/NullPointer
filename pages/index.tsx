@@ -47,11 +47,19 @@ function HomePage() {
           >
             While You Code
           </Typography>
-          <Typography sx={{ width: "32rem", mt: "2rem", pl: "0.5rem" }}>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate
-            impedit, repellat deserunt accusamus porro laboriosam laudantium
-            magnam natus, nobis quis eligendi maxime aliquid. Hic consequuntur
-            itaque animi officia odit quos.
+          <Typography
+            sx={{
+              width: "32rem",
+              mt: "2rem",
+              pl: "0.5rem",
+              fontFamily: "-apple-system",
+              fontSize: 22,
+            }}
+          >
+            NullPointer offers you a markdown based note-taking editor and a
+            file system tree to help you take and sort out notes quickly. Also,
+            feel free to share your notes and check out the forum when you are
+            tormented by bugs.
           </Typography>
         </Box>
 
