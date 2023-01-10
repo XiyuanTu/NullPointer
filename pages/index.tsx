@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { GetStaticProps } from "next";
 import { getMdText } from "../utils/homePage";
+import Head from "next/head";
 
 interface IProps {
   mdText: string;
@@ -25,6 +26,13 @@ function HomePage({ mdText }: IProps) {
 
   return (
     <>
+      <Head>
+        <title>NullPointer</title>
+        <meta
+          name="description"
+          content="A markdown based note-taking website."
+        />
+      </Head>
       <Box
         sx={{
           display: "flex",
