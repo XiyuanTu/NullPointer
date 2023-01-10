@@ -6,8 +6,14 @@ import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { GetStaticProps } from "next";
+import { getMdText } from "../utils/homePage";
 
-function HomePage() {
+interface IProps {
+  mdText: string;
+}
+
+function HomePage({ mdText }: IProps) {
   const router = useRouter();
   const { data: session, status } = useSession();
 
@@ -64,7 +70,7 @@ function HomePage() {
         </Box>
 
         <Box sx={{ mr: "6rem", width: "50rem" }}>
-          <MarkdownEditorForShow height={500} />
+          <MarkdownEditorForShow height={500} mdText={mdText} />
         </Box>
       </Box>
 
@@ -76,3 +82,11 @@ function HomePage() {
 }
 
 export default HomePage;
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  const mdText = getMdText();
+
+  return {
+    props: { mdText },
+  };
+};
