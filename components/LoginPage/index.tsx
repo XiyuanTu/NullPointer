@@ -35,7 +35,7 @@ const LoginPage = () => {
           py: 5,
           bgcolor: "#fff",
           border: "1px solid #dbdbdb",
-          width: "22vw",
+          width: 450,
           minHeight: "80vh",
         }}
       >
