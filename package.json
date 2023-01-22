@@ -22,7 +22,7 @@
     "github-markdown-css": "^5.1.0",
     "mongoose": "^6.6.0",
     "next": "12.2.5",
-    "next-auth": "^4.18.8",
+    "next-auth": "^4.18.5",
     "next-remove-imports": "^1.0.7",
     "react": "18.2.0",
     "react-dom": "18.2.0",
