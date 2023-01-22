@@ -1,11 +1,20 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
-    palette: {
-        primary: {
-            main: '#007fff',
-        }
-    }
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1400,
+      xl: 1800,
+    },
+  },
+  palette: {
+    primary: {
+      main: "#007fff",
+    },
+  },
 });
 
-export default theme
+export default theme;

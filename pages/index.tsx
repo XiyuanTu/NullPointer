@@ -38,7 +38,6 @@ function HomePage({ mdText }: IProps) {
           display: "flex",
           mt: "9vh",
           px: "8rem",
-          pb: "3.5rem",
           height: "79vh",
           bgcolor: "#ffffff",
           justifyContent: "space-between",
@@ -50,24 +49,24 @@ function HomePage({ mdText }: IProps) {
             sx={{
               color: "primary.main",
               fontWeight: "bold",
-              fontSize: "3.75rem",
+              fontSize: {xs: 40, lg:45, xl: 50},
               lineHeight: 1.2,
             }}
           >
             Take Notes
           </Typography>
           <Typography
-            sx={{ fontWeight: "bold", fontSize: "3.75rem", lineHeight: 1.2 }}
+            sx={{ fontWeight: "bold", fontSize: {xs: 40, lg:45, xl: 50}, lineHeight: 1.2 }}
           >
             While You Code
           </Typography>
           <Typography
             sx={{
-              width: "32rem",
+              width: "30vw",
               mt: "2rem",
               pl: "0.5rem",
               fontFamily: "-apple-system",
-              fontSize: 22,
+              fontSize: {xs: 15, lg:20, xl: 25},
             }}
           >
             NullPointer offers you a markdown based note-taking editor and a
@@ -77,8 +76,8 @@ function HomePage({ mdText }: IProps) {
           </Typography>
         </Box>
 
-        <Box sx={{ mr: "6rem", width: "50rem" }}>
-          <MarkdownEditorForShow height={500} mdText={mdText} />
+        <Box sx={{ mr: "6rem", width: "35vw" }}>
+          <MarkdownEditorForShow height={450} mdText={mdText} />
         </Box>
       </Box>
 
