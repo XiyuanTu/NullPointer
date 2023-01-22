@@ -7,10 +7,7 @@ import UserAccount from "../../../models/user/userAccountModel";
 import GithubUser from "../../../models/user/githubUserModel";
 import GoogleUser from "../../../models/user/googleUserModel";
 import { verifyPassword } from "../../../utils/auth/passwordValidation";
-interface User {
-  name: string;
-  email: string;
-}
+
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
