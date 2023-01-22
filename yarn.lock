@@ -1360,10 +1360,10 @@
   dependencies:
     "safe-buffer" "~5.1.1"
 
-"cookie@^0.4.1":
-  "integrity" "sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA=="
-  "resolved" "https://registry.npmmirror.com/cookie/-/cookie-0.4.2.tgz"
-  "version" "0.4.2"
+"cookie@^0.5.0":
+  "integrity" "sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw=="
+  "resolved" "https://registry.npmmirror.com/cookie/-/cookie-0.5.0.tgz"
+  "version" "0.5.0"
 
 "core-js-pure@^3.20.2":
   "integrity" "sha512-IeHpLwk3uoci37yoI2Laty59+YqH9x5uR65/yiA0ARAJrTrN4YU0rmauLWfvqOuk77SlNJXj2rM6oT/dBD87+A=="
@@ -2537,10 +2537,10 @@
     "merge-stream" "^2.0.0"
     "supports-color" "^8.0.0"
 
-"jose@^4.1.4", "jose@^4.3.7":
-  "integrity" "sha512-EqKvu2PqJCD3Jrg3PvcYZVS7D21qMVLSYMDAFcOdGUEOpJSLNtJO7NjLANvu3SYHVl6pdP2ff7ve6EZW2nX7Nw=="
-  "resolved" "https://registry.npmmirror.com/jose/-/jose-4.9.2.tgz"
-  "version" "4.9.2"
+"jose@^4.1.4", "jose@^4.9.3":
+  "integrity" "sha512-njj0VL2TsIxCtgzhO+9RRobBvws4oYyCM8TpvoUQwl/MbIM3NFJRR9+e6x0sS5xXaP1t6OCBkaBME98OV9zU5A=="
+  "resolved" "https://registry.npmmirror.com/jose/-/jose-4.11.2.tgz"
+  "version" "4.11.2"
 
 "js-tokens@^3.0.0 || ^4.0.0", "js-tokens@^4.0.0":
   "integrity" "sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ=="
@@ -3240,15 +3240,15 @@
   "resolved" "https://registry.npmmirror.com/neo-async/-/neo-async-2.6.2.tgz"
   "version" "2.6.2"
 
-"next-auth@^4.10.3":
-  "integrity" "sha512-7zc4aXYc/EEln7Pkcsn21V1IevaTZsMLJwapfbnKA4+JY0+jFzWbt5p/ljugesGIrN4VOZhpZIw50EaFZyghJQ=="
-  "resolved" "https://registry.npmmirror.com/next-auth/-/next-auth-4.10.3.tgz"
-  "version" "4.10.3"
+"next-auth@^4.18.5":
+  "integrity" "sha512-ktYsfrc3yygLkj0Z0xdoNfa59seVMF7NRf2pAFzay7eN/a/KUTC8MvM1gTDACFNKsbPa7fQx6Rds68xNVbDk2Q=="
+  "resolved" "https://registry.npmmirror.com/next-auth/-/next-auth-4.18.5.tgz"
+  "version" "4.18.5"
   dependencies:
     "@babel/runtime" "^7.16.3"
     "@panva/hkdf" "^1.0.1"
-    "cookie" "^0.4.1"
-    "jose" "^4.3.7"
+    "cookie" "^0.5.0"
+    "jose" "^4.9.3"
     "oauth" "^0.9.15"
     "openid-client" "^5.1.0"
     "preact" "^10.6.3"
@@ -3264,7 +3264,7 @@
     "babel-loader" "^8.2.2"
     "babel-plugin-transform-remove-imports" "^1.5.4"
 
-"next@12.2.5":
+"next@^12.2.5 || ^13", "next@12.2.5":
   "integrity" "sha512-tBdjqX5XC/oFs/6gxrZhjmiq90YWizUYU6qOWAfat7zJwrwapJ+BYgX2PmiacunXMaRpeVT4vz5MSPSLgNkrpA=="
   "resolved" "https://registry.npmmirror.com/next/-/next-12.2.5.tgz"
   "version" "12.2.5"
