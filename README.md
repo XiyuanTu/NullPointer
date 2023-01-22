@@ -4,6 +4,7 @@ This is a markdown-based blog system using Next.js
 
 It contains four main modules: 
 + Internal and external authentication
+  (The external authentication is currently done for the reason I haven't known yet. It works fine in development, but has bug in production)
 + A markdown editor with a file system tree
 + A forum where users can share, like, bookmark notes, etc.
 + Profile page
