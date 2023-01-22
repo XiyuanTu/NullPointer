@@ -1,4 +1,4 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth, { Account, NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -7,7 +7,10 @@ import UserAccount from "../../../models/user/userAccountModel";
 import GithubUser from "../../../models/user/githubUserModel";
 import GoogleUser from "../../../models/user/googleUserModel";
 import { verifyPassword } from "../../../utils/auth/passwordValidation";
-
+interface User {
+  name: string;
+  email: string;
+}
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
@@ -25,6 +28,7 @@ export const authOptions: NextAuthOptions = {
       type: "credentials",
       credentials: {},
       async authorize(credentials) {
+
         const { email, password } = credentials as {
           email: string;
           password: string;
@@ -42,7 +46,7 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Wrong password");
         }
 
-        return { name: userAccount.username, email };
+        return { id: userAccount._id , name: userAccount.username, email };
       },
     }),
   ],
@@ -54,7 +58,7 @@ export const authOptions: NextAuthOptions = {
       if (credentials) return true;
 
       const { name, email: userEmail, image } = user;
-      const { provider, providerAccountId } = account;
+      const { provider, providerAccountId } = account as Account;
 
       await connectDB();
 
