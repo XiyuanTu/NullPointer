@@ -16,3 +16,6 @@ Backend (REST)|Next.js
 Authentication|NextAuth.js
 Database|MongoDB Atlas
 UI Library|Material UI
+
+![image](https://user-images.githubusercontent.com/79139571/213895053-8b6eef7f-760d-425b-bf6f-572471d43100.png)
+
